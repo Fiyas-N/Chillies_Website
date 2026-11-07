@@ -162,12 +162,12 @@ function Header() {
 function Hero() {
   return (
     <section className="hero section-paper" aria-labelledby="hero-title">
-      <img className="hero-corner-leaf" data-ornament src={generatedAsset('leaf-outline.png')} alt="" aria-hidden="true" />
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
         <p className="hero-description">Experience the authentic taste of Kerala with our fragrant Malabar Dum Biriyani, charcoal-grilled favourites and much more.</p>
         <div className="hero-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> Order Now <Arrow /></Button><a className="text-link" href="#menu">Explore Menu <span className="link-arrow"><Arrow /></span></a></div>
+        <img className="hero-copy-sprig" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" />
       </div>
       <div className="hero-visual" aria-label="Malabar dum biriyani served with charcoal-grilled chicken">
         <svg className="hero-brush" viewBox="0 0 820 760" preserveAspectRatio="none" aria-hidden="true"><path d="M118 112 C209 42 337 54 431 46 C554 36 671 64 734 145 C791 219 784 336 774 436 C764 545 738 628 645 664 C556 699 440 685 338 690 C224 695 122 701 65 633 C12 580 23 443 31 339 C39 237 37 174 118 112 Z" fill="#FFC414" /></svg>
@@ -176,10 +176,9 @@ function Hero() {
         <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Authentic Malabar Dum Biriyani and charcoal grilled chicken in Chillies takeaway bucket in Wandoor, Kerala" fetchPriority="high" />
         <div className="hero-note hero-note-malay" data-draw><span>Malabar</span><strong>Dum Biriyani</strong><svg viewBox="0 0 110 48" aria-hidden="true"><path d="M4 8c20 1 30 31 61 23 13-3 23-15 37-18m-3 0 13-3-6 12" /></svg></div>
         <div className="hero-note hero-note-taste" data-draw><span>Same Great Taste</span><strong>Always!</strong><svg viewBox="0 0 120 24" aria-hidden="true"><path d="M3 16c32-14 78-12 114-4" /></svg></div>
+        <img className="hero-spice-accent hero-accent-chilli" data-ornament src="/assets/illustrations/chilli-spice.webp" alt="" aria-hidden="true" />
+        <img className="hero-spice-accent hero-accent-cardamom" data-ornament src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />
         <img className="hero-spice-doodle" data-ornament src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
-        <img className="hero-spice-chilli" data-ornament src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
-        <img className="hero-spice-cardamom" data-ornament src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
-        <img className="hero-spice-sprig" data-ornament src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
       </div>
       <img className="hero-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" />
       <ul className="hero-side-list"><li><LineIcon name="utensils" /><span>Signature<br />dishes</span></li><li><LineIcon name="leaf" /><span>Fresh<br />ingredients</span></li><li><LineIcon name="users" /><span>Family<br />friendly</span></li><li><LineIcon name="pin" /><span>Multiple<br />locations</span></li></ul>
@@ -242,12 +241,12 @@ function MenuSection() {
   return (
     <section className="menu-section section-paper" id="menu">
       <div className="menu-pin-runway" ref={runwayRef}><div className="menu-stage">
-        <div className="section-heading menu-heading"><div data-reveal><p className="eyebrow" data-typewriter><i /> Our Menu <i /></p><h2>Flavours<br />for Every Mood<span className="red-dot">.</span></h2><p>From charcoal-grilled classics to comforting rice dishes,<br className="desktop-only" /> explore a menu made for every appetite.</p><Button href="https://chilliesgroup.com/menu.php">View Full Menu <Arrow /></Button></div><div className="menu-art" data-reveal><div className="hand-note">Real ingredients<br /><strong>Real taste!</strong><svg viewBox="0 0 130 32" aria-hidden="true" data-draw><path d="M3 20c36-18 79-18 120-8m-8 0 10-1-4 10" /></svg></div><div className="menu-botanical-pair" aria-hidden="true"><img className="menu-pair-chilli" src={generatedAsset('chilli-outline.png')} alt="" /><img className="menu-pair-cardamom" src={generatedAsset('cardamom-outline.png')} alt="" /></div><img className="menu-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" /></div></div>
+        <div className="section-heading menu-heading"><div data-reveal><p className="eyebrow" data-typewriter><i /> Our Menu <i /></p><h2>Flavours<br />for Every Mood<span className="red-dot">.</span></h2><p>From charcoal-grilled classics to comforting rice dishes,<br className="desktop-only" /> explore a menu made for every appetite.</p><Button href="https://chilliesgroup.com/menu.php">View Full Menu <Arrow /></Button></div><div className="menu-art" data-reveal><div className="hand-note">Real ingredients<br /><strong>Real taste!</strong><svg viewBox="0 0 130 32" aria-hidden="true" data-draw><path d="M3 20c36-18 79-18 120-8m-8 0 10-1-4 10" /></svg></div><img className="menu-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" /></div></div>
         <div className="menu-carousel menu-train"><button className="carousel-arrow carousel-prev" onClick={() => moveCards(-1)} aria-label="Previous menu categories"><Arrow direction="left" /></button><div className="food-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.food-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveCard(nearest % menuItems.length); }}>
           {[0, 1, 2, 3].flatMap((copy) => menuItems.map((item, i) => <a className="food-card" href="https://chilliesgroup.com/menu.php" key={`${copy}-${item.title}`} data-loop-copy={copy !== 1 ? 'true' : undefined} aria-hidden={copy !== 1} tabIndex={copy !== 1 ? -1 : 0} data-reveal={copy === 1 ? '' : undefined} style={{ '--reveal-order': i }} itemScope itemType="https://schema.org/MenuItem"><meta itemProp="menuAddOn" content={item.category} /><img src={item.source ? officialAsset(item.source) : referenceAsset(item.image)} alt={copy === 1 ? item.alt : ''} loading="lazy" decoding="async" itemProp="image" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset(item.image); }} /><div className="food-info"><h3 itemProp="name">{item.title}</h3><p itemProp="description">{item.description}</p><span className="round-arrow" aria-label={`View ${item.title} menu`}><Arrow /></span></div></a>))}
         </div><button className="carousel-arrow carousel-next" onClick={() => moveCards(1)} aria-label="Next menu categories"><Arrow /></button><div className="carousel-dots" aria-label="Menu category pages">{menuItems.map((item, i) => <button key={item.title} className={activeCard === i ? 'active' : ''} aria-label={`Show ${item.title}`} onClick={() => scrollToCard(i)} />)}</div></div>
       </div></div>
-      <div className="signature-band" itemScope itemType="https://schema.org/MenuItem"><meta itemProp="name" content="Malabar Dum Biriyani" /><meta itemProp="description" content="Aromatic rice, tender meat and authentic Malabar spices." /><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Signature Malabar Dum Biriyani at Chillies Restaurant Wandoor, Kerala" loading="lazy" decoding="async" itemProp="image" /><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src={generatedAsset('botanical-sprig.png')} alt="" /><img className="signature-art-image chilli-art" src={generatedAsset('chilli-outline.png')} alt="" /><img className="signature-art-image cardamom-art" src={generatedAsset('cardamom-outline.png')} alt="" /><img className="signature-art-image leaf-art" src={generatedAsset('heart-leaf-outline.png')} alt="" /></div><span>The taste<br /><b>that stays</b></span></div></div>
+      <div className="signature-band" itemScope itemType="https://schema.org/MenuItem"><meta itemProp="name" content="Malabar Dum Biriyani" /><meta itemProp="description" content="Aromatic rice, tender meat and authentic Malabar spices." /><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Signature Malabar Dum Biriyani at Chillies Restaurant Wandoor, Kerala" loading="lazy" decoding="async" itemProp="image" /><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src="/assets/illustrations/botanical-branch.webp" alt="" /><img className="signature-art-image chilli-art" src="/assets/illustrations/chilli-spice.webp" alt="" /><img className="signature-art-image leaf-art" src="/assets/illustrations/heart-leaf.webp" alt="" /><img className="signature-art-image cardamom-art" src="/assets/illustrations/cardamom-pod.webp" alt="" /></div><span>The taste<br /><b>that stays</b></span></div></div>
     </section>
   );
 }
@@ -257,11 +256,9 @@ function StorySection() {
   const history = [['2009', 'First branch opens in Wandoor, Malappuram'], ['2019', 'Treatley fine dining opens in Wandoor'], ['2020', 'Cloud kitchen opens in Anchachavidi'], ['2021', 'Cloud kitchen becomes a fine dining restaurant in Anchachavidi'], ['2022', 'New launch at Pullikalodi'], ['2026', 'New launch at Thiruvalli']];
   return (
     <section className="story-section section-paper" id="story">
-      <img className="story-botanical-bg story-botanical-tl" src={generatedAsset('leaf-outline.png')} alt="" aria-hidden="true" />
-      <img className="story-botanical-bg story-botanical-br" src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
       <div className="story-intro" data-reveal><p className="eyebrow" data-typewriter><i /> Why Chillies <i /></p><h2>More Than<br />Just a Meal<span className="red-dot">.</span></h2><p>Good food is always better when shared. At Chillies, we bring people together with authentic Malabar flavours that feel like home.</p><div className="values">{values.map(([icon, title, detail]) => <span key={title}><LineIcon name={icon} /><span>{title}<br />{detail}</span></span>)}</div></div>
-      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken and Al Faham prepared with fresh herbs and spices at Chillies Restaurant" loading="lazy" decoding="async" /><img className="story-photo-accent" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" /></div>
-      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant family dining room in Wandoor, Kerala" loading="lazy" decoding="async" /></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From our first restaurant in Wandoor in 2009 to a growing family of branches across Kerala, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal>{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
+      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken and Al Faham prepared with fresh herbs and spices at Chillies Restaurant" loading="lazy" decoding="async" /><img className="story-float-spice" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" /></div>
+      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant family dining room in Wandoor, Kerala" loading="lazy" decoding="async" /></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From our first restaurant in Wandoor in 2009 to a growing family of branches across Kerala, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal><img className="timeline-spice-accent" src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
     </section>
   );
 }
@@ -291,11 +288,10 @@ function LocationsSection() {
         </div>
         <div className="locations-art" aria-hidden="true">
           <div className="locations-art-cluster">
-            <img className="locations-sprig" src={generatedAsset('botanical-sprig.png')} alt="" title="Pepper Sprig" />
-            <img className="locations-chilli" src={generatedAsset('chilli-outline.png')} alt="" title="Chillies Pepper" />
-            <img className="locations-cardamom" src={generatedAsset('cardamom-outline.png')} alt="" title="Cardamom Pod" />
-            <img className="locations-leaf" src={generatedAsset('heart-leaf-outline.png')} alt="" title="Heart Leaf" />
-            <img className="locations-twin" src={generatedAsset('leaf-outline.png')} alt="" title="Twin Leaves" />
+            <img className="locations-sprig" src="/assets/illustrations/botanical-branch.webp" alt="" />
+            <img className="locations-leaf" src="/assets/illustrations/heart-leaf.webp" alt="" />
+            <img className="locations-chilli" src="/assets/illustrations/chilli-spice.webp" alt="" />
+            <img className="locations-spice" src="/assets/illustrations/cardamom-pod.webp" alt="" />
           </div>
           <svg className="locations-route" viewBox="0 0 160 40" fill="none" data-draw>
             <path d="M4 30C36 8 68 8 92 24s48 18 64-10m-10 2 10-2-4 10" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -983,10 +979,10 @@ function CinematicLoader({ onRevealStart, onComplete }) {
       <canvas className="loader-particles" ref={canvasRef} aria-hidden="true" />
 
       {/* Ambient floating spice illustrations */}
-      <img className="loader-ambient-spice spice-tl" src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-tr" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-bl" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-br" src={generatedAsset('heart-leaf-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-tl" src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-tr" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-bl" src="/assets/illustrations/chilli-spice.webp" alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-br" src="/assets/illustrations/heart-leaf.webp" alt="" aria-hidden="true" />
 
       {/* Center Stage Card (Aceternity Spotlight & Glowing Border Beam) */}
       <div className="loader-center-content" ref={cardRef} onMouseMove={onCardMouseMove}>
@@ -1024,7 +1020,7 @@ function CinematicLoader({ onRevealStart, onComplete }) {
           </svg>
 
           <img className="loader-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
-          <img className="loader-sprig-badge" src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
+          <img className="loader-sprig-badge" src="/assets/illustrations/botanical-branch.webp" alt="" aria-hidden="true" />
           <img className="loader-crest-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
         </div>
 
