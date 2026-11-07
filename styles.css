@@ -1263,11 +1263,170 @@ img[data-media-state="error"]{
 @keyframes loader-brush-turn{to{transform:rotate(360deg);}}
 @keyframes loader-sprig-float{0%,100%{transform:translateY(0) rotate(14deg)}50%{transform:translateY(-6px) rotate(18deg)}}
 
-/* Give the signature photo a deeper top inset and let its two illustrations fill their column. */
+/* ==========================================================================
+   BOTANICAL & SPICE ARTWORK SYSTEM (HERO, SIGNATURE, STORY, LOCATIONS)
+   ========================================================================== */
+
+/* Hero Botanical Accents */
+.hero-corner-leaf{
+  position:absolute;
+  top:clamp(16px,3vw,36px);
+  left:clamp(12px,2.5vw,32px);
+  width:clamp(120px,14vw,190px);
+  height:auto;
+  opacity:.44;
+  transform:rotate(-18deg);
+  pointer-events:none;
+  z-index:1;
+  animation:doodle-drift 9s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px rgba(60,35,10,.08));
+}
+.hero-spice-chilli{
+  position:absolute;
+  right:8%;
+  bottom:4%;
+  width:clamp(85px,10vw,140px);
+  height:auto;
+  transform:rotate(-24deg);
+  z-index:3;
+  pointer-events:none;
+  animation:doodle-drift 6.8s ease-in-out -1.5s infinite;
+  filter:drop-shadow(0 6px 16px rgba(80,40,10,.14));
+}
+.hero-spice-cardamom{
+  position:absolute;
+  right:2%;
+  top:20%;
+  width:clamp(65px,7vw,95px);
+  height:auto;
+  transform:rotate(20deg);
+  z-index:3;
+  pointer-events:none;
+  animation:doodle-drift 7.5s ease-in-out -3s infinite;
+  filter:drop-shadow(0 4px 12px rgba(80,40,10,.12));
+}
+.hero-spice-sprig{
+  position:absolute;
+  left:6%;
+  bottom:6%;
+  width:clamp(95px,11vw,160px);
+  height:auto;
+  transform:rotate(-12deg);
+  z-index:2;
+  opacity:.85;
+  pointer-events:none;
+  animation:doodle-drift 8.2s ease-in-out -2s infinite;
+  filter:drop-shadow(0 6px 14px rgba(80,40,10,.1));
+}
+
+/* Menu Section Botanical Accents */
+.menu-botanical-pair{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-inline:6px;
+}
+.menu-pair-chilli{
+  width:clamp(50px,5vw,72px);
+  height:auto;
+  transform:rotate(-16deg);
+  filter:drop-shadow(0 4px 8px rgba(80,40,10,.12));
+  animation:doodle-drift 7s ease-in-out -1s infinite;
+}
+.menu-pair-cardamom{
+  width:clamp(40px,4vw,56px);
+  height:auto;
+  transform:rotate(18deg);
+  filter:drop-shadow(0 3px 8px rgba(80,40,10,.1));
+  animation:doodle-drift 8s ease-in-out -2.5s infinite;
+}
+
+/* Story Section Botanical Watermarks & Photo Accent */
+.story-botanical-bg{
+  position:absolute;
+  pointer-events:none;
+  z-index:0;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 14px rgba(60,35,10,.06));
+}
+.story-botanical-tl{
+  top:16px;
+  left:-25px;
+  width:clamp(140px,16vw,230px);
+  opacity:.44;
+  transform:rotate(-15deg);
+  animation:doodle-drift 9s ease-in-out infinite;
+}
+.story-botanical-br{
+  bottom:20px;
+  right:-30px;
+  width:clamp(160px,18vw,260px);
+  opacity:.4;
+  transform:rotate(20deg);
+  animation:doodle-drift 10s ease-in-out -3s infinite;
+}
+.story-photo-wrap{
+  position:relative;
+}
+.story-photo-accent{
+  position:absolute;
+  bottom:-20px;
+  right:20px;
+  width:clamp(80px,9vw,125px);
+  height:auto;
+  transform:rotate(15deg);
+  z-index:2;
+  pointer-events:none;
+  filter:drop-shadow(0 6px 16px rgba(60,35,10,.18));
+  animation:doodle-drift 7.2s ease-in-out -2s infinite;
+}
+
+/* Signature Dish Bouquet */
 .signature-band{padding-top:clamp(56px,6.8vw,86px)!important;padding-bottom:clamp(50px,6.2vw,80px)!important;overflow:hidden;}
 .signature-band>img{align-self:center;max-height:clamp(250px,23vw,330px);object-fit:cover;object-position:center 55%;border-radius:26px;box-shadow:0 14px 34px rgba(90,55,10,.18);margin:6px 0;will-change:transform;}
-.signature-art-group .signature-art-image{max-width:clamp(185px,17vw,265px)!important;height:clamp(190px,18vw,275px);transition:transform .4s ease;}
-.signature-art-group .signature-art-image:hover{transform:scale(1.06);}
+.signature-art-group{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(8px,1.2vw,16px);
+  flex-wrap:nowrap;
+  max-width:100%;
+}
+.signature-art-group .signature-art-image{
+  display:block;
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 6px 16px rgba(60,35,10,.12));
+  transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.signature-art-group .botanical-art{
+  width:clamp(115px,12vw,185px)!important;
+  max-width:185px!important;
+  transform:rotate(-8deg);
+  animation:doodle-drift 8s ease-in-out infinite;
+}
+.signature-art-group .chilli-art{
+  width:clamp(70px,7.5vw,115px)!important;
+  max-width:115px!important;
+  transform:rotate(-22deg);
+  animation:doodle-drift 6.8s ease-in-out -1.5s infinite;
+}
+.signature-art-group .cardamom-art{
+  width:clamp(55px,6vw,90px)!important;
+  max-width:90px!important;
+  transform:rotate(16deg);
+  animation:doodle-drift 7.5s ease-in-out -3s infinite;
+}
+.signature-art-group .leaf-art{
+  width:clamp(90px,9.5vw,145px)!important;
+  max-width:145px!important;
+  transform:rotate(10deg);
+  animation:doodle-drift 8.4s ease-in-out -4s infinite;
+}
+.signature-art-group .signature-art-image:hover{
+  transform:scale(1.1) translateY(-4px) !important;
+}
+
 @media(min-width:761px){
   .signature-band{grid-template-columns:minmax(0,1.02fr) minmax(0,.82fr) minmax(280px,.88fr)!important;gap:clamp(18px,2.4vw,34px);}
   .signature-art>span{font-size:clamp(24px,2.3vw,32px)!important;}
@@ -1275,36 +1434,40 @@ img[data-media-state="error"]{
 @media(max-width:760px){
   .signature-band{padding-top:clamp(40px,8vw,56px)!important;padding-bottom:clamp(40px,8vw,54px)!important;}
   .signature-band>img{max-height:clamp(210px,64vw,290px);object-position:center 55%;margin:8px auto;}
-  .signature-art-group .signature-art-image{max-width:clamp(140px,42vw,200px)!important;height:clamp(145px,42vw,200px);}
+  .signature-art-group{flex-wrap:wrap;justify-content:center;gap:10px;}
+  .signature-art-group .signature-art-image{width:clamp(75px,22vw,110px)!important;}
   .signature-art>span{font-size:clamp(20px,5.5vw,26px)!important;}
 }
 
-/* Rich, balanced locations cluster bringing the copy and note closer together while filling the mid-top space. */
+/* Locations Section 5-Element Spice & Leaf Cluster */
 @media(min-width:901px){
-  .locations-heading{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(240px,1fr) minmax(180px,.75fr);align-items:center;gap:clamp(16px,2.2vw,32px);max-width:1280px;margin:0 auto 28px;}
+  .locations-heading{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(260px,1.15fr) minmax(180px,.75fr);align-items:center;gap:clamp(16px,2.2vw,32px);max-width:1300px;margin:0 auto 28px;}
   .locations-heading>div:first-child{width:auto!important;min-width:0;max-width:440px;}
   .locations-heading h2{font-size:clamp(46px,5.2vw,74px);margin-bottom:6px;line-height:.92;}
   .locations-heading>div>p:not(.eyebrow){margin:6px 0 0;font-size:15px;line-height:1.45;}
   .locations-art{position:relative;display:flex!important;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:165px;padding:8px 12px;}
-  .locations-art-cluster{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.2vw,16px);width:100%;height:105px;}
-  .locations-art-cluster img{display:block;object-fit:contain;transition:transform .4s ease;filter:drop-shadow(0 4px 10px rgba(90,50,15,.08));}
-  .locations-art-cluster .locations-sprig{width:clamp(75px,8vw,110px);height:95px;transform:rotate(-10deg);animation:doodle-drift 7s ease-in-out -1s infinite;}
-  .locations-art-cluster .locations-leaf{width:clamp(65px,7vw,95px);height:85px;transform:rotate(14deg);animation:doodle-drift 7.8s ease-in-out -3s infinite;}
-  .locations-art-cluster .locations-chilli{width:clamp(55px,6vw,80px);height:75px;transform:rotate(-18deg);animation:doodle-drift 6.4s ease-in-out -2s infinite;}
-  .locations-art-cluster .locations-spice{width:clamp(50px,5.5vw,75px);height:70px;transform:rotate(22deg);animation:doodle-drift 8.2s ease-in-out -4s infinite;}
-  .locations-route{width:100%;max-width:180px;height:34px;margin-top:2px;overflow:visible;stroke:var(--red);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 6;}
+  .locations-art-cluster{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(6px,1vw,14px);width:100%;height:115px;}
+  .locations-art-cluster img{display:block;height:auto;object-fit:contain;transition:transform .4s ease;filter:drop-shadow(0 4px 10px rgba(90,50,15,.1));}
+  .locations-art-cluster img:hover{transform:scale(1.15) translateY(-5px)!important;}
+  .locations-art-cluster .locations-sprig{width:clamp(75px,7.5vw,105px);transform:rotate(-10deg);animation:doodle-drift 7s ease-in-out -1s infinite;}
+  .locations-art-cluster .locations-chilli{width:clamp(55px,5.5vw,78px);transform:rotate(-20deg);animation:doodle-drift 6.4s ease-in-out -2s infinite;}
+  .locations-art-cluster .locations-cardamom{width:clamp(46px,4.6vw,66px);transform:rotate(16deg);animation:doodle-drift 7.2s ease-in-out -3.5s infinite;}
+  .locations-art-cluster .locations-leaf{width:clamp(62px,6.2vw,88px);transform:rotate(12deg);animation:doodle-drift 7.8s ease-in-out -2.5s infinite;}
+  .locations-art-cluster .locations-twin{width:clamp(68px,6.8vw,94px);transform:rotate(-6deg);animation:doodle-drift 8.2s ease-in-out -4s infinite;}
+  .locations-route{width:100%;max-width:180px;height:34px;margin-top:4px;overflow:visible;stroke:var(--red);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 6;}
   .locations-art-note{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:3px 12px;border:1px dashed rgba(207,16,40,.4);border-radius:999px;background:rgba(255,248,230,.8);color:var(--red);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
   .locations-art-note i{font-style:normal;font-size:10px;}
   .map-note{width:100%;max-width:230px;margin:0!important;font-size:clamp(20px,2.1vw,28px);text-align:center;}
   .map-note>span{margin-top:6px;}
 }
 @media(min-width:901px) and (max-width:1150px){
-  .locations-heading{grid-template-columns:minmax(0,1fr) minmax(200px,.9fr) minmax(160px,.7fr);gap:14px;}
-  .locations-art-cluster{height:90px;}
-  .locations-art-cluster .locations-sprig{width:70px;height:80px;}
-  .locations-art-cluster .locations-leaf{width:60px;height:72px;}
-  .locations-art-cluster .locations-chilli{width:50px;height:65px;}
-  .locations-art-cluster .locations-spice{width:46px;height:60px;}
+  .locations-heading{grid-template-columns:minmax(0,1fr) minmax(220px,1fr) minmax(160px,.7fr);gap:14px;}
+  .locations-art-cluster{height:95px;}
+  .locations-art-cluster .locations-sprig{width:68px;}
+  .locations-art-cluster .locations-chilli{width:50px;}
+  .locations-art-cluster .locations-cardamom{width:42px;}
+  .locations-art-cluster .locations-leaf{width:56px;}
+  .locations-art-cluster .locations-twin{width:60px;}
   .map-note{font-size:19px;}
 }
 @media(max-width:900px){
@@ -1312,12 +1475,13 @@ img[data-media-state="error"]{
   .locations-heading>div:first-child{max-width:100%;}
   .locations-heading .map-note{display:block!important;margin:8px 0 0!important;text-align:left!important;font-size:22px!important;}
   .locations-art{position:relative;display:flex!important;flex-direction:column;align-items:flex-start;gap:6px;width:100%;min-height:0;margin:6px 0 10px;}
-  .locations-art-cluster{display:flex;align-items:center;gap:10px;height:75px;}
+  .locations-art-cluster{display:flex;align-items:center;flex-wrap:wrap;gap:8px;height:auto;}
   .locations-art-cluster img{display:block;object-fit:contain;}
-  .locations-art-cluster .locations-sprig{width:65px;height:72px;}
-  .locations-art-cluster .locations-leaf{width:56px;height:64px;}
-  .locations-art-cluster .locations-chilli{width:48px;height:56px;}
-  .locations-art-cluster .locations-spice{width:42px;height:50px;}
+  .locations-art-cluster .locations-sprig{width:60px;}
+  .locations-art-cluster .locations-chilli{width:46px;}
+  .locations-art-cluster .locations-cardamom{width:38px;}
+  .locations-art-cluster .locations-leaf{width:52px;}
+  .locations-art-cluster .locations-twin{width:54px;}
   .locations-route{width:140px;height:28px;stroke:var(--red);stroke-width:1.8;stroke-dasharray:3 5;}
   .locations-art-note{display:inline-flex;padding:3px 10px;border:1px dashed rgba(207,16,40,.35);border-radius:999px;background:#fff8e7;color:var(--red);font-size:10px;font-weight:700;}
 }
