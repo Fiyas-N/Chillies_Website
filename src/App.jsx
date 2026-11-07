@@ -167,7 +167,6 @@ function Hero() {
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
         <p className="hero-description">Experience the authentic taste of Kerala with our fragrant Malabar Dum Biriyani, charcoal-grilled favourites and much more.</p>
         <div className="hero-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> Order Now <Arrow /></Button><a className="text-link" href="#menu">Explore Menu <span className="link-arrow"><Arrow /></span></a></div>
-        <img className="hero-copy-sprig" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" />
       </div>
       <div className="hero-visual" aria-label="Malabar dum biriyani served with charcoal-grilled chicken">
         <svg className="hero-brush" viewBox="0 0 820 760" preserveAspectRatio="none" aria-hidden="true"><path d="M118 112 C209 42 337 54 431 46 C554 36 671 64 734 145 C791 219 784 336 774 436 C764 545 738 628 645 664 C556 699 440 685 338 690 C224 695 122 701 65 633 C12 580 23 443 31 339 C39 237 37 174 118 112 Z" fill="#FFC414" /></svg>
@@ -176,8 +175,6 @@ function Hero() {
         <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Authentic Malabar Dum Biriyani and charcoal grilled chicken in Chillies takeaway bucket in Wandoor, Kerala" fetchPriority="high" />
         <div className="hero-note hero-note-malay" data-draw><span>Malabar</span><strong>Dum Biriyani</strong><svg viewBox="0 0 110 48" aria-hidden="true"><path d="M4 8c20 1 30 31 61 23 13-3 23-15 37-18m-3 0 13-3-6 12" /></svg></div>
         <div className="hero-note hero-note-taste" data-draw><span>Same Great Taste</span><strong>Always!</strong><svg viewBox="0 0 120 24" aria-hidden="true"><path d="M3 16c32-14 78-12 114-4" /></svg></div>
-        <img className="hero-spice-accent hero-accent-chilli" data-ornament src="/assets/illustrations/chilli-spice.webp" alt="" aria-hidden="true" />
-        <img className="hero-spice-accent hero-accent-cardamom" data-ornament src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />
         <img className="hero-spice-doodle" data-ornament src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
       </div>
       <img className="hero-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" />
@@ -246,7 +243,7 @@ function MenuSection() {
           {[0, 1, 2, 3].flatMap((copy) => menuItems.map((item, i) => <a className="food-card" href="https://chilliesgroup.com/menu.php" key={`${copy}-${item.title}`} data-loop-copy={copy !== 1 ? 'true' : undefined} aria-hidden={copy !== 1} tabIndex={copy !== 1 ? -1 : 0} data-reveal={copy === 1 ? '' : undefined} style={{ '--reveal-order': i }} itemScope itemType="https://schema.org/MenuItem"><meta itemProp="menuAddOn" content={item.category} /><img src={item.source ? officialAsset(item.source) : referenceAsset(item.image)} alt={copy === 1 ? item.alt : ''} loading="lazy" decoding="async" itemProp="image" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset(item.image); }} /><div className="food-info"><h3 itemProp="name">{item.title}</h3><p itemProp="description">{item.description}</p><span className="round-arrow" aria-label={`View ${item.title} menu`}><Arrow /></span></div></a>))}
         </div><button className="carousel-arrow carousel-next" onClick={() => moveCards(1)} aria-label="Next menu categories"><Arrow /></button><div className="carousel-dots" aria-label="Menu category pages">{menuItems.map((item, i) => <button key={item.title} className={activeCard === i ? 'active' : ''} aria-label={`Show ${item.title}`} onClick={() => scrollToCard(i)} />)}</div></div>
       </div></div>
-      <div className="signature-band" itemScope itemType="https://schema.org/MenuItem"><meta itemProp="name" content="Malabar Dum Biriyani" /><meta itemProp="description" content="Aromatic rice, tender meat and authentic Malabar spices." /><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Signature Malabar Dum Biriyani at Chillies Restaurant Wandoor, Kerala" loading="lazy" decoding="async" itemProp="image" /><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src="/assets/illustrations/botanical-branch.webp" alt="" /><img className="signature-art-image chilli-art" src="/assets/illustrations/chilli-spice.webp" alt="" /><img className="signature-art-image leaf-art" src="/assets/illustrations/heart-leaf.webp" alt="" /><img className="signature-art-image cardamom-art" src="/assets/illustrations/cardamom-pod.webp" alt="" /></div><span>The taste<br /><b>that stays</b></span></div></div>
+      <div className="signature-band" itemScope itemType="https://schema.org/MenuItem"><meta itemProp="name" content="Malabar Dum Biriyani" /><meta itemProp="description" content="Aromatic rice, tender meat and authentic Malabar spices." /><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Signature Malabar Dum Biriyani at Chillies Restaurant Wandoor, Kerala" loading="lazy" decoding="async" itemProp="image" /><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src={generatedAsset('botanical-sprig.png')} alt="" /><img className="signature-art-image leaf-art" src={generatedAsset('heart-leaf-outline.png')} alt="" /></div><span>The taste<br /><b>that stays</b></span></div></div>
     </section>
   );
 }
@@ -257,8 +254,8 @@ function StorySection() {
   return (
     <section className="story-section section-paper" id="story">
       <div className="story-intro" data-reveal><p className="eyebrow" data-typewriter><i /> Why Chillies <i /></p><h2>More Than<br />Just a Meal<span className="red-dot">.</span></h2><p>Good food is always better when shared. At Chillies, we bring people together with authentic Malabar flavours that feel like home.</p><div className="values">{values.map(([icon, title, detail]) => <span key={title}><LineIcon name={icon} /><span>{title}<br />{detail}</span></span>)}</div></div>
-      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken and Al Faham prepared with fresh herbs and spices at Chillies Restaurant" loading="lazy" decoding="async" /><img className="story-float-spice" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" /></div>
-      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant family dining room in Wandoor, Kerala" loading="lazy" decoding="async" /></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From our first restaurant in Wandoor in 2009 to a growing family of branches across Kerala, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal><img className="timeline-spice-accent" src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
+      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken and Al Faham prepared with fresh herbs and spices at Chillies Restaurant" loading="lazy" decoding="async" /></div>
+      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant family dining room in Wandoor, Kerala" loading="lazy" decoding="async" /></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From our first restaurant in Wandoor in 2009 to a growing family of branches across Kerala, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal>{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
     </section>
   );
 }
@@ -288,10 +285,10 @@ function LocationsSection() {
         </div>
         <div className="locations-art" aria-hidden="true">
           <div className="locations-art-cluster">
-            <img className="locations-sprig" src="/assets/illustrations/botanical-branch.webp" alt="" />
-            <img className="locations-leaf" src="/assets/illustrations/heart-leaf.webp" alt="" />
-            <img className="locations-chilli" src="/assets/illustrations/chilli-spice.webp" alt="" />
-            <img className="locations-spice" src="/assets/illustrations/cardamom-pod.webp" alt="" />
+            <img className="locations-sprig" src={generatedAsset('botanical-sprig.png')} alt="" />
+            <img className="locations-leaf" src={generatedAsset('heart-leaf-outline.png')} alt="" />
+            <img className="locations-chilli" src={generatedAsset('chilli-outline.png')} alt="" />
+            <img className="locations-spice" src={generatedAsset('star-anise-outline.png')} alt="" />
           </div>
           <svg className="locations-route" viewBox="0 0 160 40" fill="none" data-draw>
             <path d="M4 30C36 8 68 8 92 24s48 18 64-10m-10 2 10-2-4 10" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -695,20 +692,129 @@ function useScrollMotion(heroReady = false) {
         });
       });
 
-      gsap.fromTo('.hero-food', { scale: 1.035, yPercent: 1 }, {
-        scale: 1, yPercent: -4, ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.7 },
+      // 1. Global top scroll progress bar scrub
+      ScrollTrigger.create({
+        start: 'top top',
+        end: 'max',
+        onUpdate: (self) => {
+          const bar = document.querySelector('.scroll-progress-bar');
+          if (bar) bar.style.transform = `scaleX(${self.progress})`;
+        },
       });
-      gsap.fromTo('.signature-band > img', { scale: 0.98 }, {
-        scale: 1.02, ease: 'none',
-        scrollTrigger: { trigger: '.signature-band', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+
+      // 2. Floating action pill reveal on scroll
+      ScrollTrigger.create({
+        start: 400,
+        end: 'max',
+        onToggle: (self) => {
+          const pill = document.querySelector('.floating-action-pill');
+          if (pill) pill.classList.toggle('is-visible', self.isActive);
+        },
       });
-      gsap.fromTo('.story-photo-wrap > img', { scale: 1.13 }, {
-        scale: 1, ease: 'none',
+
+      // 3. Hero multi-layer depth scrub (biryani bucket, brush splash, floating notes, stamp)
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.8,
+        },
+      })
+      .to('.hero-food', { yPercent: 16, scale: 0.95, rotate: 2.2, ease: 'none' }, 0)
+      .to('.hero-brush', { rotate: 24, scale: 1.16, yPercent: 10, ease: 'none' }, 0)
+      .to('.hero-brush-rim', { rotate: -45, ease: 'none' }, 0)
+      .to('.hero-note-malay', { y: -38, x: 14, rotate: -4, ease: 'none' }, 0)
+      .to('.hero-note-taste', { y: -48, x: -16, rotate: 4.5, ease: 'none' }, 0)
+      .to('.hero-stamp', { rotate: 50, y: -28, ease: 'none' }, 0)
+      .to('.hero-spice-doodle', { rotate: -65, y: 32, ease: 'none' }, 0)
+      .to('.hero-copy', { yPercent: -10, autoAlpha: 0.25, ease: 'none' }, 0);
+
+      // 4. Menu section stamp and hand-note organic float
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.menu-section',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.9,
+        },
+      })
+      .to('.menu-art .menu-stamp', { rotate: 28, y: -34, ease: 'none' }, 0)
+      .to('.menu-art .hand-note', { rotate: -8, y: 24, ease: 'none' }, 0);
+
+      // 5. Signature Biryani Dish dual-layer scroll parallax
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.signature-band',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.85,
+        },
+      })
+      .fromTo('.signature-band > img', { scale: 1.08, yPercent: -8 }, { scale: 0.97, yPercent: 8, ease: 'none' }, 0)
+      .to('.signature-art-image.botanical-art', { rotate: 25, y: -34, ease: 'none' }, 0)
+      .to('.signature-art-image.leaf-art', { rotate: -20, y: 30, ease: 'none' }, 0)
+      .to('.signature-art > span', { y: -14, ease: 'none' }, 0);
+
+      // 6. Our Story photos parallax & timeline active highlights
+      gsap.fromTo('.story-photo-wrap > img', { scale: 1.15, yPercent: -9 }, {
+        scale: 1.0, yPercent: 9, ease: 'none',
         scrollTrigger: { trigger: '.story-photo-wrap', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
       });
-      gsap.fromTo('.footer-cta > img', { yPercent: 7 }, {
-        yPercent: -5, ease: 'none',
+      gsap.fromTo('.story-bottom-photo > img', { scale: 1.12, yPercent: -7 }, {
+        scale: 1.0, yPercent: 7, ease: 'none',
+        scrollTrigger: { trigger: '.story-bottom-photo', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+      });
+
+      gsap.utils.toArray('.timeline p').forEach((item) => {
+        ScrollTrigger.create({
+          trigger: item,
+          start: 'top 65%',
+          end: 'bottom 35%',
+          toggleClass: { targets: item, className: 'is-in-view' },
+        });
+      });
+
+      // 7. Locations Section botanical constellation dispersion
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.locations-section',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      })
+      .to('.locations-sprig', { rotate: -24, y: -28, x: -14, ease: 'none' }, 0)
+      .to('.locations-leaf', { rotate: 30, y: 32, x: 16, ease: 'none' }, 0)
+      .to('.locations-chilli', { rotate: -38, y: -20, x: 20, ease: 'none' }, 0)
+      .to('.locations-spice', { rotate: 50, y: 24, x: -12, ease: 'none' }, 0)
+      .to('.map-note', { rotate: -2, y: -20, ease: 'none' }, 0);
+
+      // 8. Locations Ribbon architectural storefront pan
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.locations-ribbon',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.9,
+        },
+      })
+      .fromTo('.ribbon-sketch-wrap img', { xPercent: -3, yPercent: -5, scale: 0.98 }, { xPercent: 3, yPercent: 4, scale: 1.02, ease: 'none' }, 0);
+
+      // 9. Reviews Section parallax lift
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.reviews-section',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      })
+      .fromTo('.review-track', { yPercent: 4 }, { yPercent: -4, ease: 'none' }, 0);
+
+      // 10. Footer CTA Big Biryani Parallax
+      gsap.fromTo('.footer-cta > img', { yPercent: 14, scale: 1.06 }, {
+        yPercent: -9, scale: 0.98, ease: 'none',
         scrollTrigger: { trigger: '.footer-cta', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
       });
     }) : null;
@@ -979,10 +1085,10 @@ function CinematicLoader({ onRevealStart, onComplete }) {
       <canvas className="loader-particles" ref={canvasRef} aria-hidden="true" />
 
       {/* Ambient floating spice illustrations */}
-      <img className="loader-ambient-spice spice-tl" src="/assets/illustrations/cardamom-pod.webp" alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-tr" src="/assets/illustrations/leaf-pair.webp" alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-bl" src="/assets/illustrations/chilli-spice.webp" alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-br" src="/assets/illustrations/heart-leaf.webp" alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-tl" src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-tr" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-bl" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-br" src={generatedAsset('heart-leaf-outline.png')} alt="" aria-hidden="true" />
 
       {/* Center Stage Card (Aceternity Spotlight & Glowing Border Beam) */}
       <div className="loader-center-content" ref={cardRef} onMouseMove={onCardMouseMove}>
@@ -1020,7 +1126,7 @@ function CinematicLoader({ onRevealStart, onComplete }) {
           </svg>
 
           <img className="loader-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
-          <img className="loader-sprig-badge" src="/assets/illustrations/botanical-branch.webp" alt="" aria-hidden="true" />
+          <img className="loader-sprig-badge" src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
           <img className="loader-crest-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
         </div>
 
@@ -1125,7 +1231,16 @@ export default function App() {
     return () => window.cancelAnimationFrame(frame);
   }, [lenisRef]);
 
+  const scrollToTop = () => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { duration: 1.1 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return <>
+    <div className="scroll-progress-bar" aria-hidden="true" />
     {loaderMounted && (
       <CinematicLoader
         onRevealStart={() => setHeroReady(true)}
@@ -1133,6 +1248,14 @@ export default function App() {
       />
     )}
     <Header /><main><Hero /><MenuSection /><StorySection /><LocationsSection /><ReviewsSection /></main><Footer />
+    <aside className="floating-action-pill" aria-label="Quick actions">
+      <a href={orderUrl} target="_blank" rel="noreferrer" className="floating-pill-order" aria-label="Order on WhatsApp">
+        <WhatsAppIcon /> Order Now
+      </a>
+      <button className="floating-pill-top" onClick={scrollToTop} aria-label="Scroll back to top">
+        ↑
+      </button>
+    </aside>
   </>;
 }
 
