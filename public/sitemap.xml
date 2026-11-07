@@ -1,15 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:geo="http://www.google.com/geo/schemas/sitemap/1.0">
   <url>
     <loc>https://chilliesgroup.com/</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://chilliesgroup.com/assets/generated/hero-bucket-branded.png</image:loc>
+      <image:title>Chillies Restaurant Malabar Dum Biriyani and Grills</image:title>
+      <image:caption>Authentic Malabar Dum Biriyani and charcoal grilled chicken at Chillies Restaurant</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://chilliesgroup.com/assets/generated/hero-biryani.webp</image:loc>
+      <image:title>Signature Malabar Dum Biriyani</image:title>
+      <image:caption>Signature Dum Biriyani served across Chillies Restaurant branches in Kerala</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://chilliesgroup.com/#locations</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://chilliesgroup.com/#menu</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://chilliesgroup.com/menu.php</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://chilliesgroup.com/about.php</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://chilliesgroup.com/contact.php</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

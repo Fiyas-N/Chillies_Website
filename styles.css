@@ -52,7 +52,7 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 
 /* A scroll-controlled food train on desktop, with touch scrolling on smaller screens. */
 .menu-section{position:relative;isolation:isolate}
-.menu-section:after{position:absolute;z-index:0;top:13%;right:2%;width:132px;height:116px;background:url('/assets/illustrations/spice-sprig.svg') center/contain no-repeat;opacity:.68;content:'';pointer-events:none}
+.menu-section:after{position:absolute;z-index:0;top:13%;right:2%;width:132px;height:116px;background:url('/assets/generated/botanical-sprig.png') center/contain no-repeat;opacity:.68;content:'';pointer-events:none}
 .menu-heading{z-index:1;align-items:flex-end}
 .menu-heading>div:first-child{position:relative}
 .menu-heading h2{max-width:660px}
@@ -910,10 +910,56 @@ html{scroll-padding-top:82px}
 .page-loader>i{position:relative;width:142px;height:3px;overflow:hidden;border-radius:4px;background:rgba(145,35,32,.14);}
 .page-loader>i:after{position:absolute;inset:0 auto 0 0;width:42%;border-radius:inherit;background:var(--red,#cf102d);content:'';animation:loader-progress 1.1s cubic-bezier(.6,0,.4,1) infinite alternate;}
 @keyframes loader-progress{from{transform:translateX(-105%)}to{transform:translateX(250%)}}
-img[data-media-state="loading"]{background-color:#eee6d6;background-image:linear-gradient(100deg,#eee6d6 20%,#faf5e9 38%,#eee6d6 56%);background-size:220% 100%;animation:image-sheen 1.35s ease-in-out infinite;}
-img[data-media-state="ready"],img[data-media-state="error"]{background-image:none;animation:none;}
-@keyframes image-sheen{to{background-position-x:-220%}}
-@media(prefers-reduced-motion:reduce){.page-loader,.page-loader>i:after{transition:none;animation:none!important}.page-loader.is-loading{opacity:1}.page-loader>i:after{width:100%;transform:none}img[data-media-state="loading"]{animation:none;background-image:none;background-color:#eee6d6;}}
+/* Skeleton loading feature and shimmer animation system */
+@keyframes skeleton-shimmer{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+@keyframes skeleton-image-reveal{
+  0%{opacity:0.6;filter:blur(3px);}
+  100%{opacity:1;filter:blur(0);}
+}
+.skeleton-box,
+.skeleton-line,
+[data-skeleton="true"],
+img[data-media-state="loading"]{
+  background-color:#ede5d3!important;
+  background-image:linear-gradient(90deg,#ede5d3 0%,#faf4e6 35%,#f2e9d7 50%,#faf4e6 65%,#ede5d3 100%)!important;
+  background-size:200% 100%!important;
+  animation:skeleton-shimmer 1.5s ease-in-out infinite!important;
+  color:transparent!important;
+}
+img[data-media-state="loading"]{
+  border-radius:inherit;
+  min-height:100%;
+}
+img[data-media-state="ready"]{
+  background-image:none!important;
+  animation:skeleton-image-reveal 0.42s cubic-bezier(0.2,0.8,0.2,1) forwards;
+}
+img[data-media-state="error"]{
+  background-image:none!important;
+  animation:none!important;
+  background-color:#f0e9dc;
+}
+.food-card>img,.location-card>img,.story-photo-wrap>img,.story-bottom-photo img,.signature-band>img,.footer-cta>img{
+  background-color:#ede5d3;
+  transition:transform 0.45s ease,box-shadow 0.3s ease;
+}
+.skeleton-line{
+  height:12px;
+  margin-bottom:8px;
+  border-radius:6px;
+}
+.skeleton-line.short{width:42%;}
+.skeleton-line.medium{width:68%;}
+.skeleton-line.long{width:90%;}
+@media(prefers-reduced-motion:reduce){
+  .page-loader,.page-loader>i:after{transition:none;animation:none!important}
+  .page-loader.is-loading{opacity:1}
+  .page-loader>i:after{width:100%;transform:none}
+  img[data-media-state="loading"],.skeleton-box,.skeleton-line{animation:none!important;background-image:none!important;background-color:#eee6d6;}
+}
 @media(orientation:landscape) and (max-height:620px) and (max-width:900px){
   .hero:before,.hero:after{opacity:.34;width:clamp(78px,12vw,128px);height:clamp(68px,10vw,105px);}
   .locations-section:after,.story-section:after,.instagram-section:before{opacity:.36;}

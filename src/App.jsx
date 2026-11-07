@@ -10,18 +10,66 @@ const generatedAsset = (name) => `/assets/generated/${name}`;
 const orderUrl = 'https://wa.me/918089898999';
 
 const menuItems = [
-  { title: 'Biriyani', description: 'Fragrant rice, unforgettable taste.', image: 'menu-biriyani-hq.jpg', alt: 'Malabar biriyani with grilled chicken' },
-  { title: 'Grills', description: 'Charcoal flavours that hit different.', image: 'menu-grill-hq.jpg', alt: 'Charcoal grilled chicken' },
-  { title: 'Starters', description: 'Perfect to start your meal.', image: 'menu-starters-hq.jpg', alt: 'Spicy chicken starter' },
-  { title: 'Shawarma', description: 'Juicy, flavour-packed and satisfying.', image: 'menu-shawarma-hq.jpg', alt: 'Chillies Rumali Shawarma' },
-  { title: 'Rice Dishes', description: 'Comforting and delicious.', image: 'menu-rice-hq.jpg', alt: 'Fragrant rice dish' },
+  { title: 'Biriyani', description: 'Fragrant rice, unforgettable taste.', image: 'menu-biriyani-hq.jpg', alt: 'Authentic Malabar Dum Biriyani served at Chillies Restaurant Wandoor, Kerala', category: 'Main Course' },
+  { title: 'Grills', description: 'Charcoal flavours that hit different.', image: 'menu-grill-hq.jpg', alt: 'Charcoal grilled chicken and Al Faham at Chillies Restaurant Kerala', category: 'Grills' },
+  { title: 'Starters', description: 'Perfect to start your meal.', image: 'menu-starters-hq.jpg', alt: 'Spicy chicken starter platters at Chillies Restaurant', category: 'Starters' },
+  { title: 'Shawarma', description: 'Juicy, flavour-packed and satisfying.', image: 'menu-shawarma-hq.jpg', alt: 'Chillies authentic Rumali Shawarma rolls', category: 'Shawarma' },
+  { title: 'Rice Dishes', description: 'Comforting and delicious.', image: 'menu-rice-hq.jpg', alt: 'Fragrant Ghee Rice and Mandhi in Malappuram, Kerala', category: 'Rice Dishes' },
 ];
 
 const locations = [
-  { name: 'Wandoor', address: 'Nilambur Road, opposite bus stand', phone: '+918606186666', image: 'location-wandoor-new.png', source: 'generated', map: 'https://www.google.com/maps/place/Chillies+Restaurant/@11.2445001,76.2030182,966m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba63b1576ac3abf:0x8afab220bc63ce89!8m2!3d11.2445001!4d76.2030182!16s%2Fg%2F11t7k_2c0f?entry=ttu' },
-  { name: 'Anchachavidi', address: 'Near high school, Anchachavidi', phone: '+918943608000', image: 'location-anchachavidi-new.png', source: 'generated', map: 'https://www.google.com/maps/place/Chillies+Restaurant+Anchachavidi/data=!4m2!3m1!1s0x0:0xf41500c0e16c0890' },
-  { name: 'Pullikalodi', address: 'Main Road, Khadeeja Building', phone: '+917025222260', image: 'location-pullikalodi-new.png', source: 'generated', map: 'https://maps.google.com/?q=Chillies+Restaurant+Pullikalodi+Kerala' },
-  { name: 'Thiruvalli', address: 'Near Thiruvalli Panchayat', phone: '+918089898999', image: 'location-thiruvali-color.png', source: 'generated', map: 'https://maps.google.com/?q=Chillies+Restaurant+near+Thiruvalli+Panchayat' },
+  {
+    name: 'Wandoor',
+    locality: 'Wandoor',
+    region: 'Kerala',
+    postalCode: '679328',
+    lat: '11.2445',
+    lng: '76.2030',
+    address: 'Nilambur Road, opposite bus stand',
+    phone: '+918606186666',
+    image: 'location-wandoor-new.png',
+    source: 'generated',
+    map: 'https://www.google.com/maps/place/Chillies+Restaurant/@11.2445001,76.2030182,966m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba63b1576ac3abf:0x8afab220bc63ce89!8m2!3d11.2445001!4d76.2030182!16s%2Fg%2F11t7k_2c0f?entry=ttu'
+  },
+  {
+    name: 'Anchachavidi',
+    locality: 'Anchachavidi',
+    region: 'Kerala',
+    postalCode: '676525',
+    lat: '11.2335',
+    lng: '76.2570',
+    address: 'Near high school, Anchachavidi',
+    phone: '+918943608000',
+    image: 'location-anchachavidi-new.png',
+    source: 'generated',
+    map: 'https://www.google.com/maps/place/Chillies+Restaurant+Anchachavidi/data=!4m2!3m1!1s0x0:0xf41500c0e16c0890'
+  },
+  {
+    name: 'Pullikalodi',
+    locality: 'Pullikalodi',
+    region: 'Kerala',
+    postalCode: '676525',
+    lat: '11.2150',
+    lng: '76.2420',
+    address: 'Main Road, Khadeeja Building',
+    phone: '+917025222260',
+    image: 'location-pullikalodi-new.png',
+    source: 'generated',
+    map: 'https://maps.google.com/?q=Chillies+Restaurant+Pullikalodi+Kerala'
+  },
+  {
+    name: 'Thiruvalli',
+    locality: 'Thiruvalli',
+    region: 'Kerala',
+    postalCode: '679323',
+    lat: '11.1680',
+    lng: '76.1950',
+    address: 'Near Thiruvalli Panchayat',
+    phone: '+918089898999',
+    image: 'location-thiruvali-color.png',
+    source: 'generated',
+    map: 'https://maps.google.com/?q=Chillies+Restaurant+near+Thiruvalli+Panchayat'
+  },
 ];
 
 const reviews = [
@@ -39,26 +87,26 @@ function Arrow({ className = '', direction = 'right' }) {
 function LineIcon({ name }) {
   const drawings = {
     utensils: <><path d="M7 2v8M4 2v5a3 3 0 0 0 6 0V2M7 10v12M17 2v20M17 2c-2 2-3 5-3 8h3" /></>,
-    leaf: <><path d="M20 4C10 4 4 8 4 15a5 5 0 0 0 5 5c7 0 11-6 11-16Z"/><path d="M3 21c4-5 8-8 14-12"/></>,
-    users: <><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2z"/><path d="M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v1h-3"/></>,
-    pin: <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
-    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></>,
-    chilli: <><path d="M20 4c-3-1-5 1-7 3-2 2-4 3-8 3-2 0-3 2-2 4 2 4 7 6 11 3 3-2 4-6 6-10Z"/><path d="M5 10c0-2 1-4 3-5"/></>,
-    heart: <path d="M20.8 8.7c0 5-8.8 11.3-8.8 11.3S3.2 13.7 3.2 8.7A4.7 4.7 0 0 1 12 6a4.7 4.7 0 0 1 8.8 2.7Z"/>,
+    leaf: <><path d="M20 4C10 4 4 8 4 15a5 5 0 0 0 5 5c7 0 11-6 11-16Z" /><path d="M3 21c4-5 8-8 14-12" /></>,
+    users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2z" /><path d="M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v1h-3" /></>,
+    pin: <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></>,
+    sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></>,
+    chilli: <><path d="M20 4c-3-1-5 1-7 3-2 2-4 3-8 3-2 0-3 2-2 4 2 4 7 6 11 3 3-2 4-6 6-10Z" /><path d="M5 10c0-2 1-4 3-5" /></>,
+    heart: <path d="M20.8 8.7c0 5-8.8 11.3-8.8 11.3S3.2 13.7 3.2 8.7A4.7 4.7 0 0 1 12 6a4.7 4.7 0 0 1 8.8 2.7Z" />,
   };
   return <svg className="line-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">{drawings[name]}</svg>;
 }
 
 function WhatsAppIcon() {
-  return <svg className="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.2 11.8a8.2 8.2 0 0 1-12.1 7.1L3 20l1.2-4.8a8.2 8.2 0 1 1 16-3.4Z"/><path d="M8.4 8.3c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c-.2.2-.2.4 0 .7.5.8 1.2 1.5 2 2 .3.2.5.2.7-.1l.8-1c.2-.2.4-.3.7-.2l1.8.9c.3.1.4.3.4.5 0 .4-.2 1-.6 1.3-.4.4-1 .6-1.7.6-1 0-2.5-.5-4-1.8-1.5-1.3-2.6-3-2.8-4.2-.2-.8.1-1.4.7-2.1Z"/></svg>;
+  return <svg className="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.2 11.8a8.2 8.2 0 0 1-12.1 7.1L3 20l1.2-4.8a8.2 8.2 0 1 1 16-3.4Z" /><path d="M8.4 8.3c.3-.6.6-.6.9-.6h.5c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c-.2.2-.2.4 0 .7.5.8 1.2 1.5 2 2 .3.2.5.2.7-.1l.8-1c.2-.2.4-.3.7-.2l1.8.9c.3.1.4.3.4.5 0 .4-.2 1-.6 1.3-.4.4-1 .6-1.7.6-1 0-2.5-.5-4-1.8-1.5-1.3-2.6-3-2.8-4.2-.2-.8.1-1.4.7-2.1Z" /></svg>;
 }
 
 function InstagramIcon() {
-  return <svg className="instagram-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>;
+  return <svg className="instagram-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>;
 }
 
 function BagIcon() {
-  return <svg className="bag-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>;
+  return <svg className="bag-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 8h14l1 13H4L5 8Z" /><path d="M9 9V6a3 3 0 0 1 6 0v3" /></svg>;
 }
 
 function Brand() {
@@ -121,16 +169,16 @@ function Hero() {
         <div className="hero-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> Order Now <Arrow /></Button><a className="text-link" href="#menu">Explore Menu <span className="link-arrow"><Arrow /></span></a></div>
       </div>
       <div className="hero-visual" aria-label="Malabar dum biriyani served with charcoal-grilled chicken">
-        <svg className="hero-brush" viewBox="0 0 820 760" preserveAspectRatio="none" aria-hidden="true"><path d="M118 112 C209 42 337 54 431 46 C554 36 671 64 734 145 C791 219 784 336 774 436 C764 545 738 628 645 664 C556 699 440 685 338 690 C224 695 122 701 65 633 C12 580 23 443 31 339 C39 237 37 174 118 112 Z" fill="#FFC414"/></svg>
+        <svg className="hero-brush" viewBox="0 0 820 760" preserveAspectRatio="none" aria-hidden="true"><path d="M118 112 C209 42 337 54 431 46 C554 36 671 64 734 145 C791 219 784 336 774 436 C764 545 738 628 645 664 C556 699 440 685 338 690 C224 695 122 701 65 633 C12 580 23 443 31 339 C39 237 37 174 118 112 Z" fill="#FFC414" /></svg>
         <img className="hero-brush-rim" data-ornament src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
         <span className="hero-food-shadow" aria-hidden="true" />
-        <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Malabar biriyani and grilled chicken in a Chillies takeaway bucket" fetchPriority="high" />
+        <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Authentic Malabar Dum Biriyani and charcoal grilled chicken in Chillies takeaway bucket in Wandoor, Kerala" fetchPriority="high" />
         <div className="hero-note hero-note-malay" data-draw><span>Malabar</span><strong>Dum Biriyani</strong><svg viewBox="0 0 110 48" aria-hidden="true"><path d="M4 8c20 1 30 31 61 23 13-3 23-15 37-18m-3 0 13-3-6 12" /></svg></div>
         <div className="hero-note hero-note-taste" data-draw><span>Same Great Taste</span><strong>Always!</strong><svg viewBox="0 0 120 24" aria-hidden="true"><path d="M3 16c32-14 78-12 114-4" /></svg></div>
         <img className="hero-spice-doodle" data-ornament src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
       </div>
       <img className="hero-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" />
-      <ul className="hero-side-list"><li><LineIcon name="utensils"/><span>Signature<br/>dishes</span></li><li><LineIcon name="leaf"/><span>Fresh<br/>ingredients</span></li><li><LineIcon name="users"/><span>Family<br/>friendly</span></li><li><LineIcon name="pin"/><span>Multiple<br/>locations</span></li></ul>
+      <ul className="hero-side-list"><li><LineIcon name="utensils" /><span>Signature<br />dishes</span></li><li><LineIcon name="leaf" /><span>Fresh<br />ingredients</span></li><li><LineIcon name="users" /><span>Family<br />friendly</span></li><li><LineIcon name="pin" /><span>Multiple<br />locations</span></li></ul>
       <span className="hero-bottom-note">Authentic Kerala flavours · Since 2009</span>
     </section>
   );
@@ -190,24 +238,24 @@ function MenuSection() {
   return (
     <section className="menu-section section-paper" id="menu">
       <div className="menu-pin-runway" ref={runwayRef}><div className="menu-stage">
-      <div className="section-heading menu-heading"><div data-reveal><p className="eyebrow" data-typewriter><i /> Our Menu <i /></p><h2>Flavours<br />for Every Mood<span className="red-dot">.</span></h2><p>From charcoal-grilled classics to comforting rice dishes,<br className="desktop-only" /> explore a menu made for every appetite.</p><Button href="https://chilliesgroup.com/menu.php">View Full Menu <Arrow /></Button></div><div className="menu-art" data-reveal><div className="hand-note">Real ingredients<br/><strong>Real taste!</strong><svg viewBox="0 0 130 32" aria-hidden="true" data-draw><path d="M3 20c36-18 79-18 120-8m-8 0 10-1-4 10"/></svg></div><img className="menu-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" /></div></div>
-      <div className="menu-carousel menu-train"><button className="carousel-arrow carousel-prev" onClick={() => moveCards(-1)} aria-label="Previous menu categories"><Arrow direction="left" /></button><div className="food-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.food-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveCard(nearest % menuItems.length); }}>
-        {[0, 1, 2, 3].flatMap((copy) => menuItems.map((item, i) => <a className="food-card" href="https://chilliesgroup.com/menu.php" key={`${copy}-${item.title}`} data-loop-copy={copy !== 1 ? 'true' : undefined} aria-hidden={copy !== 1} tabIndex={copy !== 1 ? -1 : 0} data-reveal={copy === 1 ? '' : undefined} style={{ '--reveal-order': i }}><img src={item.source ? officialAsset(item.source) : referenceAsset(item.image)} alt={copy === 1 ? item.alt : ''} loading="lazy" decoding="async" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset(item.image); }} /><div className="food-info"><h3>{item.title}</h3><p>{item.description}</p><span className="round-arrow"><Arrow /></span></div></a>))}
-      </div><button className="carousel-arrow carousel-next" onClick={() => moveCards(1)} aria-label="Next menu categories"><Arrow /></button><div className="carousel-dots" aria-label="Menu category pages">{menuItems.map((item, i) => <button key={item.title} className={activeCard === i ? 'active' : ''} aria-label={`Show ${item.title}`} onClick={() => scrollToCard(i)} />)}</div></div>
+        <div className="section-heading menu-heading"><div data-reveal><p className="eyebrow" data-typewriter><i /> Our Menu <i /></p><h2>Flavours<br />for Every Mood<span className="red-dot">.</span></h2><p>From charcoal-grilled classics to comforting rice dishes,<br className="desktop-only" /> explore a menu made for every appetite.</p><Button href="https://chilliesgroup.com/menu.php">View Full Menu <Arrow /></Button></div><div className="menu-art" data-reveal><div className="hand-note">Real ingredients<br /><strong>Real taste!</strong><svg viewBox="0 0 130 32" aria-hidden="true" data-draw><path d="M3 20c36-18 79-18 120-8m-8 0 10-1-4 10" /></svg></div><img className="menu-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" /></div></div>
+        <div className="menu-carousel menu-train"><button className="carousel-arrow carousel-prev" onClick={() => moveCards(-1)} aria-label="Previous menu categories"><Arrow direction="left" /></button><div className="food-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.food-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveCard(nearest % menuItems.length); }}>
+          {[0, 1, 2, 3].flatMap((copy) => menuItems.map((item, i) => <a className="food-card" href="https://chilliesgroup.com/menu.php" key={`${copy}-${item.title}`} data-loop-copy={copy !== 1 ? 'true' : undefined} aria-hidden={copy !== 1} tabIndex={copy !== 1 ? -1 : 0} data-reveal={copy === 1 ? '' : undefined} style={{ '--reveal-order': i }} itemScope itemType="https://schema.org/MenuItem"><meta itemProp="menuAddOn" content={item.category} /><img src={item.source ? officialAsset(item.source) : referenceAsset(item.image)} alt={copy === 1 ? item.alt : ''} loading="lazy" decoding="async" itemProp="image" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset(item.image); }} /><div className="food-info"><h3 itemProp="name">{item.title}</h3><p itemProp="description">{item.description}</p><span className="round-arrow" aria-label={`View ${item.title} menu`}><Arrow /></span></div></a>))}
+        </div><button className="carousel-arrow carousel-next" onClick={() => moveCards(1)} aria-label="Next menu categories"><Arrow /></button><div className="carousel-dots" aria-label="Menu category pages">{menuItems.map((item, i) => <button key={item.title} className={activeCard === i ? 'active' : ''} aria-label={`Show ${item.title}`} onClick={() => scrollToCard(i)} />)}</div></div>
       </div></div>
-      <div className="signature-band"><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Malabar Dum Biriyani with fresh accompaniments" loading="lazy" decoding="async"/><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src={generatedAsset('botanical-sprig.png')} alt=""/><img className="signature-art-image leaf-art" src={generatedAsset('heart-leaf-outline.png')} alt=""/></div><span>The taste<br/><b>that stays</b></span></div></div>
+      <div className="signature-band" itemScope itemType="https://schema.org/MenuItem"><meta itemProp="name" content="Malabar Dum Biriyani" /><meta itemProp="description" content="Aromatic rice, tender meat and authentic Malabar spices." /><img data-reveal src={generatedAsset('hero-biryani.webp')} alt="Signature Malabar Dum Biriyani at Chillies Restaurant Wandoor, Kerala" loading="lazy" decoding="async" itemProp="image" /><div data-reveal><p className="eyebrow" data-typewriter>Signature Dish</p><h2>Malabar<br />Dum <em>Biriyani</em></h2><p>A perfect blend of aromatic rice, tender meat<br className="desktop-only" /> and authentic spices — a taste that keeps<br className="desktop-only" /> bringing you back.</p><Button href="https://chilliesgroup.com/menu.php" variant="light">Explore Biriyani <Arrow /></Button></div><div className="signature-art" aria-hidden="true"><div className="signature-art-group"><img className="signature-art-image botanical-art" src={generatedAsset('botanical-sprig.png')} alt="" /><img className="signature-art-image leaf-art" src={generatedAsset('heart-leaf-outline.png')} alt="" /></div><span>The taste<br /><b>that stays</b></span></div></div>
     </section>
   );
 }
 
 function StorySection() {
   const values = [['leaf', 'Quality', 'ingredients'], ['chilli', 'Authentic', 'flavours'], ['users', 'Hygienic', 'preparation'], ['sun', 'Warm', 'ambience']];
-  const history = [['2009', 'First branch opens in Wandoor'], ['2019', 'Treatley fine dining opens'], ['2020', 'Cloud kitchen opens in Anchachavidi'], ['2021', 'Cloud kitchen becomes a fine dining restaurant'], ['2022', 'New launch at Pullikalodi'], ['2026', 'New launch at Diwali']];
+  const history = [['2009', 'First branch opens in Wandoor, Malappuram'], ['2019', 'Treatley fine dining opens in Wandoor'], ['2020', 'Cloud kitchen opens in Anchachavidi'], ['2021', 'Cloud kitchen becomes a fine dining restaurant in Anchachavidi'], ['2022', 'New launch at Pullikalodi'], ['2026', 'New launch at Thiruvalli']];
   return (
     <section className="story-section section-paper" id="story">
-      <div className="story-intro" data-reveal><p className="eyebrow" data-typewriter><i /> Why Chillies <i /></p><h2>More Than<br />Just a Meal<span className="red-dot">.</span></h2><p>Good food is always better when shared. At Chillies, we bring people together with flavours that feel like home.</p><div className="values">{values.map(([icon, title, detail]) => <span key={title}><LineIcon name={icon}/><span>{title}<br/>{detail}</span></span>)}</div></div>
-      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken prepared with fresh herbs and spices" loading="lazy" decoding="async"/></div>
-      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant dining room" loading="lazy" decoding="async"/></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From a single restaurant in 2009 to a growing family of locations, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal>{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
+      <div className="story-intro" data-reveal><p className="eyebrow" data-typewriter><i /> Why Chillies <i /></p><h2>More Than<br />Just a Meal<span className="red-dot">.</span></h2><p>Good food is always better when shared. At Chillies, we bring people together with authentic Malabar flavours that feel like home.</p><div className="values">{values.map(([icon, title, detail]) => <span key={title}><LineIcon name={icon} /><span>{title}<br />{detail}</span></span>)}</div></div>
+      <div className="story-photo-wrap" data-reveal><img src={generatedAsset('grilled-chicken.webp')} alt="Charcoal-grilled chicken and Al Faham prepared with fresh herbs and spices at Chillies Restaurant" loading="lazy" decoding="async" /></div>
+      <div className="story-bottom"><div className="story-bottom-photo" data-reveal><img src={generatedAsset('restaurant-interior.webp')} alt="Warmly lit Chillies restaurant family dining room in Wandoor, Kerala" loading="lazy" decoding="async" /></div><div className="story-bottom-copy" data-reveal><p className="eyebrow" data-typewriter>Our Story</p><h2>A Journey<br />of Great Food.</h2><p>From our first restaurant in Wandoor in 2009 to a growing family of branches across Kerala, Chillies has always been about great food and the people who bring it to the table.</p><Button href="https://chilliesgroup.com/about.php" variant="dark">Discover Our Story <Arrow /></Button></div><div className="timeline" data-reveal>{history.map(([year, text]) => <p key={year}><b>{year}</b><span>{text}</span></p>)}</div></div>
     </section>
   );
 }
@@ -233,25 +281,49 @@ function LocationsSection() {
         <div data-reveal>
           <p className="eyebrow" data-typewriter><i /> Our Locations <i /></p>
           <h2>Good Food,<br />Closer to <em>You.</em></h2>
-          <p>Visit one of our locations, check the details<br className="desktop-only"/> and get directions or call to order.</p>
+          <p>Visit one of our locations, check the details<br className="desktop-only" /> and get directions or call to order.</p>
         </div>
         <div className="locations-art" aria-hidden="true">
           <div className="locations-art-cluster">
-            <img className="locations-sprig" src={generatedAsset('botanical-sprig.png')} alt=""/>
-            <img className="locations-leaf" src={generatedAsset('heart-leaf-outline.png')} alt=""/>
-            <img className="locations-chilli" src={generatedAsset('chilli-outline.png')} alt=""/>
-            <img className="locations-spice" src={generatedAsset('star-anise-outline.png')} alt=""/>
+            <img className="locations-sprig" src={generatedAsset('botanical-sprig.png')} alt="" />
+            <img className="locations-leaf" src={generatedAsset('heart-leaf-outline.png')} alt="" />
+            <img className="locations-chilli" src={generatedAsset('chilli-outline.png')} alt="" />
+            <img className="locations-spice" src={generatedAsset('star-anise-outline.png')} alt="" />
           </div>
           <svg className="locations-route" viewBox="0 0 160 40" fill="none" data-draw>
-            <path d="M4 30C36 8 68 8 92 24s48 18 64-10m-10 2 10-2-4 10" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="92" cy="24" r="3.5" fill="#cf1028" stroke="white" strokeWidth="1.5"/>
+            <path d="M4 30C36 8 68 8 92 24s48 18 64-10m-10 2 10-2-4 10" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="92" cy="24" r="3.5" fill="#cf1028" stroke="white" strokeWidth="1.5" />
           </svg>
           <span className="locations-art-note">Serving 4 Hubs <i>✦</i></span>
         </div>
         <div className="map-note" data-reveal>Authentic flavours<br /><b>across Kerala</b></div>
       </div>
-      <div className="location-carousel"><button className="carousel-arrow carousel-prev" onClick={() => moveLocations(-1)} aria-label="Previous locations"><Arrow direction="left" /></button><div className="location-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.location-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveLocation(nearest); }}>{locations.map((place, i) => <article className="location-card" data-reveal style={{ '--reveal-order': i }} key={place.name}><img src={place.source === 'generated' ? generatedAsset(place.image) : referenceAsset(place.image)} alt={`Chillies ${place.name} restaurant`} loading="lazy" decoding="async"/><div className="location-info"><h3>{place.name}</h3><p>{place.address}</p><div><a href={`tel:${place.phone}`}>☎&nbsp; Call</a><a href={place.map} target="_blank" rel="noreferrer">📍&nbsp; Directions</a></div></div></article>)}</div><button className="carousel-arrow carousel-next" onClick={() => moveLocations(1)} aria-label="Next locations"><Arrow /></button><div className="carousel-dots" aria-label="Location pages">{Array.from({ length: locationCount }, (_, i) => <button key={i} className={activeLocation === i ? 'active' : ''} aria-label={`Show location ${i + 1}`} onClick={() => scrollToLocation(i)} />)}</div></div>
-      <div className="locations-ribbon"><img src={referenceAsset('location-sketch.webp')} alt="Hand-drawn Chillies storefront illustration from the design" loading="lazy" decoding="async"/><span>Great food<br /><b>in more places.</b></span><i><LineIcon name="pin"/>Strategic<br/>locations</i><i><LineIcon name="users"/>Easy<br/>accessibility</i><i><LineIcon name="utensils"/>Same great<br/>taste</i><i><LineIcon name="heart"/>A growing<br/>family</i></div>
+      <div className="location-carousel"><button className="carousel-arrow carousel-prev" onClick={() => moveLocations(-1)} aria-label="Previous locations"><Arrow direction="left" /></button><div className="location-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.location-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveLocation(nearest); }}>{locations.map((place, i) => (
+        <article className="location-card" data-reveal style={{ '--reveal-order': i }} key={place.name} itemScope itemType="https://schema.org/Restaurant">
+          <meta itemProp="name" content={`Chillies Restaurant - ${place.name}`} />
+          <meta itemProp="servesCuisine" content="Kerala, Malabar Biryani, Charcoal Grill" />
+          <meta itemProp="priceRange" content="₹₹" />
+          <div itemProp="geo" itemScope itemType="https://schema.org/GeoCoordinates" style={{ display: 'none' }}>
+            <meta itemProp="latitude" content={place.lat} />
+            <meta itemProp="longitude" content={place.lng} />
+          </div>
+          <img src={place.source === 'generated' ? generatedAsset(place.image) : referenceAsset(place.image)} alt={`Chillies Restaurant ${place.name} branch in Kerala - Malabar Biryani & Grills`} loading="lazy" decoding="async" itemProp="image" />
+          <div className="location-info">
+            <h3 itemProp="name">{place.name}</h3>
+            <p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+              <span itemProp="streetAddress">{place.address}</span>,{' '}
+              <span itemProp="addressLocality">{place.locality}</span>,{' '}
+              <span itemProp="addressRegion">{place.region}</span>{' '}
+              <span itemProp="postalCode">{place.postalCode}</span>
+            </p>
+            <div>
+              <a href={`tel:${place.phone}`} itemProp="telephone">☎&nbsp; Call</a>
+              <a href={place.map} target="_blank" rel="noreferrer" itemProp="hasMap">📍&nbsp; Directions</a>
+            </div>
+          </div>
+        </article>
+      ))}</div><button className="carousel-arrow carousel-next" onClick={() => moveLocations(1)} aria-label="Next locations"><Arrow /></button><div className="carousel-dots" aria-label="Location pages">{Array.from({ length: locationCount }, (_, i) => <button key={i} className={activeLocation === i ? 'active' : ''} aria-label={`Show location ${i + 1}`} onClick={() => scrollToLocation(i)} />)}</div></div>
+      <div className="locations-ribbon"><img src={referenceAsset('location-sketch.webp')} alt="Hand-drawn Chillies storefront illustration from the design" loading="lazy" decoding="async" /><span>Great food<br /><b>in more places.</b></span><i><LineIcon name="pin" />Strategic<br />locations</i><i><LineIcon name="users" />Easy<br />accessibility</i><i><LineIcon name="utensils" />Same great<br />taste</i><i><LineIcon name="heart" />A growing<br />family</i></div>
     </section>
   );
 }
@@ -275,7 +347,7 @@ function ReviewsSection() {
     const card = track?.querySelector('.review-card');
     if (card) track.scrollBy({ left: card.getBoundingClientRect().width + 14, behavior: 'smooth' });
   };
-  return <section className={`reviews-section${hasOverflow ? ' has-review-overflow' : ''}`}><div className="review-intro" data-reveal><p className="eyebrow" data-typewriter>What our customers say</p><h2>Flavours That<br />Create <em>Memories.</em></h2><p>From first visits to lifelong favourites,<br /> our guests share what makes Chillies special.</p></div><div className="review-track" id="review-track" ref={trackRef}>{reviews.map(review => <article className="review-card" key={review.name} data-reveal><div className="stars">★★★★★ <span>”</span></div><p>{review.quote}</p><div className="reviewer"><img src={referenceAsset(review.image)} alt="" loading="lazy" decoding="async"/><b>{review.name}<small>{review.role}</small></b></div></article>)}</div>{hasOverflow && <button className="review-next" aria-label="Show next reviews" onClick={moveReviews}>→</button>}</section>;
+  return <section className={`reviews-section${hasOverflow ? ' has-review-overflow' : ''}`}><div className="review-intro" data-reveal><p className="eyebrow" data-typewriter>What our customers say</p><h2>Flavours That<br />Create <em>Memories.</em></h2><p>From first visits to lifelong favourites,<br /> our guests share what makes Chillies special.</p></div><div className="review-track" id="review-track" ref={trackRef}>{reviews.map(review => <article className="review-card" key={review.name} data-reveal><div className="stars">★★★★★ <span>”</span></div><p>{review.quote}</p><div className="reviewer"><img src={referenceAsset(review.image)} alt="" loading="lazy" decoding="async" /><b>{review.name}<small>{review.role}</small></b></div></article>)}</div>{hasOverflow && <button className="review-next" aria-label="Show next reviews" onClick={moveReviews}>→</button>}</section>;
 }
 
 function Footer() {
@@ -290,8 +362,8 @@ function Footer() {
     event.currentTarget.reset();
   };
 
-  return <footer id="contact"><section className="footer-cta"><div data-reveal><h2>Hungry?<br/>Let’s Get You<br/>Something <em>Great.</em></h2><p>Call us or order through WhatsApp for a quick<br className="desktop-only"/> and delicious experience. Great food is always<br className="desktop-only"/> just a few clicks away.</p><div className="footer-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><BagIcon /> Order Now <Arrow /></Button><Button href={orderUrl} variant="outline" target="_blank" rel="noreferrer"><WhatsAppIcon /> Chat on WhatsApp <Arrow /></Button></div></div><img src={generatedAsset('hero-biryani.webp')} alt="A freshly prepared biriyani spread" loading="lazy" decoding="async" data-reveal/></section>
-    <div className="footer-main"><div className="footer-brand"><Brand /><p>Authentic flavours. Great food. Good people.</p><div className="socials"><a href="https://instagram.com/" aria-label="Follow Chillies on Instagram" target="_blank" rel="noreferrer"><InstagramIcon /></a><a href="https://facebook.com/chillies_restaurant_" aria-label="Chillies on Facebook" target="_blank" rel="noreferrer">f</a><a href={orderUrl} aria-label="Chillies on WhatsApp" target="_blank" rel="noreferrer"><WhatsAppIcon /></a><a href="https://maps.google.com/?q=Chillies+Restaurant+Wandoor" aria-label="Chillies on Maps" target="_blank" rel="noreferrer"><LineIcon name="pin" /></a></div></div><div className="footer-links"><h3>Quick Links</h3><a href="#top">Home</a><a href="#menu">Our Menu</a><a href="#story">Our Story</a><a href="#locations">Locations</a><a href="#contact">Contact</a></div><div className="footer-locations"><h3>Our Locations</h3><p>📍 &nbsp;Wandoor <small>Nilambur Road, opposite bus stand</small></p><p>📍 &nbsp;Anchachavidi <small>Near high school</small></p><p>📍 &nbsp;Pullikalodi <small>Main Road, Khadeeja Building</small></p><p>📍 &nbsp;Thiruvalli <small>Near Thiruvalli Panchayat</small></p></div><div className="footer-news"><h3>Stay Updated</h3><p>Get the latest updates, special offers<br/> and new dishes straight to your inbox.</p><form onSubmit={requestUpdates}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" placeholder="Enter your email address" autoComplete="email" required/><button type="submit" aria-label="Request email updates"><Arrow /></button></form><small role="status">{signupStatus}</small></div></div><div className="footer-bottom"><span>© 2026 Chillies Restaurant. All rights reserved.</span><span>Made with <b>♥</b> for food lovers</span></div>
+  return <footer id="contact"><section className="footer-cta"><div data-reveal><h2>Hungry?<br />Let’s Get You<br />Something <em>Great.</em></h2><p>Call us or order through WhatsApp for a quick<br className="desktop-only" /> and delicious experience. Great food is always<br className="desktop-only" /> just a few clicks away.</p><div className="footer-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><BagIcon /> Order Now <Arrow /></Button><Button href={orderUrl} variant="outline" target="_blank" rel="noreferrer"><WhatsAppIcon /> Chat on WhatsApp <Arrow /></Button></div></div><img src={generatedAsset('hero-biryani.webp')} alt="Freshly prepared Malabar Dum Biriyani spread with raita and pickle at Chillies Restaurant Kerala" loading="lazy" decoding="async" data-reveal /></section>
+    <div className="footer-main"><div className="footer-brand"><Brand /><p>Authentic flavours. Great food. Good people.</p><div className="socials"><a href="https://instagram.com/" aria-label="Follow Chillies on Instagram" target="_blank" rel="noreferrer"><InstagramIcon /></a><a href="https://facebook.com/chillies_restaurant_" aria-label="Chillies on Facebook" target="_blank" rel="noreferrer">f</a><a href={orderUrl} aria-label="Chillies on WhatsApp" target="_blank" rel="noreferrer"><WhatsAppIcon /></a><a href="https://maps.google.com/?q=Chillies+Restaurant+Wandoor" aria-label="Chillies on Maps" target="_blank" rel="noreferrer"><LineIcon name="pin" /></a></div></div><div className="footer-links"><h3>Quick Links</h3><a href="#top">Home</a><a href="#menu">Our Menu</a><a href="#story">Our Story</a><a href="#locations">Locations</a><a href="#contact">Contact</a></div><div className="footer-locations" itemScope itemType="https://schema.org/Organization"><meta itemProp="name" content="Chillies Restaurant Group" /><h3>Our Locations in Kerala</h3><p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">📍 &nbsp;<strong itemProp="addressLocality">Wandoor</strong> <small itemProp="streetAddress">Nilambur Road, opposite bus stand, Kerala 679328</small></p><p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">📍 &nbsp;<strong itemProp="addressLocality">Anchachavidi</strong> <small itemProp="streetAddress">Near high school, Kerala 676525</small></p><p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">📍 &nbsp;<strong itemProp="addressLocality">Pullikalodi</strong> <small itemProp="streetAddress">Main Road, Khadeeja Building, Kerala 676525</small></p><p itemProp="address" itemScope itemType="https://schema.org/PostalAddress">📍 &nbsp;<strong itemProp="addressLocality">Thiruvalli</strong> <small itemProp="streetAddress">Near Thiruvalli Panchayat, Kerala 679323</small></p></div><div className="footer-news"><h3>Stay Updated</h3><p>Get the latest updates, special offers<br /> and new dishes straight to your inbox.</p><form onSubmit={requestUpdates}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" placeholder="Enter your email address" autoComplete="email" required /><button type="submit" aria-label="Request email updates"><Arrow /></button></form><small role="status">{signupStatus}</small></div></div><div className="footer-bottom"><span>© 2026 Chillies Restaurant. All rights reserved.</span><span>Made with <b>♥</b> for food lovers</span></div>
   </footer>;
 }
 
@@ -695,15 +767,24 @@ export default function App() {
     const markImage = (image) => {
       if (!(image instanceof HTMLImageElement)) return;
       if (image.complete) {
-        image.dataset.mediaState = image.naturalWidth > 0 ? 'ready' : 'error';
+        const isReady = image.naturalWidth > 0;
+        image.dataset.mediaState = isReady ? 'ready' : 'error';
+        image.closest('.food-card, .location-card, .story-photo-wrap, .story-bottom-photo, .signature-band, .footer-cta')?.classList.toggle('has-loaded-image', isReady);
       } else {
         image.dataset.mediaState = 'loading';
+        image.closest('.food-card, .location-card, .story-photo-wrap, .story-bottom-photo, .signature-band, .footer-cta')?.classList.add('has-skeleton');
       }
     };
     document.querySelectorAll('img').forEach(markImage);
     const onImageEvent = (event) => {
       if (!(event.target instanceof HTMLImageElement)) return;
-      event.target.dataset.mediaState = event.type === 'load' ? 'ready' : 'error';
+      const isReady = event.type === 'load' && event.target.naturalWidth > 0;
+      event.target.dataset.mediaState = isReady ? 'ready' : 'error';
+      const parent = event.target.closest('.food-card, .location-card, .story-photo-wrap, .story-bottom-photo, .signature-band, .footer-cta');
+      if (parent) {
+        parent.classList.toggle('has-loaded-image', isReady);
+        parent.classList.remove('has-skeleton');
+      }
     };
     document.addEventListener('load', onImageEvent, true);
     document.addEventListener('error', onImageEvent, true);
