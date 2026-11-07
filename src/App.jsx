@@ -1044,9 +1044,6 @@ const INK_WINDOW = 0.04;
 
 function TilesLoader({
   minTime = 2.0,
-  font = { fontFamily: ED_SERIF },
-  background = '#FAF5E8', // Chillies --paper
-  accent = '#15120F',     // Chillies --ink
   onRevealStart,
   onComplete,
   style,
@@ -1060,6 +1057,9 @@ function TilesLoader({
   const paperRefs = useRef([]);
   const countRef = useRef(null);
   const numRef = useRef(null);
+  const chromeRef = useRef(null);
+  const barRef = useRef(null);
+  const phaseRef = useRef(null);
   tileRefs.current.length = paperRefs.current.length = count;
 
   const order = useRef([]);
@@ -1104,18 +1104,43 @@ function TilesLoader({
         const e = edInOutCubic(edSeg(reveal, d * 0.55, d * 0.55 + 0.45));
         tile.style.transform = `scale(${1 - e})`;
       }
+      const pct = Math.round(progress * 100);
+      const digits = String(pct);
       const num = numRef.current;
-      const digits = String(Math.round(progress * 100));
       if (num && num.textContent !== digits) num.textContent = digits;
+
+      // Update liquid gold-red progress bar
+      if (barRef.current) {
+        barRef.current.style.width = `${pct}%`;
+      }
+
+      // Update poetic culinary stage note
+      if (phaseRef.current) {
+        if (pct >= 85) phaseRef.current.textContent = 'മേശയിലേക്ക് സ്വാഗതം · Welcome to Chillies';
+        else if (pct >= 60) phaseRef.current.textContent = 'ദം ഇട്ട് കാത്തുവെച്ച ബിരിയാണി · Slow-simmering Kaima dum...';
+        else if (pct >= 30) phaseRef.current.textContent = 'കരിങ്കനലിൽ വേവുന്ന വിഭവങ്ങൾ · Wood-fired charcoal grills...';
+        else phaseRef.current.textContent = 'സുഗന്ധവ്യഞ്ജനങ്ങളുടെ മാന്ത്രികത · Infusing fresh Malabar spices...';
+      }
+
+      // Fade difference percentage and chrome smoothly as the diagonal reveal wave sweeps
+      const fadeFactor = edOutCubic(edSeg(t, 0.08, 0.7)) * (1 - edSeg(reveal, 0, 0.16));
       const label = countRef.current;
-      if (label) label.style.opacity = String(edOutCubic(edSeg(t, 0.1, 0.8)) * (1 - edSeg(reveal, 0, 0.15)));
+      if (label) label.style.opacity = String(fadeFactor);
+      const chrome = chromeRef.current;
+      if (chrome) chrome.style.opacity = String(fadeFactor);
     },
   };
 
   useEditorialLoader(rootRef, sceneRef, optsRef);
 
   return (
-    <div ref={rootRef} style={edRootStyle(style)} role="status" aria-label="Loading Chillies Restaurant website">
+    <div
+      ref={rootRef}
+      style={edRootStyle(style)}
+      role="status"
+      aria-label="Loading Chillies Restaurant website"
+    >
+      {/* Procedural Inking Grid */}
       {Array.from({ length: count }, (_, i) => {
         const c = i % cols;
         const r = Math.floor(i / cols);
@@ -1131,20 +1156,27 @@ function TilesLoader({
               top: `${(r * 100) / rows}%`,
               width: `calc(${100 / cols}% + 1px)`,
               height: `calc(${100 / rows}% + 1px)`,
-              background: accent,
+              background: '#15120F', // Website --ink color
             }}
           >
+            {/* Paper Face with Website Stippled Dot Texture */}
             <div
               ref={(el) => {
                 paperRefs.current[i] = el;
               }}
-              style={{ position: 'absolute', inset: 0, background }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: '#FAF5E8', // Website --paper color
+                backgroundImage: 'radial-gradient(rgba(143, 111, 66, 0.16) 0.55px, transparent 0.7px)',
+                backgroundSize: '5px 5px',
+              }}
             />
           </div>
         );
       })}
 
-      {/* Difference blend against the tiles: reads dark on bare tiles and light on inked ones */}
+      {/* Center Giant Difference Blend Percentage Counter */}
       <div
         ref={countRef}
         aria-hidden="true"
@@ -1156,46 +1188,152 @@ function TilesLoader({
           alignItems: 'center',
           justifyContent: 'center',
           mixBlendMode: 'difference',
-          color: '#fff',
+          color: '#ffffff',
           pointerEvents: 'none',
           whiteSpace: 'nowrap',
-          ...edFont(font, ED_SERIF),
-          fontSize: 'min(30cqh, 40cqw)',
+          fontFamily: "'Cormorant Garamond', Georgia, serif", // Website --serif
+          fontSize: 'min(32cqh, 42cqw)',
+          fontWeight: 700,
+          letterSpacing: '-0.06em',
+          lineHeight: 0.86,
           fontVariantNumeric: 'tabular-nums',
           opacity: 0,
         }}
       >
-        <div
-          style={{
-            fontSize: 'min(3.2cqh, 3.8cqw)',
-            fontFamily: ED_SANS,
-            fontWeight: 800,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            marginBottom: '0.12em',
-            opacity: 0.88,
-          }}
-        >
-          CHILLIES RESTAURANT · EST. 2009
+        <span style={{ display: 'inline-flex', alignItems: 'flex-start' }}>
+          <span ref={numRef}>0</span>
+          <span
+            style={{
+              fontSize: '0.32em',
+              fontStyle: 'italic',
+              fontWeight: 600,
+              marginTop: '0.82em',
+              marginLeft: '0.06em',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+            }}
+          >
+            %
+          </span>
+        </span>
+      </div>
+
+      {/* Brand Chrome Layer in Exact Chillies Palette (Red, Saffron Yellow, Paper, Ink) */}
+      <div
+        ref={chromeRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: 'clamp(24px, 4.5vh, 48px) clamp(20px, 4vw, 40px)',
+          pointerEvents: 'none',
+          zIndex: 4,
+          opacity: 0,
+          transition: 'opacity 0.25s ease',
+        }}
+      >
+        {/* Top Eyebrow in Chillies Crimson Red & Personal Cursive Note */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', textAlign: 'center' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '12px',
+              color: 'var(--red, #cf1028)', // Website --red
+              fontFamily: "'DM Sans', Arial, sans-serif", // Website --sans
+              fontSize: 'clamp(11px, 1.4vw, 13px)',
+              fontWeight: 800,
+              letterSpacing: '0.28em',
+              textTransform: 'uppercase',
+            }}
+          >
+            <span>✦</span>
+            <span>CHILLIES RESTAURANT · EST. 2009</span>
+            <span>✦</span>
+          </div>
+          <span
+            style={{
+              fontFamily: "'Caveat', cursive", // Website handwritten cursive
+              fontSize: 'clamp(17px, 2.3vw, 22px)',
+              color: '#8a6038',
+              letterSpacing: '0.02em',
+            }}
+          >
+            Slow-simmered dum, wood-fired charcoal grills & authentic coastal flavours
+          </span>
         </div>
 
-        <span style={{ display: 'inline-flex', alignItems: 'flex-start' }}>
-          <span ref={numRef} />
-          <span style={{ fontSize: '0.3em', fontStyle: 'italic', marginTop: '0.9em', marginLeft: '0.08em' }}>%</span>
-        </span>
-
+        {/* Center Progress Meter Bar in Turmeric Gold & Crimson Red */}
         <div
           style={{
-            fontSize: 'min(2.6cqh, 3.2cqw)',
-            fontFamily: ED_SANS,
-            fontWeight: 700,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            marginTop: '0.25em',
-            opacity: 0.8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '10px',
+            marginTop: 'min(30cqh, 38cqw)',
           }}
         >
-          AUTHENTIC MALABAR CUISINE
+          <div
+            style={{
+              width: 'clamp(190px, 28vw, 320px)',
+              height: '4px',
+              borderRadius: '999px',
+              background: 'rgba(47, 35, 20, 0.15)',
+              overflow: 'hidden',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.12)',
+            }}
+          >
+            <div
+              ref={barRef}
+              style={{
+                width: '0%',
+                height: '100%',
+                borderRadius: 'inherit',
+                background: 'linear-gradient(90deg, #ffc414 0%, #cf1028 100%)', // Website --yellow to --red
+                boxShadow: '0 0 10px rgba(207, 16, 40, 0.5)',
+                transition: 'width 0.1s linear',
+              }}
+            />
+          </div>
+          <div
+            ref={phaseRef}
+            style={{
+              fontFamily: "'Caveat', cursive",
+              fontSize: 'clamp(16px, 2.2vw, 20px)',
+              color: '#5e5a54', // Website --muted
+              letterSpacing: '0.02em',
+            }}
+          >
+            സുഗന്ധവ്യഞ്ജനങ്ങളുടെ മാന്ത്രികത · Infusing fresh Malabar spices...
+          </div>
+        </div>
+
+        {/* Bottom Locations Footer in DM Sans and Chillies Red */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            gap: 'clamp(8px, 1.8vw, 16px)',
+            fontFamily: "'DM Sans', Arial, sans-serif", // Website --sans
+            fontSize: 'clamp(9.5px, 1.2vw, 11.5px)',
+            fontWeight: 800,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#8a6038',
+          }}
+        >
+          <span>WANDOOR</span>
+          <span style={{ color: 'var(--red, #cf1028)', fontSize: '12px' }}>·</span>
+          <span>ANCHACHAVIDI</span>
+          <span style={{ color: 'var(--red, #cf1028)', fontSize: '12px' }}>·</span>
+          <span>PULLIKALODI</span>
+          <span style={{ color: 'var(--red, #cf1028)', fontSize: '12px' }}>·</span>
+          <span>THIRUVALLI</span>
         </div>
       </div>
     </div>
