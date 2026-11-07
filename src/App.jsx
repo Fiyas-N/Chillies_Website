@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -862,318 +862,348 @@ function useScrollMotion(heroReady = false) {
   return lenisRef;
 }
 
-function CinematicLoader({ onRevealStart, onComplete }) {
-  const [progress, setProgress] = useState(0);
-  const [stepIndex, setStepIndex] = useState(0);
-  const canvasRef = useRef(null);
-  const loaderRef = useRef(null);
-  const cardRef = useRef(null);
-  const particlesRef = useRef([]);
+// ============================================================================
+// Tiles Loader — Originkit (adapted for Chillies Malabar Theme)
+// ============================================================================
+const ED_FADE_S = 0.35;
+const ED_SERIF = '"Cormorant Garamond", Georgia, serif';
+const ED_SANS = '"DM Sans", Arial, sans-serif';
 
-  const steps = [
-    {
-      kicker: 'MALABAR CULINARY ARCHIVE · 01',
-      malayalam: 'സുഗന്ധവ്യഞ്ജനങ്ങളുടെ മാന്ത്രികത',
-      english: 'Hand-crushing green cardamom, star anise & tellicherry peppercorns',
-    },
-    {
-      kicker: 'MALABAR CULINARY ARCHIVE · 02',
-      malayalam: 'കനലിൽ വേവുന്ന ദം ബിരിയാണി',
-      english: 'Slow-simmering fragrant Kaima rice in copper degs on coconut husk coals',
-    },
-    {
-      kicker: 'MALABAR CULINARY ARCHIVE · 03',
-      malayalam: 'കരിങ്കനലിൽ ചുട്ടെടുത്ത വിഭവങ്ങൾ',
-      english: 'Sizzling charcoal Al Faham, smokey grills & fresh rumali rolls',
-    },
-    {
-      kicker: 'MALABAR CULINARY ARCHIVE · 04',
-      malayalam: 'മേശയിലേക്ക് സ്വാഗതം',
-      english: 'The feast is prepared with love. Welcome to Chillies.',
-    },
-  ];
+function edRand(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
-  // Interactive Saffron & Spice Pollen Canvas Simulation on Parchment
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animationId;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+/** Simulated load: seeded asset chunks landing at uneven times; exactly 1 at loadS. */
+function edLoadCurve(seed, loadS) {
+  const r = edRand(seed);
+  const k = Math.min(1, loadS / 4.4);
+  const chunks = [];
+  let total = 0;
+  for (let i = 0; i < 7; i++) {
+    const size = 0.4 + r() * 1.2;
+    chunks.push({ size, start: r() * 0.78 * loadS, len: (0.25 + r() * 0.9) * k });
+    total += size;
+  }
+  chunks.push({ size: total * 0.12, start: loadS - 0.45 * k, len: 0.45 * k });
+  total *= 1.12;
+  return (t) => {
+    if (t >= loadS) return 1;
+    let p = 0;
+    for (const c of chunks) {
+      const x = Math.min(1, Math.max(0, (t - c.start) / Math.max(1e-3, c.len)));
+      p += c.size * x * x * (3 - 2 * x);
+    }
+    return Math.min(0.999, p / total);
+  };
+}
 
-    const onResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', onResize);
+/** Real document load, 0..1. Images and fonts pull it up; the window load event finishes it. */
+function edRealLoad() {
+  if (typeof document === 'undefined') return 1;
+  if (document.readyState === 'complete') return 1;
+  const imgs = document.images;
+  let done = 0;
+  for (let i = 0; i < imgs.length; i++) if (imgs[i].complete) done++;
+  const frac = imgs.length ? done / imgs.length : 1;
+  const fonts = document.fonts && document.fonts.status === 'loaded' ? 1 : 0;
+  return Math.min(0.95, 0.15 + 0.6 * frac + 0.2 * fonts);
+}
 
-    // Subtle drifting saffron and golden spice specks
-    const spiceColors = ['#cf1028', '#c89b3c', '#d4af37', '#b83a22', '#8c6527'];
-    const ambientFlecks = Array.from({ length: 32 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 2 + 1,
-      speedY: Math.random() * 0.45 + 0.15,
-      speedX: (Math.random() - 0.5) * 0.3,
-      angle: Math.random() * Math.PI * 2,
-      wobbleSpeed: Math.random() * 0.02 + 0.01,
-      opacity: Math.random() * 0.35 + 0.12,
-      color: spiceColors[Math.floor(Math.random() * spiceColors.length)],
-    }));
+const edClamp = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const edSeg = (x, a, b) => edClamp((x - a) / Math.max(1e-6, b - a));
+const edOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+const edInOutCubic = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
-    // Interactive pointer/touch spice trail
-    const onPointerMove = (e) => {
-      const x = e.clientX ?? (e.touches && e.touches[0]?.clientX);
-      const y = e.clientY ?? (e.touches && e.touches[0]?.clientY);
-      if (x === undefined || y === undefined) return;
+function edFont(font, fallbackFamily) {
+  const f = font || {};
+  return {
+    fontFamily: f.fontFamily || fallbackFamily,
+    fontWeight: f.fontWeight ?? 600,
+    fontStyle: f.fontStyle || 'normal',
+    letterSpacing: f.letterSpacing ?? '-0.03em',
+    lineHeight: f.lineHeight ?? 1,
+  };
+}
 
-      for (let i = 0; i < 2; i++) {
-        particlesRef.current.push({
-          x: x + (Math.random() - 0.5) * 12,
-          y: y + (Math.random() - 0.5) * 12,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2 - 0.4,
-          size: Math.random() * 2.4 + 1.2,
-          color: Math.random() > 0.4 ? '#c89b3c' : '#cf1028',
-          life: 0,
-          maxLife: 26 + Math.random() * 14,
-        });
+function edRootStyle(style) {
+  return {
+    position: 'fixed',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 9999999,
+    overflow: 'hidden',
+    containerType: 'size',
+    isolation: 'isolate',
+    pointerEvents: 'auto',
+    ...style,
+  };
+}
+
+const useEdLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+function useEditorialLoader(rootRef, sceneRef, optsRef) {
+  useEdLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const reduced =
+      typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = root.offsetWidth;
+    let h = root.offsetHeight;
+    let t = 0;
+    let progress = 0;
+    let revealAt = -1;
+    let finished = false;
+    let revealTriggered = false;
+    let loadS = reduced ? 0.6 : Math.max(0.5, optsRef.current.minTime);
+    let curve = edLoadCurve(7, loadS);
+
+    const draw = (dt) => {
+      const revealS = reduced ? 0.4 : sceneRef.current.revealS;
+      const reveal = revealAt < 0 ? 0 : edClamp((t - revealAt) / revealS);
+      const phase = revealAt < 0 ? 'loading' : reveal < 1 ? 'reveal' : 'page';
+      try {
+        sceneRef.current.frame({ t, dt, progress, reveal, phase, w, h });
+      } catch (e) {
+        console.error(e);
       }
     };
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('touchmove', onPointerMove, { passive: true });
 
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
+    const restart = () => {
+      loadS = reduced ? 0.6 : Math.max(0.5, optsRef.current.minTime);
+      curve = edLoadCurve(7, loadS);
+      t = 0;
+      progress = 0;
+      revealAt = -1;
+      const s = sceneRef.current;
+      if (s.reset) s.reset();
+    };
+    restart();
+    draw(0);
 
-      // Ambient specks
-      ambientFlecks.forEach((p) => {
-        p.angle += p.wobbleSpeed;
-        p.y += p.speedY;
-        p.x += p.speedX + Math.sin(p.angle) * 0.3;
+    const ro = new ResizeObserver(() => {
+      w = root.offsetWidth;
+      h = root.offsetHeight;
+      if (!finished) draw(0);
+    });
+    ro.observe(root);
 
-        if (p.y > height + 10) {
-          p.y = -10;
-          p.x = Math.random() * width;
-        }
-        if (p.x < -10) p.x = width + 10;
-        else if (p.x > width + 10) p.x = -10;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.opacity;
-        ctx.fill();
-      });
-
-      // Pointer trail
-      const list = particlesRef.current;
-      for (let i = list.length - 1; i >= 0; i--) {
-        const pt = list[i];
-        pt.life++;
-        pt.x += pt.vx;
-        pt.y += pt.vy;
-        pt.vy += 0.03;
-        pt.size *= 0.96;
-
-        const progressVal = pt.life / pt.maxLife;
-        if (progressVal >= 1 || pt.size <= 0.2) {
-          list.splice(i, 1);
-          continue;
-        }
-
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
-        ctx.fillStyle = pt.color;
-        ctx.globalAlpha = (1 - progressVal) * 0.55;
-        ctx.fill();
+    let raf = 0;
+    let last = -1;
+    const tick = (now) => {
+      const dt = last < 0 ? 0 : Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      const revealS = reduced ? 0.4 : sceneRef.current.revealS;
+      if (revealAt < 0) {
+        const target = Math.min(curve(t), edRealLoad());
+        progress = target >= 1 ? 1 : Math.min(target, progress + dt * 1.5);
+        if (progress >= 1 && t >= loadS) revealAt = t;
       }
 
-      ctx.globalAlpha = 1;
-      animationId = requestAnimationFrame(render);
+      if (revealAt >= 0 && !revealTriggered) {
+        revealTriggered = true;
+        optsRef.current.onRevealStart && optsRef.current.onRevealStart();
+      }
+
+      draw(dt);
+
+      if (revealAt >= 0 && t - revealAt >= revealS) {
+        finished = true;
+        root.style.transition = `opacity ${ED_FADE_S}s ease`;
+        root.style.opacity = '0';
+        root.style.pointerEvents = 'none';
+        window.setTimeout(() => {
+          root.style.visibility = 'hidden';
+        }, ED_FADE_S * 1000);
+        optsRef.current.onComplete && optsRef.current.onComplete();
+        return;
+      }
+      raf = requestAnimationFrame(tick);
     };
-    render();
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener('resize', onResize);
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('touchmove', onPointerMove);
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(raf);
+      ro.disconnect();
     };
   }, []);
+}
 
-  // Smooth numerical count and progress increments
+const REVEAL_S = 1.6;
+const SHORT_SIDE = 7;
+const INK_WINDOW = 0.04;
+
+function TilesLoader({
+  minTime = 2.0,
+  font = { fontFamily: ED_SERIF },
+  background = '#FAF5E8', // Chillies --paper
+  accent = '#15120F',     // Chillies --ink
+  onRevealStart,
+  onComplete,
+  style,
+}) {
+  const [grid, setGrid] = useState({ cols: 11, rows: 7 });
+  const { cols, rows } = grid;
+  const count = cols * rows;
+
+  const rootRef = useRef(null);
+  const tileRefs = useRef([]);
+  const paperRefs = useRef([]);
+  const countRef = useRef(null);
+  const numRef = useRef(null);
+  tileRefs.current.length = paperRefs.current.length = count;
+
+  const order = useRef([]);
+  if (order.current.length !== count) {
+    const r = edRand(count * 7919 + 13);
+    order.current = Array.from({ length: count }, () => r() * (1 - INK_WINDOW));
+  }
+
   useEffect(() => {
-    const startTime = performance.now();
-    const duration = 2800; // 2.8 seconds - crisp, polite, memorable
-    let frameId;
-    let hasTriggeredReveal = false;
-
-    const tick = (now) => {
-      const elapsed = now - startTime;
-      const rawProgress = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(rawProgress);
-
-      if (rawProgress >= 76) setStepIndex(3);
-      else if (rawProgress >= 51) setStepIndex(2);
-      else if (rawProgress >= 26) setStepIndex(1);
-      else setStepIndex(0);
-
-      if (elapsed < duration) {
-        frameId = requestAnimationFrame(tick);
-      } else if (!hasTriggeredReveal) {
-        hasTriggeredReveal = true;
-
-        if (loaderRef.current) {
-          const tl = gsap.timeline({
-            onComplete: () => {
-              onComplete?.();
-            },
-          });
-
-          // 1. Heritage postcard lifts and scales smoothly
-          tl.to(cardRef.current, {
-            y: -22,
-            scale: 0.97,
-            autoAlpha: 0,
-            duration: 0.42,
-            ease: 'power3.in',
-          });
-
-          // 2. Vintage framing lines slide out
-          tl.to('.heritage-frame-line-top, .heritage-frame-line-bottom', {
-            scaleX: 0,
-            duration: 0.32,
-            ease: 'power2.inOut',
-          }, '<');
-
-          // 3. Whole loader screen dissolves smoothly into the matching paper page
-          tl.to(loaderRef.current, {
-            autoAlpha: 0,
-            duration: 0.38,
-            ease: 'power2.out',
-          }, '-=0.12');
-
-          // 4. Trigger hero animation seamlessly
-          tl.call(() => {
-            onRevealStart?.();
-          }, null, '-=0.32');
-        } else {
-          onRevealStart?.();
-          onComplete?.();
-        }
-      }
+    const root = rootRef.current;
+    if (!root) return;
+    const fit = () => {
+      const w = root.offsetWidth;
+      const h = root.offsetHeight;
+      if (!w || !h) return;
+      const cell = Math.min(w, h) / SHORT_SIDE;
+      const next = { cols: Math.max(1, Math.round(w / cell)), rows: Math.max(1, Math.round(h / cell)) };
+      setGrid((g) => (g.cols === next.cols && g.rows === next.rows ? g : next));
     };
-    frameId = requestAnimationFrame(tick);
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, []);
 
-    return () => cancelAnimationFrame(frameId);
-  }, [onRevealStart, onComplete]);
+  const optsRef = useRef({ minTime, onRevealStart, onComplete });
+  optsRef.current = { minTime, onRevealStart, onComplete };
+
+  const sceneRef = useRef({ revealS: REVEAL_S, frame() {} });
+  sceneRef.current = {
+    revealS: REVEAL_S,
+    frame({ t, progress, reveal }) {
+      const u = order.current;
+      for (let i = 0; i < count; i++) {
+        const paper = paperRefs.current[i];
+        if (paper) paper.style.opacity = String(1 - edSeg(progress, u[i], u[i] + INK_WINDOW));
+        const tile = tileRefs.current[i];
+        if (!tile) continue;
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+        const d = 0.5 * (cols > 1 ? c / (cols - 1) : 0) + 0.5 * (rows > 1 ? (rows - 1 - r) / (rows - 1) : 0);
+        const e = edInOutCubic(edSeg(reveal, d * 0.55, d * 0.55 + 0.45));
+        tile.style.transform = `scale(${1 - e})`;
+      }
+      const num = numRef.current;
+      const digits = String(Math.round(progress * 100));
+      if (num && num.textContent !== digits) num.textContent = digits;
+      const label = countRef.current;
+      if (label) label.style.opacity = String(edOutCubic(edSeg(t, 0.1, 0.8)) * (1 - edSeg(reveal, 0, 0.15)));
+    },
+  };
+
+  useEditorialLoader(rootRef, sceneRef, optsRef);
 
   return (
-    <aside className="heritage-loader section-paper" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
-      <canvas className="heritage-canvas" ref={canvasRef} aria-hidden="true" />
-
-      {/* Decorative Archival Corner Ticks & Framing Lines */}
-      <div className="heritage-frame-border" aria-hidden="true">
-        <span className="heritage-corner heritage-corner-tl">┏</span>
-        <span className="heritage-corner heritage-corner-tr">┓</span>
-        <span className="heritage-corner heritage-corner-bl">┗</span>
-        <span className="heritage-corner heritage-corner-br">┛</span>
-        <div className="heritage-frame-line heritage-frame-line-top" />
-        <div className="heritage-frame-line heritage-frame-line-bottom" />
-      </div>
-
-      {/* Centerpiece: The Malabar Heritage Postcard Card */}
-      <div className="heritage-card" ref={cardRef}>
-        {/* Top Eyebrow Tag */}
-        <div className="heritage-card-header">
-          <p className="eyebrow"><i /> EST. 2009 · MALABAR CULINARY TRADITION <i /></p>
-          <span className="heritage-hand-note">A taste of home, slow-cooked with care</span>
-        </div>
-
-        {/* Illustrated Architectural & Spice Vignette */}
-        <div className="heritage-vignette-wrap">
-          {/* Saffron / Turmeric Wash (Identical to .hero-yellow) */}
-          <div className="heritage-yellow-wash" aria-hidden="true" />
-
-          {/* Hand-Drawn Restaurant Building Sketch */}
-          <img
-            className="heritage-sketch"
-            src={referenceAsset('location-sketch.webp')}
-            alt="Chillies Restaurant Hand-Drawn Ink Sketch with Palm Trees"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = referenceAsset('location-sketch.png');
+    <div ref={rootRef} style={edRootStyle(style)} role="status" aria-label="Loading Chillies Restaurant website">
+      {Array.from({ length: count }, (_, i) => {
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+        return (
+          <div
+            key={`${cols}x${rows}-${i}`}
+            ref={(el) => {
+              tileRefs.current[i] = el;
             }}
-          />
-
-          {/* Rotating Hand-Drawn Star Anise Doodle */}
-          <div className="heritage-spice-rotate" aria-hidden="true">
-            <img
-              src={generatedAsset('star-anise-outline.png')}
-              alt=""
-              className="heritage-star-anise"
+            style={{
+              position: 'absolute',
+              left: `${(c * 100) / cols}%`,
+              top: `${(r * 100) / rows}%`,
+              width: `calc(${100 / cols}% + 1px)`,
+              height: `calc(${100 / rows}% + 1px)`,
+              background: accent,
+            }}
+          >
+            <div
+              ref={(el) => {
+                paperRefs.current[i] = el;
+              }}
+              style={{ position: 'absolute', inset: 0, background }}
             />
           </div>
+        );
+      })}
 
-          {/* Official Red Wax / Rubber Stamp Seal */}
-          <img
-            className="heritage-red-stamp"
-            src={referenceAsset('hero-good-food-stamp.webp')}
-            alt="Chillies Authentic Taste Stamp"
-            aria-hidden="true"
-          />
+      {/* Difference blend against the tiles: reads dark on bare tiles and light on inked ones */}
+      <div
+        ref={countRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mixBlendMode: 'difference',
+          color: '#fff',
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          ...edFont(font, ED_SERIF),
+          fontSize: 'min(30cqh, 40cqw)',
+          fontVariantNumeric: 'tabular-nums',
+          opacity: 0,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 'min(3.2cqh, 3.8cqw)',
+            fontFamily: ED_SANS,
+            fontWeight: 800,
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            marginBottom: '0.12em',
+            opacity: 0.88,
+          }}
+        >
+          CHILLIES RESTAURANT · EST. 2009
         </div>
 
-        {/* Brand Name Typography */}
-        <div className="heritage-brand-row">
-          <img
-            className="heritage-brand-logo"
-            src={officialAsset('chillies-logo.png')}
-            alt="Chillies Restaurant"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = referenceAsset('logo-board.webp');
-            }}
-          />
-        </div>
+        <span style={{ display: 'inline-flex', alignItems: 'flex-start' }}>
+          <span ref={numRef} />
+          <span style={{ fontSize: '0.3em', fontStyle: 'italic', marginTop: '0.9em', marginLeft: '0.08em' }}>%</span>
+        </span>
 
-        {/* Grand Editorial Cormorant Garamond Counter */}
-        <div className="heritage-counter-row">
-          <span className="heritage-counter-digits">{progress.toString().padStart(2, '0')}</span>
-          <span className="heritage-counter-unit">%</span>
-        </div>
-
-        {/* Artisanal Malabar Progress Track */}
-        <div className="heritage-meter-track" aria-hidden="true">
-          <div className="heritage-meter-fill" style={{ width: `${progress}%` }}>
-            <span className="heritage-meter-seed">✦</span>
-          </div>
-        </div>
-
-        {/* Poetic Stage Description with Malayalam Script */}
-        <div className="heritage-narrative-box" key={stepIndex}>
-          <span className="heritage-narrative-kicker">{steps[stepIndex].kicker}</span>
-          <h3 className="heritage-narrative-malayalam">{steps[stepIndex].malayalam}</h3>
-          <p className="heritage-narrative-english">{steps[stepIndex].english}</p>
-        </div>
-
-        {/* Bottom Editorial Coordinates */}
-        <div className="heritage-footer-row">
-          <span>WANDOOR</span>
-          <span className="heritage-sep">·</span>
-          <span>ANCHACHAVIDI</span>
-          <span className="heritage-sep">·</span>
-          <span>PULLIKALODI</span>
-          <span className="heritage-sep">·</span>
-          <span>THIRUVALLI</span>
+        <div
+          style={{
+            fontSize: 'min(2.6cqh, 3.2cqw)',
+            fontFamily: ED_SANS,
+            fontWeight: 700,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            marginTop: '0.25em',
+            opacity: 0.8,
+          }}
+        >
+          AUTHENTIC MALABAR CUISINE
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
+
+// Keep CinematicLoader alias for backwards compatibility
+const CinematicLoader = TilesLoader;
 
 export default function App() {
   const [loaderMounted, setLoaderMounted] = useState(() => {
