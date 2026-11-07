@@ -323,7 +323,29 @@ function LocationsSection() {
           </div>
         </article>
       ))}</div><button className="carousel-arrow carousel-next" onClick={() => moveLocations(1)} aria-label="Next locations"><Arrow /></button><div className="carousel-dots" aria-label="Location pages">{Array.from({ length: locationCount }, (_, i) => <button key={i} className={activeLocation === i ? 'active' : ''} aria-label={`Show location ${i + 1}`} onClick={() => scrollToLocation(i)} />)}</div></div>
-      <div className="locations-ribbon"><img src={referenceAsset('location-sketch.webp')} alt="Hand-drawn architectural sketch of Chillies Restaurant storefront with palm trees" loading="lazy" decoding="async" /><span>Great food<br /><b>in more places.</b></span><i><LineIcon name="pin" />Strategic<br />locations</i><i><LineIcon name="users" />Easy<br />accessibility</i><i><LineIcon name="utensils" />Same great<br />taste</i><i><LineIcon name="heart" />A growing<br />family</i></div>
+      <div className="locations-ribbon">
+        <div className="ribbon-sketch-wrap">
+          <img
+            src={referenceAsset('location-sketch.png?v=4')}
+            alt="Hand-drawn architectural sketch of Chillies Restaurant storefront with palm trees"
+            loading="lazy"
+            decoding="async"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = referenceAsset('location-sketch.webp');
+            }}
+          />
+        </div>
+        <div className="ribbon-content">
+          <span className="ribbon-tagline">Great food<br /><b>in more places.</b></span>
+          <div className="ribbon-features">
+            <i><LineIcon name="pin" /><span>Strategic<br />locations</span></i>
+            <i><LineIcon name="users" /><span>Easy<br />accessibility</span></i>
+            <i><LineIcon name="utensils" /><span>Same great<br />taste</span></i>
+            <i><LineIcon name="heart" /><span>A growing<br />family</span></i>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

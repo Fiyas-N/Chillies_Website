@@ -1010,9 +1010,192 @@ img[data-media-state="error"]{
 /* Prevent art layers and adjacent section colors from bleeding into content at resized widths. */
 .hero:before,.hero:after{display:none!important;}
 .locations-section{padding-bottom:clamp(30px,4vw,56px);}
-.locations-ribbon>img{clip-path:none!important;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(80,50,15,0.09));}
-@media(min-width:761px) and (max-width:900px){
-  .locations-ribbon{grid-template-columns:minmax(0,1.15fr) repeat(4,minmax(0,1fr))!important;}
+
+/* ==========================================================================
+   LOCATIONS RIBBON - WIDE ARCHITECTURAL SHOWCASE SKETCH
+   ========================================================================== */
+.locations-ribbon{
+  position:relative;
+  z-index:2;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:clamp(16px, 2.5vw, 36px) !important;
+  min-height:clamp(185px, 16vw, 230px);
+  margin:28px -5.8% 0 !important;
+  padding:20px clamp(24px, 5.2%, 56px) !important;
+  background:transparent !important;
+  clip-path:none !important;
+  overflow:visible !important;
+}
+
+/* Wavy / torn paper yellow background rendered on pseudo-element so the sketch is NEVER clipped */
+.locations-ribbon::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--yellow);
+  clip-path:polygon(0 12%, 16% 6%, 32% 12%, 48% 5%, 67% 11%, 84% 4%, 100% 11%, 100% 91%, 84% 97%, 67% 90%, 49% 97%, 32% 90%, 16% 98%, 0 91%);
+  z-index:1;
+  pointer-events:none;
+}
+
+/* Sketch Wrapper - Unclipped, elevated, crisp storefront illustration */
+.ribbon-sketch-wrap{
+  position:relative;
+  z-index:2;
+  flex:0 0 clamp(280px, 34vw, 480px) !important;
+  max-width:480px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  margin-top:-10px; /* Slight lift allowing palm trees to rise above yellow ribbon naturally */
+}
+.ribbon-sketch-wrap img,
+.locations-ribbon > img{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  max-height:clamp(140px, 15vw, 205px) !important;
+  object-fit:contain !important;
+  object-position:left center !important;
+  clip-path:none !important;
+  filter:drop-shadow(0 6px 18px rgba(60,35,10,0.12)) !important;
+  transition:transform 0.3s ease;
+}
+.ribbon-sketch-wrap:hover img{
+  transform:scale(1.02);
+}
+
+/* Ribbon Content (Tagline + Features) */
+.ribbon-content{
+  position:relative;
+  z-index:2;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(14px, 2vw, 28px);
+  min-width:0;
+}
+.ribbon-tagline{
+  flex:0 0 auto;
+  font:italic clamp(21px, 2vw, 26px)/1.08 var(--serif);
+  white-space:nowrap;
+  color:var(--ink);
+}
+.ribbon-tagline b{
+  font-weight:700;
+}
+.ribbon-features{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:clamp(12px, 1.8vw, 24px);
+  min-width:0;
+}
+.ribbon-features i{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding-left:clamp(10px, 1.4vw, 18px);
+  border-left:1px solid rgba(128, 95, 29, 0.45);
+  font-size:clamp(11.5px, 1.1vw, 13px);
+  font-style:normal;
+  font-weight:600;
+  line-height:1.35;
+  color:#3a2e12;
+  white-space:nowrap;
+}
+.ribbon-features i .line-icon{
+  width:24px;
+  height:24px;
+  flex:0 0 24px;
+  color:#734b10;
+}
+
+/* Tablet responsiveness (761px - 1024px) */
+@media(max-width:1024px){
+  .locations-ribbon{
+    flex-direction:column !important;
+    gap:18px !important;
+    padding:32px 5% !important;
+  }
+  .locations-ribbon::before{
+    clip-path:none !important;
+    border-radius:24px;
+  }
+  .ribbon-sketch-wrap{
+    flex:0 0 auto !important;
+    width:min(100%, 460px) !important;
+    max-width:100% !important;
+    justify-content:center;
+    margin-top:0;
+  }
+  .ribbon-sketch-wrap img{
+    object-position:center !important;
+  }
+  .ribbon-content{
+    width:100%;
+    flex-direction:column;
+    gap:14px;
+    text-align:center;
+  }
+  .ribbon-features{
+    width:100%;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+}
+
+/* Mobile responsiveness (<= 760px) */
+@media(max-width:760px){
+  .locations-ribbon{
+    flex-direction:column !important;
+    margin:24px -5% 0 !important;
+    padding:28px 6% !important;
+    gap:16px !important;
+    border-radius:20px;
+  }
+  .locations-ribbon::before{
+    clip-path:none !important;
+    border-radius:20px;
+  }
+  .ribbon-sketch-wrap{
+    width:100% !important;
+    max-width:360px !important;
+    margin:0 auto;
+    justify-content:center;
+  }
+  .ribbon-sketch-wrap img{
+    max-height:150px !important;
+    object-position:center !important;
+  }
+  .ribbon-tagline{
+    white-space:normal;
+    text-align:center;
+    font-size:20px;
+  }
+  .ribbon-features{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+    width:100%;
+  }
+  .ribbon-features i{
+    padding-left:8px;
+    border-left:2px solid rgba(128, 95, 29, 0.35);
+    font-size:12px;
+    white-space:normal;
+  }
+  .ribbon-features i .line-icon{
+    width:20px;
+    height:20px;
+    flex:0 0 20px;
+  }
 }
 
 /* Readable navigation with color feedback in both the full header and the island. */
