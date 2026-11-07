@@ -323,7 +323,7 @@ function LocationsSection() {
           </div>
         </article>
       ))}</div><button className="carousel-arrow carousel-next" onClick={() => moveLocations(1)} aria-label="Next locations"><Arrow /></button><div className="carousel-dots" aria-label="Location pages">{Array.from({ length: locationCount }, (_, i) => <button key={i} className={activeLocation === i ? 'active' : ''} aria-label={`Show location ${i + 1}`} onClick={() => scrollToLocation(i)} />)}</div></div>
-      <div className="locations-ribbon"><img src={referenceAsset('location-sketch.webp')} alt="Hand-drawn Chillies storefront illustration from the design" loading="lazy" decoding="async" /><span>Great food<br /><b>in more places.</b></span><i><LineIcon name="pin" />Strategic<br />locations</i><i><LineIcon name="users" />Easy<br />accessibility</i><i><LineIcon name="utensils" />Same great<br />taste</i><i><LineIcon name="heart" />A growing<br />family</i></div>
+      <div className="locations-ribbon"><img src={referenceAsset('location-sketch.webp')} alt="Hand-drawn architectural sketch of Chillies Restaurant storefront with palm trees" loading="lazy" decoding="async" /><span>Great food<br /><b>in more places.</b></span><i><LineIcon name="pin" />Strategic<br />locations</i><i><LineIcon name="users" />Easy<br />accessibility</i><i><LineIcon name="utensils" />Same great<br />taste</i><i><LineIcon name="heart" />A growing<br />family</i></div>
     </section>
   );
 }

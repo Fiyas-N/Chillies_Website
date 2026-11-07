@@ -200,7 +200,7 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 .locations-ribbon i>.line-icon{width:26px;height:26px;flex-basis:26px}
 @media(max-width:760px){.hero-side-list{display:none}.values>span{width:50%;min-width:50%;padding-left:10px}.locations-ribbon i{justify-content:flex-start}}
 .footer-follow-link{display:inline-flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--red);color:var(--ink);font-size:13px;font-weight:700}
-.locations-ribbon>img{clip-path:inset(0 0 18% 0)}
+.locations-ribbon>img{clip-path:none;}
 
 
 .brand{width:168px}
@@ -773,7 +773,7 @@ html{scroll-padding-top:82px}
   .location-card{width:100%;min-width:0;max-width:none;}
   .location-carousel>.carousel-arrow,.location-carousel>.carousel-dots{display:none;}
   .locations-ribbon{grid-column:1;grid-row:3;}
-  .locations-ribbon>img{align-self:center;justify-self:center;width:26%;height:158px;max-height:none;margin:0;object-fit:contain;object-position:center;clip-path:none;}
+  .locations-ribbon>img{align-self:center;justify-self:center;width:clamp(230px,27vw,360px);height:clamp(125px,13vw,170px);max-height:none;margin:0;object-fit:contain;object-position:center;clip-path:none;}
 }
 
 /* The review arrow only appears when the row cannot show all three reviews. */
@@ -1010,7 +1010,7 @@ img[data-media-state="error"]{
 /* Prevent art layers and adjacent section colors from bleeding into content at resized widths. */
 .hero:before,.hero:after{display:none!important;}
 .locations-section{padding-bottom:clamp(30px,4vw,56px);}
-.locations-ribbon>img{clip-path:inset(0 0 16% 0)!important;}
+.locations-ribbon>img{clip-path:none!important;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(80,50,15,0.09));}
 @media(min-width:761px) and (max-width:900px){
   .locations-ribbon{grid-template-columns:minmax(0,1.15fr) repeat(4,minmax(0,1fr))!important;}
 }
