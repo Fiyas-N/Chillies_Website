@@ -1226,7 +1226,9 @@ img[data-media-state="error"]{
   .main-nav a{transition:none;}
   .site-header.is-scrolled:before{animation:none;}
 }
-.heading-word{display:inline-block;}
+.line-mask-wrap{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:0.12em;margin-bottom:-0.12em;}
+.line-mask-inner,
+.heading-word{display:inline-block;will-change:transform,filter,opacity;transform-origin:center bottom;}
 
 /* Give the location heading its own row and keep carousel controls off the photos. */
 @media(max-width:900px){

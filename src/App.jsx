@@ -492,10 +492,14 @@ function useScrollMotion(heroReady = false) {
               if (!part) return;
               if (/^\s+$/.test(part)) fragment.append(document.createTextNode(part));
               else {
+                const mask = document.createElement('span');
+                mask.className = 'line-mask-wrap';
+
                 const word = document.createElement('span');
                 word.className = 'heading-word';
                 word.textContent = part;
-                fragment.append(word);
+                mask.appendChild(word);
+                fragment.append(mask);
               }
             });
             textNode.replaceWith(fragment);
@@ -503,27 +507,44 @@ function useScrollMotion(heroReady = false) {
           heading.classList.add('words-split');
         }
         const words = heading.querySelectorAll('.heading-word');
-        gsap.fromTo(words, { yPercent: 120, autoAlpha: 0 }, {
+        gsap.fromTo(words, {
+          yPercent: 115,
+          autoAlpha: 0,
+          filter: 'blur(16px)',
+        }, {
           yPercent: 0,
           autoAlpha: 1,
-          duration: 0.78,
-          stagger: 0.05,
-          ease: 'power4.out',
+          filter: 'blur(0px)',
+          duration: 0.88,
+          stagger: 0.045,
+          ease: 'power3.out',
           immediateRender: false,
-          scrollTrigger: { trigger: heading, start: 'top 86%', once: true },
+          scrollTrigger: {
+            trigger: heading,
+            start: 'top 88%',
+            toggleActions: 'play none none reverse',
+          },
         });
       });
 
       gsap.utils.toArray('.menu-heading > div:first-child > p:not(.eyebrow), .story-intro > p:not(.eyebrow), .story-bottom-copy > p:not(.eyebrow), .locations-heading > div:first-child > p:not(.eyebrow), .review-intro > p:not(.eyebrow), .instagram-section > div:first-child > p:not(.eyebrow)').forEach((paragraph, index) => {
-        gsap.fromTo(paragraph, { autoAlpha: 0, y: 18, clipPath: 'inset(0 0 100% 0)' }, {
+        gsap.fromTo(paragraph, {
+          autoAlpha: 0,
+          y: 24,
+          filter: 'blur(12px)',
+        }, {
           autoAlpha: 1,
           y: 0,
-          clipPath: 'inset(0 0 0% 0)',
+          filter: 'blur(0px)',
           duration: 0.95,
-          delay: (index % 3) * 0.09,
+          delay: (index % 3) * 0.08,
           ease: 'power3.out',
           immediateRender: false,
-          scrollTrigger: { trigger: paragraph, start: 'top 91%', once: true },
+          scrollTrigger: {
+            trigger: paragraph,
+            start: 'top 91%',
+            toggleActions: 'play none none reverse',
+          },
         });
       });
 
@@ -723,14 +744,14 @@ function useScrollMotion(heroReady = false) {
           scrub: 0.8,
         },
       })
-      .to('.hero-food', { yPercent: 16, scale: 0.95, rotate: 2.2, ease: 'none' }, 0)
-      .to('.hero-brush', { rotate: 24, scale: 1.16, yPercent: 10, ease: 'none' }, 0)
-      .to('.hero-brush-rim', { rotate: -45, ease: 'none' }, 0)
-      .to('.hero-note-malay', { y: -38, x: 14, rotate: -4, ease: 'none' }, 0)
-      .to('.hero-note-taste', { y: -48, x: -16, rotate: 4.5, ease: 'none' }, 0)
-      .to('.hero-stamp', { rotate: 50, y: -28, ease: 'none' }, 0)
-      .to('.hero-spice-doodle-wrap', { y: 32, ease: 'none' }, 0)
-      .to('.hero-copy', { yPercent: -10, autoAlpha: 0.25, ease: 'none' }, 0);
+        .to('.hero-food', { yPercent: 16, scale: 0.95, rotate: 2.2, ease: 'none' }, 0)
+        .to('.hero-brush', { rotate: 24, scale: 1.16, yPercent: 10, ease: 'none' }, 0)
+        .to('.hero-brush-rim', { rotate: -45, ease: 'none' }, 0)
+        .to('.hero-note-malay', { y: -38, x: 14, rotate: -4, ease: 'none' }, 0)
+        .to('.hero-note-taste', { y: -48, x: -16, rotate: 4.5, ease: 'none' }, 0)
+        .to('.hero-stamp', { rotate: 50, y: -28, ease: 'none' }, 0)
+        .to('.hero-spice-doodle-wrap', { y: 32, ease: 'none' }, 0)
+        .to('.hero-copy', { yPercent: -10, autoAlpha: 0.25, ease: 'none' }, 0);
 
       // 4. Menu section stamp and hand-note organic float
       gsap.timeline({
@@ -741,8 +762,8 @@ function useScrollMotion(heroReady = false) {
           scrub: 0.9,
         },
       })
-      .to('.menu-art .menu-stamp', { rotate: 28, y: -34, ease: 'none' }, 0)
-      .to('.menu-art .hand-note', { rotate: -8, y: 24, ease: 'none' }, 0);
+        .to('.menu-art .menu-stamp', { rotate: 28, y: -34, ease: 'none' }, 0)
+        .to('.menu-art .hand-note', { rotate: -8, y: 24, ease: 'none' }, 0);
 
       // 5. Signature Biryani Dish dual-layer scroll parallax
       gsap.timeline({
@@ -753,10 +774,10 @@ function useScrollMotion(heroReady = false) {
           scrub: 0.85,
         },
       })
-      .fromTo('.signature-band > img', { scale: 1.08, yPercent: -8 }, { scale: 0.97, yPercent: 8, ease: 'none' }, 0)
-      .to('.signature-art-image.botanical-art', { rotate: 25, y: -34, ease: 'none' }, 0)
-      .to('.signature-art-image.leaf-art', { rotate: -20, y: 30, ease: 'none' }, 0)
-      .to('.signature-art > span', { y: -14, ease: 'none' }, 0);
+        .fromTo('.signature-band > img', { scale: 1.08, yPercent: -8 }, { scale: 0.97, yPercent: 8, ease: 'none' }, 0)
+        .to('.signature-art-image.botanical-art', { rotate: 25, y: -34, ease: 'none' }, 0)
+        .to('.signature-art-image.leaf-art', { rotate: -20, y: 30, ease: 'none' }, 0)
+        .to('.signature-art > span', { y: -14, ease: 'none' }, 0);
 
       // 6. Our Story photos parallax & timeline active highlights
       gsap.fromTo('.story-photo-wrap > img', { scale: 1.15, yPercent: -9 }, {
@@ -786,11 +807,11 @@ function useScrollMotion(heroReady = false) {
           scrub: 1,
         },
       })
-      .to('.locations-sprig', { rotate: -24, y: -28, x: -14, ease: 'none' }, 0)
-      .to('.locations-leaf', { rotate: 30, y: 32, x: 16, ease: 'none' }, 0)
-      .to('.locations-chilli', { rotate: -38, y: -20, x: 20, ease: 'none' }, 0)
-      .to('.locations-spice', { rotate: 50, y: 24, x: -12, ease: 'none' }, 0)
-      .to('.map-note', { rotate: -2, y: -20, ease: 'none' }, 0);
+        .to('.locations-sprig', { rotate: -24, y: -28, x: -14, ease: 'none' }, 0)
+        .to('.locations-leaf', { rotate: 30, y: 32, x: 16, ease: 'none' }, 0)
+        .to('.locations-chilli', { rotate: -38, y: -20, x: 20, ease: 'none' }, 0)
+        .to('.locations-spice', { rotate: 50, y: 24, x: -12, ease: 'none' }, 0)
+        .to('.map-note', { rotate: -2, y: -20, ease: 'none' }, 0);
 
       // 8. Locations Ribbon architectural storefront pan
       gsap.timeline({
@@ -801,7 +822,7 @@ function useScrollMotion(heroReady = false) {
           scrub: 0.9,
         },
       })
-      .fromTo('.ribbon-sketch-wrap img', { xPercent: -3, yPercent: -5, scale: 0.98 }, { xPercent: 3, yPercent: 4, scale: 1.02, ease: 'none' }, 0);
+        .fromTo('.ribbon-sketch-wrap img', { xPercent: -3, yPercent: -5, scale: 0.98 }, { xPercent: 3, yPercent: 4, scale: 1.02, ease: 'none' }, 0);
 
       // 9. Reviews Section parallax lift
       gsap.timeline({
@@ -812,7 +833,7 @@ function useScrollMotion(heroReady = false) {
           scrub: 1,
         },
       })
-      .fromTo('.review-track', { yPercent: 4 }, { yPercent: -4, ease: 'none' }, 0);
+        .fromTo('.review-track', { yPercent: 4 }, { yPercent: -4, ease: 'none' }, 0);
 
       // 10. Footer CTA Big Biryani Parallax
       gsap.fromTo('.footer-cta > img', { yPercent: 14, scale: 1.06 }, {
@@ -840,26 +861,153 @@ function useScrollMotion(heroReady = false) {
       tl.from(['.hero .eyebrow', '.hero-description', '.hero-actions'], {
         autoAlpha: 0, y: 34, duration: 1.15, stagger: 0.16,
       }, 0.05)
-      .from('.hero-line > *', {
-        yPercent: 120, duration: 1.1, stagger: 0.12,
-      }, 0.12)
-      .from('.hero-food', {
-        scale: 0.86, autoAlpha: 0, y: 38, duration: 1.25, ease: 'back.out(1.4)',
-      }, 0.22)
-      .from('.hero-brush', {
-        scale: 0.8, autoAlpha: 0, rotation: -8, duration: 1.3, ease: 'power3.out',
-      }, 0.1)
-      .from('.hero-side-list li', {
-        autoAlpha: 0, x: -22, duration: 0.7, stagger: 0.08, ease: 'power3.out',
-      }, 0.38)
-      .from('.hero-bottom-note', {
-        autoAlpha: 0, y: 10, duration: 0.8, ease: 'power3.out',
-      }, 0.5);
+        .fromTo('.hero-line > *', {
+          yPercent: 120,
+          autoAlpha: 0,
+          filter: 'blur(16px)',
+        }, {
+          yPercent: 0,
+          autoAlpha: 1,
+          filter: 'blur(0px)',
+          duration: 1.15,
+          stagger: 0.12,
+          ease: 'power3.out',
+        }, 0.12)
+        .from('.hero-food', {
+          scale: 0.86, autoAlpha: 0, y: 38, duration: 1.25, ease: 'back.out(1.4)',
+        }, 0.22)
+        .from('.hero-brush', {
+          scale: 0.8, autoAlpha: 0, rotation: -8, duration: 1.3, ease: 'power3.out',
+        }, 0.1)
+        .from('.hero-side-list li', {
+          autoAlpha: 0, x: -22, duration: 0.7, stagger: 0.08, ease: 'power3.out',
+        }, 0.38)
+        .from('.hero-bottom-note', {
+          autoAlpha: 0, y: 10, duration: 0.8, ease: 'power3.out',
+        }, 0.5);
     });
     return () => ctx.revert();
   }, [heroReady]);
 
   return lenisRef;
+}
+
+// ============================================================================
+// Scroll Text Reveal — Originkit Component (LineMaskSplit)
+// Reusable component supporting words/chars/lines, mask clipping & blur reveal
+// ============================================================================
+export function LineMaskSplit({
+  text = 'ANIMATION ON REVEAL',
+  color = 'inherit',
+  font = {},
+  tag = 'h2',
+  className = '',
+  style = {},
+  transition = {
+    duration: 0.85,
+    ease: 'power3.out',
+    delay: 0,
+  },
+  reverse = true,
+  splitMode = 'words', // 'words' | 'chars' | 'lines'
+  blurEnabled = true,
+  blurIntensity = 16,
+  translateYInitial = 100, // percent
+}) {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    const container = containerRef.current;
+    if (!el || !container) return;
+
+    el.innerHTML = '';
+    const parts = splitMode === 'chars' ? text.split('') : text.split(/(\s+)/);
+    const elements = [];
+
+    parts.forEach((part) => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        el.appendChild(document.createTextNode(part));
+      } else {
+        const mask = document.createElement('span');
+        mask.className = 'line-mask-wrap';
+
+        const inner = document.createElement('span');
+        inner.className = 'line-mask-inner';
+        inner.textContent = part;
+        mask.appendChild(inner);
+        el.appendChild(mask);
+        elements.push(inner);
+      }
+    });
+
+    const totalDuration = transition.duration || 0.85;
+    const baseDelay = transition.delay || 0;
+    const blurVal = blurEnabled ? blurIntensity : 0;
+
+    const anim = gsap.fromTo(elements, {
+      yPercent: translateYInitial,
+      autoAlpha: 0,
+      filter: blurVal ? `blur(${blurVal}px)` : 'none',
+    }, {
+      yPercent: 0,
+      autoAlpha: 1,
+      filter: 'blur(0px)',
+      duration: totalDuration,
+      stagger: 0.04,
+      delay: baseDelay,
+      ease: transition.ease || 'power3.out',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: container,
+        start: 'top 88%',
+        toggleActions: reverse ? 'play none none reverse' : 'play none none none',
+      },
+    });
+
+    return () => {
+      anim.kill();
+    };
+  }, [text, splitMode, blurEnabled, blurIntensity, translateYInitial, reverse, transition]);
+
+  const Tag = tag;
+
+  return (
+    <div
+      ref={containerRef}
+      className={`line-mask-split ${className}`}
+      style={{
+        display: 'flex',
+        justifyContent: font.textAlign === 'center' ? 'center' : font.textAlign === 'right' ? 'flex-end' : 'flex-start',
+        alignItems: 'center',
+        width: '100%',
+        backgroundColor: 'transparent',
+        ...style,
+      }}
+    >
+      <Tag
+        ref={textRef}
+        style={{
+          margin: 0,
+          color,
+          fontSize: font.fontSize,
+          fontWeight: font.fontWeight || '700',
+          fontFamily: font.fontFamily || 'var(--serif)',
+          fontStyle: font.fontStyle,
+          textDecoration: font.textDecoration,
+          textTransform: font.textTransform,
+          letterSpacing: font.letterSpacing,
+          lineHeight: font.lineHeight,
+          textAlign: font.textAlign || 'inherit',
+          width: '100%',
+        }}
+      >
+        {text}
+      </Tag>
+    </div>
+  );
 }
 
 // ============================================================================
@@ -1088,7 +1236,7 @@ function TilesLoader({
   const optsRef = useRef({ minTime, onRevealStart, onComplete });
   optsRef.current = { minTime, onRevealStart, onComplete };
 
-  const sceneRef = useRef({ revealS: REVEAL_S, frame() {} });
+  const sceneRef = useRef({ revealS: REVEAL_S, frame() { } });
   sceneRef.current = {
     revealS: REVEAL_S,
     frame({ t, progress, reveal }) {
@@ -1156,7 +1304,7 @@ function TilesLoader({
               top: `${(r * 100) / rows}%`,
               width: `calc(${100 / cols}% + 1px)`,
               height: `calc(${100 / rows}% + 1px)`,
-              background: '#15120F', // Website --ink color
+              background: '#ffc414', // Website --ink color
             }}
           >
             {/* Paper Face with Website Stippled Dot Texture */}
