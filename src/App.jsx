@@ -367,7 +367,7 @@ function Footer() {
   </footer>;
 }
 
-function useScrollMotion() {
+function useScrollMotion(heroReady = false) {
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -404,23 +404,6 @@ function useScrollMotion() {
     }
 
     const context = lenis ? gsap.context(() => {
-      gsap.from(['.hero .eyebrow', '.hero-description', '.hero-actions'], {
-        autoAlpha: 0, y: 34, duration: 1.15, stagger: 0.18, ease: 'power4.out', delay: 0.14,
-      });
-      gsap.from('.hero-line > *', {
-        yPercent: 120, duration: 1.05, stagger: 0.14, ease: 'power4.out', delay: 0.2,
-      });
-
-      // Side list items stagger in from left
-      gsap.from('.hero-side-list li', {
-        autoAlpha: 0, x: -22, duration: 0.7, stagger: 0.1, ease: 'power3.out', delay: 0.6,
-      });
-
-      // Hero bottom note fade in
-      gsap.from('.hero-bottom-note', {
-        autoAlpha: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.85,
-      });
-
       gsap.utils.toArray('[data-draw]').forEach((drawing) => {
         const paths = [...drawing.querySelectorAll('path')];
         gsap.fromTo(paths, {
@@ -714,54 +697,358 @@ function useScrollMotion() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!heroReady) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+      tl.from(['.hero .eyebrow', '.hero-description', '.hero-actions'], {
+        autoAlpha: 0, y: 34, duration: 1.15, stagger: 0.16,
+      }, 0.05)
+      .from('.hero-line > *', {
+        yPercent: 120, duration: 1.1, stagger: 0.12,
+      }, 0.12)
+      .from('.hero-food', {
+        scale: 0.86, autoAlpha: 0, y: 38, duration: 1.25, ease: 'back.out(1.4)',
+      }, 0.22)
+      .from('.hero-brush', {
+        scale: 0.8, autoAlpha: 0, rotation: -8, duration: 1.3, ease: 'power3.out',
+      }, 0.1)
+      .from('.hero-side-list li', {
+        autoAlpha: 0, x: -22, duration: 0.7, stagger: 0.08, ease: 'power3.out',
+      }, 0.38)
+      .from('.hero-bottom-note', {
+        autoAlpha: 0, y: 10, duration: 0.8, ease: 'power3.out',
+      }, 0.5);
+    });
+    return () => ctx.revert();
+  }, [heroReady]);
+
   return lenisRef;
 }
 
-export default function App() {
-  const lenisRef = useScrollMotion();
-  const [pageLoading, setPageLoading] = useState(true);
-  const [loadStep, setLoadStep] = useState(0);
+function CinematicLoader({ onRevealStart, onComplete }) {
+  const [progress, setProgress] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+  const canvasRef = useRef(null);
+  const loaderRef = useRef(null);
+  const cardRef = useRef(null);
+  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
 
-  const loadingMessages = [
-    'Infusing authentic Malabar spices…',
-    'Slow-dum cooking the Biriyani…',
-    'Charcoal-grilling to perfection…',
-    'Your table is ready. Welcome to Chillies!'
+  const steps = [
+    {
+      index: '01 / 04',
+      tag: 'സുഗന്ധവ്യഞ്ജനങ്ങൾ · Spice Harvest',
+      title: 'Infusing Kerala Spices',
+      subtitle: 'Wild green cardamom, star anise, cloves & Malabar pepper'
+    },
+    {
+      index: '02 / 04',
+      tag: 'ദമ്പർ ബിരിയാണി · Dum Simmer',
+      title: 'Dum-Cooking Fragrant Rice',
+      subtitle: 'Slow-simmered Kaima in golden Kerala ghee & saffron'
+    },
+    {
+      index: '03 / 04',
+      tag: 'കരിങ്കനൽ · Charcoal Embers',
+      title: 'Charcoal Grills on Fire',
+      subtitle: 'Signature smoky Al Faham & tender charcoal grills'
+    },
+    {
+      index: '04 / 04',
+      tag: 'സ്വാഗതം · Malabar Hospitality',
+      title: 'Your Table is Ready',
+      subtitle: 'Authentic flavours & warm hospitality · Since 2009'
+    },
   ];
 
+  // AI Particle Simulator style canvas with cursor physics & glowing ember sparks
   useEffect(() => {
-    const stepTimers = [
-      window.setTimeout(() => setLoadStep(1), 850),
-      window.setTimeout(() => setLoadStep(2), 1700),
-      window.setTimeout(() => setLoadStep(3), 2500),
-    ];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    const startedAt = performance.now();
-    const heroImage = document.querySelector('.hero-food');
-    let finished = false;
-    let minTimer;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      window.clearTimeout(fallbackTimer);
-      // Ensure at least 3 full seconds of smooth, welcoming experience
-      const remaining = Math.max(0, 3100 - (performance.now() - startedAt));
-      minTimer = window.setTimeout(() => setPageLoading(false), remaining);
+    const onResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     };
-    const fallbackTimer = window.setTimeout(finish, 5200);
-    if (!heroImage || heroImage.complete) finish();
-    else {
-      heroImage.addEventListener('load', finish, { once: true });
-      heroImage.addEventListener('error', finish, { once: true });
-    }
+    window.addEventListener('resize', onResize);
+
+    const onPointerMove = (e) => {
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
+      mouseRef.current.active = true;
+    };
+    const onPointerLeave = () => {
+      mouseRef.current.active = false;
+      mouseRef.current.x = -1000;
+      mouseRef.current.y = -1000;
+    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerleave', onPointerLeave);
+
+    const palette = ['#ffc414', '#cf1028', '#ff6b35', '#ffd700', '#fff5d6'];
+    const particleCount = Math.min(42, Math.max(24, Math.floor(window.innerWidth / 30)));
+
+    const particles = Array.from({ length: particleCount }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height + height * 0.1,
+      size: Math.random() * 2.8 + 1.2,
+      baseSpeedY: Math.random() * 0.75 + 0.35,
+      baseSpeedX: (Math.random() - 0.5) * 0.35,
+      wobbleSpeed: Math.random() * 0.03 + 0.015,
+      wobbleRadius: Math.random() * 1.6 + 0.6,
+      angle: Math.random() * Math.PI * 2,
+      opacity: Math.random() * 0.65 + 0.25,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      pulse: Math.random() * Math.PI,
+    }));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      const hasMouse = mouseRef.current.active;
+
+      particles.forEach((p) => {
+        p.angle += p.wobbleSpeed;
+        p.pulse += 0.04;
+        let vx = p.baseSpeedX + Math.sin(p.angle) * p.wobbleRadius * 0.35;
+        let vy = -p.baseSpeedY;
+
+        // Cursor repulsion
+        if (hasMouse) {
+          const dx = p.x - mx;
+          const dy = p.y - my;
+          const distSq = dx * dx + dy * dy;
+          const maxDist = 130;
+          if (distSq < maxDist * maxDist && distSq > 0) {
+            const dist = Math.sqrt(distSq);
+            const force = (1 - dist / maxDist) * 2.0;
+            vx += (dx / dist) * force;
+            vy += (dy / dist) * force;
+          }
+        }
+
+        p.x += vx;
+        p.y += vy;
+
+        if (p.y < -20) {
+          p.y = height + 20;
+          p.x = Math.random() * width;
+        }
+        if (p.x < -20) p.x = width + 20;
+        else if (p.x > width + 20) p.x = -20;
+
+        const currentOpacity = Math.max(0.15, Math.min(1, p.opacity + Math.sin(p.pulse) * 0.18));
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = currentOpacity;
+        ctx.shadowBlur = p.size * 2.5;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(render);
+    };
+    render();
+
     return () => {
-      stepTimers.forEach((t) => window.clearTimeout(t));
-      window.clearTimeout(fallbackTimer);
-      window.clearTimeout(minTimer);
-      heroImage?.removeEventListener('load', finish);
-      heroImage?.removeEventListener('error', finish);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerleave', onPointerLeave);
+      cancelAnimationFrame(animationId);
     };
   }, []);
+
+  // Smooth numerical counter and phase progression (3.2 seconds minimum display)
+  useEffect(() => {
+    const startTime = performance.now();
+    const duration = 3200; // 3.2 seconds luxury duration
+    let frameId;
+    let hasTriggeredReveal = false;
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const rawProgress = Math.min(100, Math.round((elapsed / duration) * 100));
+      setProgress(rawProgress);
+
+      if (rawProgress >= 76) setStepIndex(3);
+      else if (rawProgress >= 51) setStepIndex(2);
+      else if (rawProgress >= 26) setStepIndex(1);
+      else setStepIndex(0);
+
+      if (elapsed < duration) {
+        frameId = requestAnimationFrame(tick);
+      } else if (!hasTriggeredReveal) {
+        hasTriggeredReveal = true;
+        if (loaderRef.current) {
+          const tl = gsap.timeline({
+            onComplete: () => {
+              onComplete?.();
+            },
+          });
+          // Center card exit
+          tl.to(cardRef.current, {
+            scale: 0.92,
+            autoAlpha: 0,
+            duration: 0.36,
+            ease: 'power3.in',
+          });
+          // 5 Shutters pull upward
+          tl.to('.loader-shutter', {
+            yPercent: -102,
+            duration: 0.85,
+            stagger: 0.065,
+            ease: 'power4.inOut',
+          }, '-=0.1');
+          // Trigger synchronous Hero entrance as the shutters slide open
+          tl.call(() => {
+            onRevealStart?.();
+          }, null, '-=0.45');
+        } else {
+          onRevealStart?.();
+          onComplete?.();
+        }
+      }
+    };
+    frameId = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [onRevealStart, onComplete]);
+
+  const onCardMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  const circleRadius = 100;
+  const circumference = 2 * Math.PI * circleRadius; // ~628.32
+  const strokeOffset = circumference * (1 - progress / 100);
+
+  return (
+    <aside className="cinematic-loader" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
+      {/* 5 Staggered Curtain Shutters for award-winning theatrical reveal */}
+      <div className="loader-shutters" aria-hidden="true">
+        <span className="loader-shutter shutter-1" />
+        <span className="loader-shutter shutter-2" />
+        <span className="loader-shutter shutter-3" />
+        <span className="loader-shutter shutter-4" />
+        <span className="loader-shutter shutter-5" />
+      </div>
+
+      <canvas className="loader-particles" ref={canvasRef} aria-hidden="true" />
+
+      {/* Ambient floating spice illustrations */}
+      <img className="loader-ambient-spice spice-tl" src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-tr" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-bl" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
+      <img className="loader-ambient-spice spice-br" src={generatedAsset('heart-leaf-outline.png')} alt="" aria-hidden="true" />
+
+      {/* Center Stage Card (Aceternity Spotlight & Glowing Border Beam) */}
+      <div className="loader-center-content" ref={cardRef} onMouseMove={onCardMouseMove}>
+        <div className="loader-spotlight" aria-hidden="true" />
+        <div className="loader-beam-border" aria-hidden="true" />
+
+        <div className="loader-emblem-wrap">
+          <div className="loader-pulse-aura" aria-hidden="true" />
+
+          {/* Circular SVG Liquid Progress Ring (React Bits / Uiverse style) */}
+          <svg className="loader-circular-progress" viewBox="0 0 220 220" aria-hidden="true">
+            <defs>
+              <linearGradient id="loaderRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffc414" />
+                <stop offset="60%" stopColor="#ff6b35" />
+                <stop offset="100%" stopColor="#cf1028" />
+              </linearGradient>
+            </defs>
+            <circle className="ring-track" cx="110" cy="110" r={circleRadius} />
+            <circle
+              className="ring-bar"
+              cx="110"
+              cy="110"
+              r={circleRadius}
+              stroke="url(#loaderRingGrad)"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeOffset}
+            />
+          </svg>
+
+          {/* Astrolabe dashed orbit */}
+          <svg className="loader-orbit-ring" viewBox="0 0 240 240" fill="none" aria-hidden="true">
+            <circle cx="120" cy="120" r="112" stroke="rgba(255,196,20,0.4)" strokeWidth="1.2" strokeDasharray="5 7" />
+            <circle cx="120" cy="120" r="94" stroke="rgba(207,16,40,0.25)" strokeWidth="1" strokeDasharray="3 5" />
+          </svg>
+
+          <img className="loader-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
+          <img className="loader-sprig-badge" src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
+          <img className="loader-crest-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
+        </div>
+
+        {/* Counter Row with Culinary Sizzle Equalizer (React Bits inspired) */}
+        <div className="loader-counter-row">
+          <div className="loader-equalizer-bars" aria-hidden="true">
+            <span className="eq-bar eq-1" />
+            <span className="eq-bar eq-2" />
+            <span className="eq-bar eq-3" />
+            <span className="eq-bar eq-4" />
+            <span className="eq-bar eq-5" />
+          </div>
+          <div className="loader-digit-stack">
+            <span className="loader-count-num">{progress.toString().padStart(2, '0')}</span>
+            <span className="loader-count-sym">%</span>
+          </div>
+        </div>
+
+        <div className="loader-step-pill">
+          <span className="loader-step-num">{steps[stepIndex].index}</span>
+          <span className="loader-step-tag">{steps[stepIndex].tag}</span>
+        </div>
+
+        {/* Phase Text Transitions */}
+        <div className="loader-phase-box" key={stepIndex}>
+          <h2 className="loader-phase-title">{steps[stepIndex].title}</h2>
+          <p className="loader-phase-subtitle">{steps[stepIndex].subtitle}</p>
+        </div>
+
+        {/* Horizontal Progress Track with Ember Flame Marker */}
+        <div className="loader-progress-track" aria-hidden="true">
+          <div className="loader-progress-bar" style={{ width: `${progress}%` }} />
+          <span className="loader-progress-flame" style={{ left: `${progress}%` }}>🌶</span>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+export default function App() {
+  const [loaderMounted, setLoaderMounted] = useState(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return false;
+    }
+    return true;
+  });
+  const [heroReady, setHeroReady] = useState(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return true;
+    }
+    return false;
+  });
+  const lenisRef = useScrollMotion(heroReady);
 
   useEffect(() => {
     const markImage = (image) => {
@@ -814,26 +1101,12 @@ export default function App() {
   }, [lenisRef]);
 
   return <>
-    <div className={`page-loader${pageLoading ? ' is-loading' : ''}`} role="status" aria-live="polite" aria-hidden={!pageLoading}>
-      <img className="loader-spice loader-spice-tl" src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-spice loader-spice-tr" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-spice loader-spice-bl" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-spice loader-spice-br" src={generatedAsset('heart-leaf-outline.png')} alt="" aria-hidden="true" />
-
-      <div className="loader-card" aria-hidden="true">
-        <div className="loader-emblem">
-          <img className="loader-brush" src={generatedAsset('yellow-brush-ring.png')} alt="" />
-          <img className="loader-sprig" src={generatedAsset('botanical-sprig.png')} alt="" />
-          <img className="loader-logo" src={officialAsset('chillies-logo.png')} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset('logo-board.webp'); }} />
-        </div>
-        <span className="loader-kicker">Chillies Restaurant · Est. 2009</span>
-        <span className="loader-caption key={loadStep}">{loadingMessages[loadStep]}</span>
-        <div className="loader-progress-wrap">
-          <div className="loader-progress"><i style={{ width: `${(loadStep + 1) * 25}%` }} /></div>
-          <span className="loader-tag">{(loadStep + 1) * 25}%</span>
-        </div>
-      </div>
-    </div>
+    {loaderMounted && (
+      <CinematicLoader
+        onRevealStart={() => setHeroReady(true)}
+        onComplete={() => setLoaderMounted(false)}
+      />
+    )}
     <Header /><main><Hero /><MenuSection /><StorySection /><LocationsSection /><ReviewsSection /></main><Footer />
   </>;
 }
