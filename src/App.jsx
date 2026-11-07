@@ -867,37 +867,33 @@ function CinematicLoader({ onRevealStart, onComplete }) {
   const [stepIndex, setStepIndex] = useState(0);
   const canvasRef = useRef(null);
   const loaderRef = useRef(null);
-  const contentRef = useRef(null);
-  const sparksRef = useRef([]);
+  const cardRef = useRef(null);
+  const particlesRef = useRef([]);
 
   const steps = [
     {
-      kicker: 'CHAPTER 01 · ORIGINS',
-      tag: 'സുഗന്ധവ്യഞ്ജനങ്ങൾ · Spice Gardens',
-      title: 'Infusing Hand-Ground Spices',
-      desc: 'Green cardamom, star anise, cloves & wild Malabar black pepper'
+      kicker: 'MALABAR CULINARY ARCHIVE · 01',
+      malayalam: 'സുഗന്ധവ്യഞ്ജനങ്ങളുടെ മാന്ത്രികത',
+      english: 'Hand-crushing green cardamom, star anise & tellicherry peppercorns',
     },
     {
-      kicker: 'CHAPTER 02 · TRADITION',
-      tag: 'ദമ്പർ ബിരിയാണി · Dum Cooking',
-      title: 'Slow-Simmering Fragrant Kaima',
-      desc: 'Layered in pure golden ghee, saffron threads & fresh garden mint'
+      kicker: 'MALABAR CULINARY ARCHIVE · 02',
+      malayalam: 'കനലിൽ വേവുന്ന ദം ബിരിയാണി',
+      english: 'Slow-simmering fragrant Kaima rice in copper degs on coconut husk coals',
     },
     {
-      kicker: 'CHAPTER 03 · THE HEARTH',
-      tag: 'കരിങ്കനൽ · Charcoal Flame',
-      title: 'Charcoal Grills on Fire',
-      desc: 'Smoky, sizzling Al Faham & tender charcoal-grilled favourites'
+      kicker: 'MALABAR CULINARY ARCHIVE · 03',
+      malayalam: 'കരിങ്കനലിൽ ചുട്ടെടുത്ത വിഭവങ്ങൾ',
+      english: 'Sizzling charcoal Al Faham, smokey grills & fresh rumali rolls',
     },
     {
-      kicker: 'CHAPTER 04 · HOSPITALITY',
-      tag: 'സ്വാഗതം · Welcome to Chillies',
-      title: 'Your Feast is Ready',
-      desc: 'Authentic flavours that bring people together · Since 2009'
+      kicker: 'MALABAR CULINARY ARCHIVE · 04',
+      malayalam: 'മേശയിലേക്ക് സ്വാഗതം',
+      english: 'The feast is prepared with love. Welcome to Chillies.',
     },
   ];
 
-  // Interactive Charcoal Hearth Ember & Spark Physics Simulation
+  // Interactive Saffron & Spice Pollen Canvas Simulation on Parchment
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -913,37 +909,36 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     };
     window.addEventListener('resize', onResize);
 
-    // Ambient floating embers rising from the hearth
-    const emberPalette = ['#ffc414', '#ff5722', '#cf1028', '#ff9800', '#ffd54f'];
-    const embers = Array.from({ length: 48 }, () => ({
+    // Subtle drifting saffron and golden spice specks
+    const spiceColors = ['#cf1028', '#c89b3c', '#d4af37', '#b83a22', '#8c6527'];
+    const ambientFlecks = Array.from({ length: 32 }, () => ({
       x: Math.random() * width,
-      y: Math.random() * height + height * 0.1,
-      size: Math.random() * 2.6 + 1.2,
-      speedY: Math.random() * 0.8 + 0.35,
-      speedX: (Math.random() - 0.5) * 0.4,
-      wobbleSpeed: Math.random() * 0.03 + 0.015,
+      y: Math.random() * height,
+      size: Math.random() * 2 + 1,
+      speedY: Math.random() * 0.45 + 0.15,
+      speedX: (Math.random() - 0.5) * 0.3,
       angle: Math.random() * Math.PI * 2,
-      opacity: Math.random() * 0.65 + 0.25,
-      color: emberPalette[Math.floor(Math.random() * emberPalette.length)],
-      pulse: Math.random() * Math.PI,
+      wobbleSpeed: Math.random() * 0.02 + 0.01,
+      opacity: Math.random() * 0.35 + 0.12,
+      color: spiceColors[Math.floor(Math.random() * spiceColors.length)],
     }));
 
-    // Interactive pointer sparkles
+    // Interactive pointer/touch spice trail
     const onPointerMove = (e) => {
       const x = e.clientX ?? (e.touches && e.touches[0]?.clientX);
       const y = e.clientY ?? (e.touches && e.touches[0]?.clientY);
       if (x === undefined || y === undefined) return;
 
-      for (let i = 0; i < 3; i++) {
-        sparksRef.current.push({
+      for (let i = 0; i < 2; i++) {
+        particlesRef.current.push({
           x: x + (Math.random() - 0.5) * 12,
           y: y + (Math.random() - 0.5) * 12,
-          vx: (Math.random() - 0.5) * 3.5,
-          vy: (Math.random() - 0.5) * 3.5 - 1.2,
-          size: Math.random() * 2.8 + 1.5,
-          color: Math.random() > 0.3 ? '#ffc414' : '#ff4242',
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2 - 0.4,
+          size: Math.random() * 2.4 + 1.2,
+          color: Math.random() > 0.4 ? '#c89b3c' : '#cf1028',
           life: 0,
-          maxLife: 32 + Math.random() * 20,
+          maxLife: 26 + Math.random() * 14,
         });
       }
     };
@@ -953,58 +948,50 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Render & update ambient hearth embers
-      embers.forEach((p) => {
+      // Ambient specks
+      ambientFlecks.forEach((p) => {
         p.angle += p.wobbleSpeed;
-        p.pulse += 0.04;
-        p.y -= p.speedY;
-        p.x += p.speedX + Math.sin(p.angle) * 0.45;
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(p.angle) * 0.3;
 
-        if (p.y < -20) {
-          p.y = height + 20;
+        if (p.y > height + 10) {
+          p.y = -10;
           p.x = Math.random() * width;
         }
-        if (p.x < -20) p.x = width + 20;
-        else if (p.x > width + 20) p.x = -20;
-
-        const currentOpacity = Math.max(0.12, Math.min(1, p.opacity + Math.sin(p.pulse) * 0.2));
+        if (p.x < -10) p.x = width + 10;
+        else if (p.x > width + 10) p.x = -10;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = currentOpacity;
-        ctx.shadowBlur = p.size * 3;
-        ctx.shadowColor = p.color;
+        ctx.globalAlpha = p.opacity;
         ctx.fill();
       });
 
-      // Render & update interactive touch/cursor sparks
-      const sparks = sparksRef.current;
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        s.life++;
-        s.x += s.vx;
-        s.y += s.vy;
-        s.vy += 0.06;
-        s.size *= 0.97;
+      // Pointer trail
+      const list = particlesRef.current;
+      for (let i = list.length - 1; i >= 0; i--) {
+        const pt = list[i];
+        pt.life++;
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.vy += 0.03;
+        pt.size *= 0.96;
 
-        const pVal = s.life / s.maxLife;
-        if (pVal >= 1 || s.size <= 0.2) {
-          sparks.splice(i, 1);
+        const progressVal = pt.life / pt.maxLife;
+        if (progressVal >= 1 || pt.size <= 0.2) {
+          list.splice(i, 1);
           continue;
         }
 
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fillStyle = s.color;
-        ctx.globalAlpha = Math.max(0, 1 - pVal);
-        ctx.shadowBlur = s.size * 4;
-        ctx.shadowColor = s.color;
+        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+        ctx.fillStyle = pt.color;
+        ctx.globalAlpha = (1 - progressVal) * 0.55;
         ctx.fill();
       }
 
       ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
       animationId = requestAnimationFrame(render);
     };
     render();
@@ -1017,10 +1004,10 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     };
   }, []);
 
-  // Smooth numerical counter and phase progression (3.2 seconds duration)
+  // Smooth numerical count and progress increments
   useEffect(() => {
     const startTime = performance.now();
-    const duration = 3200; // 3.2s
+    const duration = 2800; // 2.8 seconds - crisp, polite, memorable
     let frameId;
     let hasTriggeredReveal = false;
 
@@ -1045,43 +1032,34 @@ function CinematicLoader({ onRevealStart, onComplete }) {
               onComplete?.();
             },
           });
-          // 1. Content smoothly scales down and dissolves
-          tl.to(contentRef.current, {
-            scale: 0.92,
+
+          // 1. Heritage postcard lifts and scales smoothly
+          tl.to(cardRef.current, {
+            y: -22,
+            scale: 0.97,
             autoAlpha: 0,
-            duration: 0.38,
+            duration: 0.42,
             ease: 'power3.in',
           });
-          // 2. Light beam flash
-          tl.fromTo('.hearth-light-beam', {
-            scaleY: 0.2,
-            autoAlpha: 0,
-          }, {
-            scaleY: 1.2,
-            autoAlpha: 1,
-            duration: 0.16,
-            ease: 'power2.out',
-          }, '-=0.1');
-          // 3. Cinematic dual-door sweep outward
-          tl.to('.hearth-door-left', {
-            xPercent: -102,
-            duration: 0.9,
-            ease: 'power4.inOut',
-          }, '+=0.02');
-          tl.to('.hearth-door-right', {
-            xPercent: 102,
-            duration: 0.9,
-            ease: 'power4.inOut',
+
+          // 2. Vintage framing lines slide out
+          tl.to('.heritage-frame-line-top, .heritage-frame-line-bottom', {
+            scaleX: 0,
+            duration: 0.32,
+            ease: 'power2.inOut',
           }, '<');
-          tl.to('.hearth-light-beam', {
+
+          // 3. Whole loader screen dissolves smoothly into the matching paper page
+          tl.to(loaderRef.current, {
             autoAlpha: 0,
-            duration: 0.35,
+            duration: 0.38,
             ease: 'power2.out',
-          }, '<');
-          // 4. Synchronous hero reveal as the doors open!
+          }, '-=0.12');
+
+          // 4. Trigger hero animation seamlessly
           tl.call(() => {
             onRevealStart?.();
-          }, null, '-=0.45');
+          }, null, '-=0.32');
         } else {
           onRevealStart?.();
           onComplete?.();
@@ -1094,80 +1072,103 @@ function CinematicLoader({ onRevealStart, onComplete }) {
   }, [onRevealStart, onComplete]);
 
   return (
-    <aside className="hearth-loader" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
-      {/* Cinematic Dual Palace Doors for Grand Entrance */}
-      <div className="hearth-door hearth-door-left" aria-hidden="true" />
-      <div className="hearth-door hearth-door-right" aria-hidden="true" />
-      <div className="hearth-light-beam" aria-hidden="true" />
+    <aside className="heritage-loader section-paper" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
+      <canvas className="heritage-canvas" ref={canvasRef} aria-hidden="true" />
 
-      <canvas className="hearth-canvas" ref={canvasRef} aria-hidden="true" />
+      {/* Decorative Archival Corner Ticks & Framing Lines */}
+      <div className="heritage-frame-border" aria-hidden="true">
+        <span className="heritage-corner heritage-corner-tl">┏</span>
+        <span className="heritage-corner heritage-corner-tr">┓</span>
+        <span className="heritage-corner heritage-corner-bl">┗</span>
+        <span className="heritage-corner heritage-corner-br">┛</span>
+        <div className="heritage-frame-line heritage-frame-line-top" />
+        <div className="heritage-frame-line heritage-frame-line-bottom" />
+      </div>
 
-      {/* Main Theatrical Stage */}
-      <div className="hearth-stage" ref={contentRef}>
-        <div className="hearth-top-bar">
-          <span className="hearth-prestige-tag">CHILLIES RESTAURANT GROUP · EST. 2009</span>
-          <span className="hearth-hint">✦ MOVE CURSOR TO IGNITE SPARK EMBER TRAILS ✦</span>
+      {/* Centerpiece: The Malabar Heritage Postcard Card */}
+      <div className="heritage-card" ref={cardRef}>
+        {/* Top Eyebrow Tag */}
+        <div className="heritage-card-header">
+          <p className="eyebrow"><i /> EST. 2009 · MALABAR CULINARY TRADITION <i /></p>
+          <span className="heritage-hand-note">A taste of home, slow-cooked with care</span>
         </div>
 
-        {/* Central Glowing Culinary Sigil & Rotating Spice Wheel */}
-        <div className="hearth-sigil-wrap">
-          <div className="hearth-glow-core" aria-hidden="true" />
+        {/* Illustrated Architectural & Spice Vignette */}
+        <div className="heritage-vignette-wrap">
+          {/* Saffron / Turmeric Wash (Identical to .hero-yellow) */}
+          <div className="heritage-yellow-wash" aria-hidden="true" />
 
-          {/* Concentric Astrolabe Rings */}
-          <svg className="hearth-astrolabe" viewBox="0 0 280 280" fill="none" aria-hidden="true">
-            <circle cx="140" cy="140" r="134" stroke="rgba(255, 196, 20, 0.22)" strokeWidth="1" strokeDasharray="4 8" />
-            <circle cx="140" cy="140" r="116" stroke="rgba(207, 16, 40, 0.3)" strokeWidth="1.2" strokeDasharray="8 6" />
-            <circle cx="140" cy="140" r="94" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="1" strokeDasharray="3 5" />
-          </svg>
+          {/* Hand-Drawn Restaurant Building Sketch */}
+          <img
+            className="heritage-sketch"
+            src={referenceAsset('location-sketch.webp')}
+            alt="Chillies Restaurant Hand-Drawn Ink Sketch with Palm Trees"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = referenceAsset('location-sketch.png');
+            }}
+          />
 
-          {/* Rotating Hand-Drawn Spice Satellites */}
-          <div className="hearth-spice-orbit" aria-hidden="true">
-            <div className="satellite-spice satellite-star-anise">
-              <img src={generatedAsset('star-anise-outline.png')} alt="" />
-            </div>
-            <div className="satellite-spice satellite-cardamom">
-              <img src={generatedAsset('cardamom-outline.png')} alt="" />
-            </div>
-            <div className="satellite-spice satellite-leaf">
-              <img src={generatedAsset('heart-leaf-outline.png')} alt="" />
-            </div>
+          {/* Rotating Hand-Drawn Star Anise Doodle */}
+          <div className="heritage-spice-rotate" aria-hidden="true">
+            <img
+              src={generatedAsset('star-anise-outline.png')}
+              alt=""
+              className="heritage-star-anise"
+            />
           </div>
 
-          {/* Golden Brush Ring */}
-          <img className="hearth-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
+          {/* Official Red Wax / Rubber Stamp Seal */}
+          <img
+            className="heritage-red-stamp"
+            src={referenceAsset('hero-good-food-stamp.webp')}
+            alt="Chillies Authentic Taste Stamp"
+            aria-hidden="true"
+          />
+        </div>
 
-          {/* Brand Logo Crest */}
-          <div className="hearth-crest">
-            <img className="hearth-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
+        {/* Brand Name Typography */}
+        <div className="heritage-brand-row">
+          <img
+            className="heritage-brand-logo"
+            src={officialAsset('chillies-logo.png')}
+            alt="Chillies Restaurant"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = referenceAsset('logo-board.webp');
+            }}
+          />
+        </div>
+
+        {/* Grand Editorial Cormorant Garamond Counter */}
+        <div className="heritage-counter-row">
+          <span className="heritage-counter-digits">{progress.toString().padStart(2, '0')}</span>
+          <span className="heritage-counter-unit">%</span>
+        </div>
+
+        {/* Artisanal Malabar Progress Track */}
+        <div className="heritage-meter-track" aria-hidden="true">
+          <div className="heritage-meter-fill" style={{ width: `${progress}%` }}>
+            <span className="heritage-meter-seed">✦</span>
           </div>
         </div>
 
-        {/* Grand Typography Counter */}
-        <div className="hearth-counter-row">
-          <span className="hearth-num-digits">{progress.toString().padStart(2, '0')}</span>
-          <span className="hearth-num-percent">%</span>
+        {/* Poetic Stage Description with Malayalam Script */}
+        <div className="heritage-narrative-box" key={stepIndex}>
+          <span className="heritage-narrative-kicker">{steps[stepIndex].kicker}</span>
+          <h3 className="heritage-narrative-malayalam">{steps[stepIndex].malayalam}</h3>
+          <p className="heritage-narrative-english">{steps[stepIndex].english}</p>
         </div>
 
-        {/* Liquid Gold Progress Track */}
-        <div className="hearth-meter-track" aria-hidden="true">
-          <div className="hearth-meter-bar" style={{ width: `${progress}%` }}>
-            <span className="hearth-meter-flame" />
-          </div>
-        </div>
-
-        {/* Poetic Culinary Narrative */}
-        <div className="hearth-narrative-box" key={stepIndex}>
-          <span className="hearth-narrative-kicker">{steps[stepIndex].kicker}</span>
-          <h2 className="hearth-narrative-title">{steps[stepIndex].title}</h2>
-          <p className="hearth-narrative-desc">{steps[stepIndex].desc}</p>
-        </div>
-
-        <div className="hearth-bottom-bar">
-          <span>AUTHENTIC MALABAR TASTE</span>
-          <span className="hearth-dot">✦</span>
-          <span>4 HUBS ACROSS KERALA</span>
-          <span className="hearth-dot">✦</span>
-          <span>WANDOOR · ANCHACHAVIDI · PULLIKALODI · THIRUVALLI</span>
+        {/* Bottom Editorial Coordinates */}
+        <div className="heritage-footer-row">
+          <span>WANDOOR</span>
+          <span className="heritage-sep">·</span>
+          <span>ANCHACHAVIDI</span>
+          <span className="heritage-sep">·</span>
+          <span>PULLIKALODI</span>
+          <span className="heritage-sep">·</span>
+          <span>THIRUVALLI</span>
         </div>
       </div>
     </aside>
