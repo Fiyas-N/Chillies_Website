@@ -121,47 +121,114 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState('#top');
-  const links = [['Home', '#top'], ['Menu', '#menu'], ['Our Story', '#story'], ['Locations', '#locations'], ['Contact', '#contact']];
+  const links = [
+    ['Home', '#top'],
+    ['Menu', '#menu'],
+    ['Our Story', '#story'],
+    ['Locations', '#locations'],
+    ['Contact', '#contact'],
+  ];
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 15);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    const sections = links.map(([, href]) => document.querySelector(href)).filter(Boolean);
-    if (!('IntersectionObserver' in window) || sections.length === 0) return undefined;
+    const sectionElements = links
+      .map(([, href]) => ({ id: href, el: document.querySelector(href) }))
+      .filter((s) => s.el);
 
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible?.target.id) setActiveHref(`#${visible.target.id}`);
-    }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.1, 0.25, 0.5] });
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      
+      // Top of page
+      if (scrollY < 120) {
+        setActiveHref('#top');
+        return;
+      }
 
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+      // Bottom of page near contact/footer
+      if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 80) {
+        setActiveHref('#contact');
+        return;
+      }
+
+      // Find currently visible section
+      for (let i = sectionElements.length - 1; i >= 0; i--) {
+        const { id, el } = sectionElements[i];
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 140) {
+          setActiveHref(id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className={`site-header${scrolled ? ' is-scrolled' : ''}`} id="top">
-      <Brand />
-      <nav className={`main-nav${menuOpen ? ' open' : ''}`} id="main-nav" aria-label="Main navigation">
-        {links.map(([label, href]) => <a className={activeHref === href ? 'active' : ''} href={href} key={href} onClick={() => { setActiveHref(href); closeMenu(); }}>{label}</a>)}
-      </nav>
-      <Button href={orderUrl} className="header-order" target="_blank" rel="noreferrer"><WhatsAppIcon /> Order Now <Arrow /></Button>
-      <button className="menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="main-nav" onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-    </header>
+    <>
+      <header className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
+        <Brand />
+        <nav className={`main-nav${menuOpen ? ' open' : ''}`} id="main-nav" aria-label="Main navigation">
+          {links.map(([label, href]) => (
+            <a
+              className={activeHref === href ? 'active' : ''}
+              href={href}
+              key={href}
+              onClick={() => {
+                setActiveHref(href);
+                closeMenu();
+              }}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <Button href={orderUrl} className="header-order" target="_blank" rel="noreferrer">
+          <WhatsAppIcon /> Order Now <Arrow />
+        </Button>
+        <button
+          className={`menu-toggle${menuOpen ? ' is-active' : ''}`}
+          aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+          aria-expanded={menuOpen}
+          aria-controls="main-nav"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span />
+          <span />
+        </button>
+      </header>
+      {menuOpen && (
+        <div
+          className="nav-backdrop"
+          aria-hidden="true"
+          onClick={closeMenu}
+        />
+      )}
+    </>
   );
 }
 
 function Hero() {
   return (
-    <section className="hero section-paper" aria-labelledby="hero-title">
+    <section className="hero section-paper" id="top" aria-labelledby="hero-title">
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
