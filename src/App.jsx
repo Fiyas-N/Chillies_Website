@@ -867,37 +867,37 @@ function CinematicLoader({ onRevealStart, onComplete }) {
   const [stepIndex, setStepIndex] = useState(0);
   const canvasRef = useRef(null);
   const loaderRef = useRef(null);
-  const cardRef = useRef(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
+  const contentRef = useRef(null);
+  const sparksRef = useRef([]);
 
   const steps = [
     {
-      index: '01 / 04',
-      tag: 'സുഗന്ധവ്യഞ്ജനങ്ങൾ · Spice Harvest',
-      title: 'Infusing Kerala Spices',
-      subtitle: 'Wild green cardamom, star anise, cloves & Malabar pepper'
+      kicker: 'CHAPTER 01 · ORIGINS',
+      tag: 'സുഗന്ധവ്യഞ്ജനങ്ങൾ · Spice Gardens',
+      title: 'Infusing Hand-Ground Spices',
+      desc: 'Green cardamom, star anise, cloves & wild Malabar black pepper'
     },
     {
-      index: '02 / 04',
-      tag: 'ദമ്പർ ബിരിയാണി · Dum Simmer',
-      title: 'Dum-Cooking Fragrant Rice',
-      subtitle: 'Slow-simmered Kaima in golden Kerala ghee & saffron'
+      kicker: 'CHAPTER 02 · TRADITION',
+      tag: 'ദമ്പർ ബിരിയാണി · Dum Cooking',
+      title: 'Slow-Simmering Fragrant Kaima',
+      desc: 'Layered in pure golden ghee, saffron threads & fresh garden mint'
     },
     {
-      index: '03 / 04',
-      tag: 'കരിങ്കനൽ · Charcoal Embers',
+      kicker: 'CHAPTER 03 · THE HEARTH',
+      tag: 'കരിങ്കനൽ · Charcoal Flame',
       title: 'Charcoal Grills on Fire',
-      subtitle: 'Signature smoky Al Faham & tender charcoal grills'
+      desc: 'Smoky, sizzling Al Faham & tender charcoal-grilled favourites'
     },
     {
-      index: '04 / 04',
-      tag: 'സ്വാഗതം · Malabar Hospitality',
-      title: 'Your Table is Ready',
-      subtitle: 'Authentic flavours & warm hospitality · Since 2009'
+      kicker: 'CHAPTER 04 · HOSPITALITY',
+      tag: 'സ്വാഗതം · Welcome to Chillies',
+      title: 'Your Feast is Ready',
+      desc: 'Authentic flavours that bring people together · Since 2009'
     },
   ];
 
-  // AI Particle Simulator style canvas with cursor physics & glowing ember sparks
+  // Interactive Charcoal Hearth Ember & Spark Physics Simulation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -913,64 +913,52 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     };
     window.addEventListener('resize', onResize);
 
-    const onPointerMove = (e) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-      mouseRef.current.active = true;
-    };
-    const onPointerLeave = () => {
-      mouseRef.current.active = false;
-      mouseRef.current.x = -1000;
-      mouseRef.current.y = -1000;
-    };
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerleave', onPointerLeave);
-
-    const palette = ['#ffc414', '#cf1028', '#ff6b35', '#ffd700', '#fff5d6'];
-    const particleCount = Math.min(42, Math.max(24, Math.floor(window.innerWidth / 30)));
-
-    const particles = Array.from({ length: particleCount }, () => ({
+    // Ambient floating embers rising from the hearth
+    const emberPalette = ['#ffc414', '#ff5722', '#cf1028', '#ff9800', '#ffd54f'];
+    const embers = Array.from({ length: 48 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height + height * 0.1,
-      size: Math.random() * 2.8 + 1.2,
-      baseSpeedY: Math.random() * 0.75 + 0.35,
-      baseSpeedX: (Math.random() - 0.5) * 0.35,
+      size: Math.random() * 2.6 + 1.2,
+      speedY: Math.random() * 0.8 + 0.35,
+      speedX: (Math.random() - 0.5) * 0.4,
       wobbleSpeed: Math.random() * 0.03 + 0.015,
-      wobbleRadius: Math.random() * 1.6 + 0.6,
       angle: Math.random() * Math.PI * 2,
       opacity: Math.random() * 0.65 + 0.25,
-      color: palette[Math.floor(Math.random() * palette.length)],
+      color: emberPalette[Math.floor(Math.random() * emberPalette.length)],
       pulse: Math.random() * Math.PI,
     }));
 
+    // Interactive pointer sparkles
+    const onPointerMove = (e) => {
+      const x = e.clientX ?? (e.touches && e.touches[0]?.clientX);
+      const y = e.clientY ?? (e.touches && e.touches[0]?.clientY);
+      if (x === undefined || y === undefined) return;
+
+      for (let i = 0; i < 3; i++) {
+        sparksRef.current.push({
+          x: x + (Math.random() - 0.5) * 12,
+          y: y + (Math.random() - 0.5) * 12,
+          vx: (Math.random() - 0.5) * 3.5,
+          vy: (Math.random() - 0.5) * 3.5 - 1.2,
+          size: Math.random() * 2.8 + 1.5,
+          color: Math.random() > 0.3 ? '#ffc414' : '#ff4242',
+          life: 0,
+          maxLife: 32 + Math.random() * 20,
+        });
+      }
+    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('touchmove', onPointerMove, { passive: true });
+
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-      const hasMouse = mouseRef.current.active;
 
-      particles.forEach((p) => {
+      // Render & update ambient hearth embers
+      embers.forEach((p) => {
         p.angle += p.wobbleSpeed;
         p.pulse += 0.04;
-        let vx = p.baseSpeedX + Math.sin(p.angle) * p.wobbleRadius * 0.35;
-        let vy = -p.baseSpeedY;
-
-        // Cursor repulsion
-        if (hasMouse) {
-          const dx = p.x - mx;
-          const dy = p.y - my;
-          const distSq = dx * dx + dy * dy;
-          const maxDist = 130;
-          if (distSq < maxDist * maxDist && distSq > 0) {
-            const dist = Math.sqrt(distSq);
-            const force = (1 - dist / maxDist) * 2.0;
-            vx += (dx / dist) * force;
-            vy += (dy / dist) * force;
-          }
-        }
-
-        p.x += vx;
-        p.y += vy;
+        p.y -= p.speedY;
+        p.x += p.speedX + Math.sin(p.angle) * 0.45;
 
         if (p.y < -20) {
           p.y = height + 20;
@@ -979,16 +967,41 @@ function CinematicLoader({ onRevealStart, onComplete }) {
         if (p.x < -20) p.x = width + 20;
         else if (p.x > width + 20) p.x = -20;
 
-        const currentOpacity = Math.max(0.15, Math.min(1, p.opacity + Math.sin(p.pulse) * 0.18));
+        const currentOpacity = Math.max(0.12, Math.min(1, p.opacity + Math.sin(p.pulse) * 0.2));
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = currentOpacity;
-        ctx.shadowBlur = p.size * 2.5;
+        ctx.shadowBlur = p.size * 3;
         ctx.shadowColor = p.color;
         ctx.fill();
       });
+
+      // Render & update interactive touch/cursor sparks
+      const sparks = sparksRef.current;
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.life++;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.06;
+        s.size *= 0.97;
+
+        const pVal = s.life / s.maxLife;
+        if (pVal >= 1 || s.size <= 0.2) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = Math.max(0, 1 - pVal);
+        ctx.shadowBlur = s.size * 4;
+        ctx.shadowColor = s.color;
+        ctx.fill();
+      }
 
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 0;
@@ -999,15 +1012,15 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     return () => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerleave', onPointerLeave);
+      window.removeEventListener('touchmove', onPointerMove);
       cancelAnimationFrame(animationId);
     };
   }, []);
 
-  // Smooth numerical counter and phase progression (3.2 seconds minimum display)
+  // Smooth numerical counter and phase progression (3.2 seconds duration)
   useEffect(() => {
     const startTime = performance.now();
-    const duration = 3200; // 3.2 seconds luxury duration
+    const duration = 3200; // 3.2s
     let frameId;
     let hasTriggeredReveal = false;
 
@@ -1025,27 +1038,47 @@ function CinematicLoader({ onRevealStart, onComplete }) {
         frameId = requestAnimationFrame(tick);
       } else if (!hasTriggeredReveal) {
         hasTriggeredReveal = true;
+
         if (loaderRef.current) {
           const tl = gsap.timeline({
             onComplete: () => {
               onComplete?.();
             },
           });
-          // Center card exit
-          tl.to(cardRef.current, {
+          // 1. Content smoothly scales down and dissolves
+          tl.to(contentRef.current, {
             scale: 0.92,
             autoAlpha: 0,
-            duration: 0.36,
+            duration: 0.38,
             ease: 'power3.in',
           });
-          // 5 Shutters pull upward
-          tl.to('.loader-shutter', {
-            yPercent: -102,
-            duration: 0.85,
-            stagger: 0.065,
-            ease: 'power4.inOut',
+          // 2. Light beam flash
+          tl.fromTo('.hearth-light-beam', {
+            scaleY: 0.2,
+            autoAlpha: 0,
+          }, {
+            scaleY: 1.2,
+            autoAlpha: 1,
+            duration: 0.16,
+            ease: 'power2.out',
           }, '-=0.1');
-          // Trigger synchronous Hero entrance as the shutters slide open
+          // 3. Cinematic dual-door sweep outward
+          tl.to('.hearth-door-left', {
+            xPercent: -102,
+            duration: 0.9,
+            ease: 'power4.inOut',
+          }, '+=0.02');
+          tl.to('.hearth-door-right', {
+            xPercent: 102,
+            duration: 0.9,
+            ease: 'power4.inOut',
+          }, '<');
+          tl.to('.hearth-light-beam', {
+            autoAlpha: 0,
+            duration: 0.35,
+            ease: 'power2.out',
+          }, '<');
+          // 4. Synchronous hero reveal as the doors open!
           tl.call(() => {
             onRevealStart?.();
           }, null, '-=0.45');
@@ -1060,108 +1093,81 @@ function CinematicLoader({ onRevealStart, onComplete }) {
     return () => cancelAnimationFrame(frameId);
   }, [onRevealStart, onComplete]);
 
-  const onCardMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
-  };
-
-  const circleRadius = 100;
-  const circumference = 2 * Math.PI * circleRadius; // ~628.32
-  const strokeOffset = circumference * (1 - progress / 100);
-
   return (
-    <aside className="cinematic-loader" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
-      {/* 5 Staggered Curtain Shutters for award-winning theatrical reveal */}
-      <div className="loader-shutters" aria-hidden="true">
-        <span className="loader-shutter shutter-1" />
-        <span className="loader-shutter shutter-2" />
-        <span className="loader-shutter shutter-3" />
-        <span className="loader-shutter shutter-4" />
-        <span className="loader-shutter shutter-5" />
-      </div>
+    <aside className="hearth-loader" ref={loaderRef} role="status" aria-label="Loading Chillies Restaurant website">
+      {/* Cinematic Dual Palace Doors for Grand Entrance */}
+      <div className="hearth-door hearth-door-left" aria-hidden="true" />
+      <div className="hearth-door hearth-door-right" aria-hidden="true" />
+      <div className="hearth-light-beam" aria-hidden="true" />
 
-      <canvas className="loader-particles" ref={canvasRef} aria-hidden="true" />
+      <canvas className="hearth-canvas" ref={canvasRef} aria-hidden="true" />
 
-      {/* Ambient floating spice illustrations */}
-      <img className="loader-ambient-spice spice-tl" src={generatedAsset('cardamom-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-tr" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-bl" src={generatedAsset('chilli-outline.png')} alt="" aria-hidden="true" />
-      <img className="loader-ambient-spice spice-br" src={generatedAsset('heart-leaf-outline.png')} alt="" aria-hidden="true" />
-
-      {/* Center Stage Card (Aceternity Spotlight & Glowing Border Beam) */}
-      <div className="loader-center-content" ref={cardRef} onMouseMove={onCardMouseMove}>
-        <div className="loader-spotlight" aria-hidden="true" />
-        <div className="loader-beam-border" aria-hidden="true" />
-
-        <div className="loader-emblem-wrap">
-          <div className="loader-pulse-aura" aria-hidden="true" />
-
-          {/* Circular SVG Liquid Progress Ring (React Bits / Uiverse style) */}
-          <svg className="loader-circular-progress" viewBox="0 0 220 220" aria-hidden="true">
-            <defs>
-              <linearGradient id="loaderRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ffc414" />
-                <stop offset="60%" stopColor="#ff6b35" />
-                <stop offset="100%" stopColor="#cf1028" />
-              </linearGradient>
-            </defs>
-            <circle className="ring-track" cx="110" cy="110" r={circleRadius} />
-            <circle
-              className="ring-bar"
-              cx="110"
-              cy="110"
-              r={circleRadius}
-              stroke="url(#loaderRingGrad)"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeOffset}
-            />
-          </svg>
-
-          {/* Astrolabe dashed orbit */}
-          <svg className="loader-orbit-ring" viewBox="0 0 240 240" fill="none" aria-hidden="true">
-            <circle cx="120" cy="120" r="112" stroke="rgba(255,196,20,0.4)" strokeWidth="1.2" strokeDasharray="5 7" />
-            <circle cx="120" cy="120" r="94" stroke="rgba(207,16,40,0.25)" strokeWidth="1" strokeDasharray="3 5" />
-          </svg>
-
-          <img className="loader-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
-          <img className="loader-sprig-badge" src={generatedAsset('botanical-sprig.png')} alt="" aria-hidden="true" />
-          <img className="loader-crest-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
+      {/* Main Theatrical Stage */}
+      <div className="hearth-stage" ref={contentRef}>
+        <div className="hearth-top-bar">
+          <span className="hearth-prestige-tag">CHILLIES RESTAURANT GROUP · EST. 2009</span>
+          <span className="hearth-hint">✦ MOVE CURSOR TO IGNITE SPARK EMBER TRAILS ✦</span>
         </div>
 
-        {/* Counter Row with Culinary Sizzle Equalizer (React Bits inspired) */}
-        <div className="loader-counter-row">
-          <div className="loader-equalizer-bars" aria-hidden="true">
-            <span className="eq-bar eq-1" />
-            <span className="eq-bar eq-2" />
-            <span className="eq-bar eq-3" />
-            <span className="eq-bar eq-4" />
-            <span className="eq-bar eq-5" />
+        {/* Central Glowing Culinary Sigil & Rotating Spice Wheel */}
+        <div className="hearth-sigil-wrap">
+          <div className="hearth-glow-core" aria-hidden="true" />
+
+          {/* Concentric Astrolabe Rings */}
+          <svg className="hearth-astrolabe" viewBox="0 0 280 280" fill="none" aria-hidden="true">
+            <circle cx="140" cy="140" r="134" stroke="rgba(255, 196, 20, 0.22)" strokeWidth="1" strokeDasharray="4 8" />
+            <circle cx="140" cy="140" r="116" stroke="rgba(207, 16, 40, 0.3)" strokeWidth="1.2" strokeDasharray="8 6" />
+            <circle cx="140" cy="140" r="94" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="1" strokeDasharray="3 5" />
+          </svg>
+
+          {/* Rotating Hand-Drawn Spice Satellites */}
+          <div className="hearth-spice-orbit" aria-hidden="true">
+            <div className="satellite-spice satellite-star-anise">
+              <img src={generatedAsset('star-anise-outline.png')} alt="" />
+            </div>
+            <div className="satellite-spice satellite-cardamom">
+              <img src={generatedAsset('cardamom-outline.png')} alt="" />
+            </div>
+            <div className="satellite-spice satellite-leaf">
+              <img src={generatedAsset('heart-leaf-outline.png')} alt="" />
+            </div>
           </div>
-          <div className="loader-digit-stack">
-            <span className="loader-count-num">{progress.toString().padStart(2, '0')}</span>
-            <span className="loader-count-sym">%</span>
+
+          {/* Golden Brush Ring */}
+          <img className="hearth-brush-ring" src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
+
+          {/* Brand Logo Crest */}
+          <div className="hearth-crest">
+            <img className="hearth-logo" src={officialAsset('chillies-logo.png')} alt="Chillies Restaurant" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = referenceAsset('logo-board.webp'); }} />
           </div>
         </div>
 
-        <div className="loader-step-pill">
-          <span className="loader-step-num">{steps[stepIndex].index}</span>
-          <span className="loader-step-tag">{steps[stepIndex].tag}</span>
+        {/* Grand Typography Counter */}
+        <div className="hearth-counter-row">
+          <span className="hearth-num-digits">{progress.toString().padStart(2, '0')}</span>
+          <span className="hearth-num-percent">%</span>
         </div>
 
-        {/* Phase Text Transitions */}
-        <div className="loader-phase-box" key={stepIndex}>
-          <h2 className="loader-phase-title">{steps[stepIndex].title}</h2>
-          <p className="loader-phase-subtitle">{steps[stepIndex].subtitle}</p>
+        {/* Liquid Gold Progress Track */}
+        <div className="hearth-meter-track" aria-hidden="true">
+          <div className="hearth-meter-bar" style={{ width: `${progress}%` }}>
+            <span className="hearth-meter-flame" />
+          </div>
         </div>
 
-        {/* Horizontal Progress Track with Ember Flame Marker */}
-        <div className="loader-progress-track" aria-hidden="true">
-          <div className="loader-progress-bar" style={{ width: `${progress}%` }} />
-          <span className="loader-progress-flame" style={{ left: `${progress}%` }}>🌶</span>
+        {/* Poetic Culinary Narrative */}
+        <div className="hearth-narrative-box" key={stepIndex}>
+          <span className="hearth-narrative-kicker">{steps[stepIndex].kicker}</span>
+          <h2 className="hearth-narrative-title">{steps[stepIndex].title}</h2>
+          <p className="hearth-narrative-desc">{steps[stepIndex].desc}</p>
+        </div>
+
+        <div className="hearth-bottom-bar">
+          <span>AUTHENTIC MALABAR TASTE</span>
+          <span className="hearth-dot">✦</span>
+          <span>4 HUBS ACROSS KERALA</span>
+          <span className="hearth-dot">✦</span>
+          <span>WANDOOR · ANCHACHAVIDI · PULLIKALODI · THIRUVALLI</span>
         </div>
       </div>
     </aside>
