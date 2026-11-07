@@ -175,7 +175,9 @@ function Hero() {
         <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Authentic Malabar Dum Biriyani and charcoal grilled chicken in Chillies takeaway bucket in Wandoor, Kerala" fetchPriority="high" />
         <div className="hero-note hero-note-malay" data-draw><span>Malabar</span><strong>Dum Biriyani</strong><svg viewBox="0 0 110 48" aria-hidden="true"><path d="M4 8c20 1 30 31 61 23 13-3 23-15 37-18m-3 0 13-3-6 12" /></svg></div>
         <div className="hero-note hero-note-taste" data-draw><span>Same Great Taste</span><strong>Always!</strong><svg viewBox="0 0 120 24" aria-hidden="true"><path d="M3 16c32-14 78-12 114-4" /></svg></div>
-        <img className="hero-spice-doodle" data-ornament src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
+        <div className="hero-spice-doodle-wrap" data-ornament>
+          <img className="hero-spice-doodle" src={generatedAsset('star-anise-outline.png')} alt="" aria-hidden="true" />
+        </div>
       </div>
       <img className="hero-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" />
       <ul className="hero-side-list"><li><LineIcon name="utensils" /><span>Signature<br />dishes</span></li><li><LineIcon name="leaf" /><span>Fresh<br />ingredients</span></li><li><LineIcon name="users" /><span>Family<br />friendly</span></li><li><LineIcon name="pin" /><span>Multiple<br />locations</span></li></ul>
@@ -727,7 +729,7 @@ function useScrollMotion(heroReady = false) {
       .to('.hero-note-malay', { y: -38, x: 14, rotate: -4, ease: 'none' }, 0)
       .to('.hero-note-taste', { y: -48, x: -16, rotate: 4.5, ease: 'none' }, 0)
       .to('.hero-stamp', { rotate: 50, y: -28, ease: 'none' }, 0)
-      .to('.hero-spice-doodle', { rotate: -65, y: 32, ease: 'none' }, 0)
+      .to('.hero-spice-doodle-wrap', { y: 32, ease: 'none' }, 0)
       .to('.hero-copy', { yPercent: -10, autoAlpha: 0.25, ease: 'none' }, 0);
 
       // 4. Menu section stamp and hand-note organic float
