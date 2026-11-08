@@ -303,25 +303,8 @@ function MenuSection() {
   const [activeCard, setActiveCard] = useState(0);
   useEffect(() => {
     const track = trackRef.current;
-    const runway = runwayRef.current;
-    if (!track || !runway) return undefined;
-    const desktop = window.matchMedia('(min-width: 761px)');
-    if (!desktop.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    if (!track) return undefined;
     gsap.registerPlugin(ScrollTrigger);
-    const getCycleWidth = () => {
-      const cards = [...track.querySelectorAll('.food-card')];
-      return cards.length >= menuItems.length * 2
-        ? cards[menuItems.length].getBoundingClientRect().left - cards[0].getBoundingClientRect().left
-        : 0;
-    };
-    if (!getCycleWidth()) return undefined;
-    const context = gsap.context(() => {
-      gsap.fromTo(track, { x: 0 }, {
-        x: () => -getCycleWidth(),
-        ease: 'none',
-        scrollTrigger: { trigger: runway, start: 'top 90%', end: 'bottom 10%', scrub: 0.75, invalidateOnRefresh: true },
-      });
-    }, runway);
     const observer = new ResizeObserver(() => ScrollTrigger.refresh());
     observer.observe(track);
     const refreshAfterImages = [...track.querySelectorAll('img')].map((image) => {
@@ -333,7 +316,6 @@ function MenuSection() {
     });
     Promise.all(refreshAfterImages).then(() => ScrollTrigger.refresh());
     return () => {
-      context.revert();
       observer.disconnect();
     };
   }, []);
@@ -637,13 +619,17 @@ function useScrollMotion(heroReady = false) {
             if (walker.currentNode.nodeValue.trim()) textNodes.push(walker.currentNode);
           }
           textNodes.forEach((textNode) => {
+            const isItalic = textNode.parentElement && (
+              textNode.parentElement.tagName === 'EM' ||
+              window.getComputedStyle(textNode.parentElement).fontStyle === 'italic'
+            );
             const fragment = document.createDocumentFragment();
             textNode.nodeValue.split(/(\s+)/).forEach((part) => {
               if (!part) return;
               if (/^\s+$/.test(part)) fragment.append(document.createTextNode(part));
               else {
                 const mask = document.createElement('span');
-                mask.className = 'line-mask-wrap';
+                mask.className = `line-mask-wrap${isItalic ? ' is-italic' : ''}`;
 
                 const word = document.createElement('span');
                 word.className = 'heading-word';
@@ -1033,6 +1019,7 @@ function useScrollMotion(heroReady = false) {
           ease: 'power3.out',
           onComplete: () => {
             gsap.set('.hero-line', { overflow: 'visible' });
+            gsap.set('.hero-line > span', { clearProps: 'filter' });
           },
         }, 0.12)
         .from('.hero-food', {
