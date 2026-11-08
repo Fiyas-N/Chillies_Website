@@ -882,23 +882,23 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 .hero-spice-doodle{right:0;bottom:3%;}
 
 /* The menu moves with the page; only its repeated photo strip translates. */
-.menu-section{overflow:visible;padding:48px 5.2% 0}
+.menu-section{overflow:visible;padding:60px 5.2% 0}
 .menu-section:after{animation:none!important;transform:none!important}
-.menu-pin-runway{position:relative;display:grid;grid-template-columns:minmax(280px,clamp(300px,26vw,360px)) minmax(0,1fr);align-items:center;gap:clamp(18px,2.4vw,32px);min-height:0;padding:24px 0 28px;}
+.menu-pin-runway{position:relative;display:grid;grid-template-columns:minmax(280px,clamp(300px,26vw,360px)) minmax(0,1fr);align-items:start;gap:clamp(18px,2.4vw,32px);min-height:0;padding:16px 0 clamp(64px,7vw,92px);}
 .menu-stage{display:contents}
-.menu-stage .menu-heading{position:static;grid-column:1;grid-row:1;display:block;min-height:0;width:100%;align-self:center;}
+.menu-stage .menu-heading{position:static;grid-column:1;grid-row:1;display:block;min-height:0;width:100%;align-self:start;margin-top:clamp(28px,3.2vw,44px);}
 .menu-stage .menu-heading>div:first-child{width:100%;}
 .menu-stage .menu-heading h2{font-size:clamp(42px,5vw,68px);line-height:.91;}
-.menu-stage .menu-art{position:absolute;z-index:3;top:0;right:2%;width:auto;margin:0;display:flex;align-items:flex-end;gap:clamp(12px,1.8vw,22px);pointer-events:none;}
-.menu-stage .menu-art .hand-note{width:clamp(160px,16vw,195px);font-size:clamp(20px,2vw,28px);}
-.menu-stage .menu-art .menu-stamp{width:clamp(88px,8vw,118px);height:auto;}
+.menu-stage .menu-art{position:absolute;z-index:3;top:0;right:2%;width:auto;margin:0;display:flex;align-items:center;gap:clamp(12px,1.8vw,22px);pointer-events:none;}
+.menu-stage .menu-art .hand-note{width:clamp(150px,15vw,185px);font-size:clamp(19px,1.8vw,26px);}
+.menu-stage .menu-art .menu-stamp{width:clamp(82px,7.5vw,108px);height:auto;}
 .menu-stage .menu-carousel{
   position:relative;
   grid-column:2;
   grid-row:1;
   width:100%;
   min-width:0;
-  margin:clamp(28px,3.2vw,44px) 0 0;
+  margin:clamp(86px,9vw,114px) 0 0;
   padding:14px 0 20px;
   overflow:hidden;
   -webkit-mask-image:linear-gradient(
@@ -1038,11 +1038,11 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 /* Final page composition fixes: give the menu its reference-like top alignment,
    keep the card train moving inside its own row, and fill the signature panel. */
 @media(min-width:761px){
-  .menu-section{padding-top:28px;overflow:clip}
+  .menu-section{padding-top:56px;overflow:clip}
   .menu-section:after{display:none;content:none}
-  .menu-pin-runway{height:auto!important;min-height:0;padding:8px 0 24px;align-items:center;grid-template-columns:minmax(280px,clamp(300px,26vw,360px)) minmax(0,1fr);gap:clamp(18px,2.4vw,32px)}
-  .menu-stage .menu-heading{align-self:center;margin-top:0}
-  .menu-stage .menu-carousel{align-self:center;margin:clamp(28px,3.2vw,44px) 0 0;width:100%;}
+  .menu-pin-runway{height:auto!important;min-height:0;padding:12px 0 clamp(64px,7vw,92px);align-items:start;grid-template-columns:minmax(280px,clamp(300px,26vw,360px)) minmax(0,1fr);gap:clamp(18px,2.4vw,32px)}
+  .menu-stage .menu-heading{align-self:start;margin-top:clamp(28px,3.2vw,44px)}
+  .menu-stage .menu-carousel{align-self:start;margin:clamp(86px,9vw,114px) 0 0;width:100%;}
   .menu-stage .menu-art{top:0;right:2%;width:auto;}
   .menu-stage .food-card{flex-basis:clamp(210px,17.5vw,270px)}
   .menu-stage .food-card>img{height:clamp(192px,16vw,245px)}
@@ -1053,8 +1053,9 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 }
 @media(min-width:761px) and (max-width:1100px){
   .hero-stamp{left:.5%;top:42%;width:64px;}
-  .menu-pin-runway{grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:18px}
-  .menu-stage .menu-carousel{margin-top:clamp(24px,3vw,36px)}
+  .menu-pin-runway{grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:18px;padding-bottom:clamp(56px,6vw,78px)}
+  .menu-stage .menu-heading{margin-top:clamp(22px,2.8vw,36px)}
+  .menu-stage .menu-carousel{margin-top:clamp(78px,8.5vw,98px)}
   .menu-stage .food-card{flex-basis:clamp(195px,21vw,236px)}
   .menu-stage .food-card>img{height:clamp(180px,19vw,220px)}
   .signature-band{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr) minmax(112px,.42fr);gap:14px;min-height:330px}
@@ -1070,9 +1071,9 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
   .location-card{flex:0 0 min(220px,calc((100% - 28px)/3));}
 }
 
-/* Keep the hero artwork inside the viewport while preserving vertical overflow. */
+/* Keep the hero artwork cleanly bounded inside its section so it never bleeds into the menu. */
 @media(min-width:761px){
-  .hero{overflow-x:clip;overflow-y:visible}
+  .hero{overflow:hidden}
 }
 
 /* Keep the bucket fully inside the hero and move its seal clear of the feature list. */
@@ -1699,83 +1700,52 @@ img[data-media-state="error"]{
   will-change:transform;
 }
 
-/* 2. Floating Quick-Action & Back-to-Top Pill */
-.floating-action-pill{
+/* 2. Floating Back-to-Top Button (Order button moved exclusively to header island) */
+.floating-back-to-top{
   position:fixed;
   bottom:26px;
   right:26px;
   z-index:9999;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 8px 6px 14px;
-  border-radius:999px;
-  background:rgba(255,253,248,0.88);
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(80,54,26,0.16);
-  box-shadow:0 14px 40px rgba(45,20,10,0.18), 0 2px 6px rgba(45,20,10,0.06);
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border-radius:50%;
+  background:rgba(255,253,248,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(80,54,26,0.18);
+  box-shadow:0 10px 30px rgba(45,20,10,0.16), 0 2px 6px rgba(45,20,10,0.06);
+  color:var(--ink);
+  font-size:18px;
+  font-weight:700;
+  border:1px solid rgba(80,54,26,0.18);
+  cursor:pointer;
   opacity:0;
-  transform:translateY(24px) scale(0.92);
+  transform:translateY(16px) scale(0.9);
   pointer-events:none;
-  transition:opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition:opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1), background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.floating-action-pill.is-visible{
+.floating-back-to-top.is-visible{
   opacity:1;
   transform:translateY(0) scale(1);
   pointer-events:auto;
 }
-.floating-pill-order{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  color:#fff;
+.floating-back-to-top:hover{
   background:var(--red);
-  padding:8px 16px;
-  border-radius:999px;
-  font-size:13px;
-  font-weight:700;
-  text-decoration:none;
-  box-shadow:0 4px 14px rgba(207,16,40,0.32);
-  transition:transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-}
-.floating-pill-order:hover{
-  transform:translateY(-1px);
-  background:#b50e23;
-  box-shadow:0 6px 18px rgba(207,16,40,0.42);
-}
-.floating-pill-order .whatsapp-icon{
-  width:16px;
-  height:16px;
-}
-.floating-pill-top{
-  display:grid;
-  place-items:center;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  background:rgba(80,54,26,0.07);
-  color:var(--ink);
-  font-size:15px;
-  font-weight:700;
-  border:0;
-  cursor:pointer;
-  transition:background 0.25s ease, transform 0.25s ease;
-}
-.floating-pill-top:hover{
-  background:rgba(207,16,40,0.12);
-  color:var(--red);
-  transform:translateY(-2px);
+  color:#fff;
+  border-color:var(--red);
+  transform:translateY(-2px) scale(1.06);
+  box-shadow:0 12px 32px rgba(207,16,40,0.38);
 }
 @media(max-width:600px){
-  .floating-action-pill{
+  .floating-back-to-top{
     bottom:16px;
     right:16px;
-    padding:5px 6px 5px 12px;
-  }
-  .floating-pill-order{
-    padding:7px 13px;
-    font-size:12px;
+    width:40px;
+    height:40px;
+    font-size:16px;
   }
 }
 

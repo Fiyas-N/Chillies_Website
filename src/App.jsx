@@ -855,12 +855,12 @@ function useScrollMotion(heroReady = false) {
         },
       });
 
-      // 2. Floating action pill reveal on scroll
+      // 2. Floating back-to-top button reveal on scroll
       ScrollTrigger.create({
         start: 400,
         end: 'max',
         onToggle: (self) => {
-          const pill = document.querySelector('.floating-action-pill');
+          const pill = document.querySelector('.floating-back-to-top');
           if (pill) pill.classList.toggle('is-visible', self.isActive);
         },
       });
@@ -1703,14 +1703,9 @@ export default function App() {
       />
     )}
     <Header /><main><Hero /><MenuSection /><StorySection /><LocationsSection /><ReviewsSection /></main><Footer />
-    <aside className="floating-action-pill" aria-label="Quick actions">
-      <a href={orderUrl} target="_blank" rel="noreferrer" className="floating-pill-order" aria-label="Order on WhatsApp">
-        <WhatsAppIcon /> Order Now
-      </a>
-      <button className="floating-pill-top" onClick={scrollToTop} aria-label="Scroll back to top">
-        ↑
-      </button>
-    </aside>
+    <button className="floating-back-to-top" onClick={scrollToTop} aria-label="Scroll back to top">
+      <span aria-hidden="true">↑</span>
+    </button>
   </>;
 }
 
