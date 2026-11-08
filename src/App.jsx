@@ -537,11 +537,18 @@ function useScrollMotion(heroReady = false) {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let lenis = null;
-    if (!prefersReducedMotion) {
-      gsap.registerPlugin(ScrollTrigger);
-      lenis = new Lenis({ autoRaf: false, duration: 1.2, smoothWheel: true, wheelMultiplier: 0.82, touchMultiplier: 1.1 });
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Touch devices (phones, tablets) have native 120Hz momentum scrolling.
+    // Virtualizing touch scroll via Lenis disrupts native iOS/Android momentum and swipe gestures.
+    // We only bind Lenis smooth wheel scrolling on non-coarse pointer devices (mouse/trackpad).
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (!prefersReducedMotion && !isTouch) {
+      lenis = new Lenis({ autoRaf: false, duration: 1.1, smoothWheel: true, wheelMultiplier: 0.82 });
       lenisRef.current = lenis;
     }
+
     const onSectionLink = (event) => {
       const anchor = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
       if (!anchor) return;
@@ -560,14 +567,16 @@ function useScrollMotion(heroReady = false) {
       window.history.pushState(null, '', hash);
     };
     document.addEventListener('click', onSectionLink);
+
     const tick = lenis ? (time) => lenis.raf(time * 1000) : null;
-    if (lenis) {
+    if (lenis && tick) {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
     }
 
-    const context = lenis ? gsap.context(() => {
+    // ScrollTrigger context runs on ALL devices, whether Lenis is active or native scroll is used!
+    const context = !prefersReducedMotion ? gsap.context(() => {
       gsap.utils.toArray('[data-draw]').forEach((drawing) => {
         const paths = [...drawing.querySelectorAll('path')];
         gsap.fromTo(paths, {
@@ -1202,7 +1211,7 @@ function edRealLoad() {
   for (let i = 0; i < imgs.length; i++) if (imgs[i].complete) done++;
   const frac = imgs.length ? done / imgs.length : 1;
   const fonts = document.fonts && document.fonts.status === 'loaded' ? 1 : 0;
-  return Math.min(0.95, 0.15 + 0.6 * frac + 0.2 * fonts);
+  return Math.min(1, 0.2 + 0.6 * frac + 0.2 * fonts);
 }
 
 const edClamp = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
@@ -1285,6 +1294,12 @@ function useEditorialLoader(rootRef, sceneRef, optsRef) {
     });
     ro.observe(root);
 
+    let isWindowLoaded = typeof document !== 'undefined' && document.readyState === 'complete';
+    const onLoad = () => { isWindowLoaded = true; };
+    if (!isWindowLoaded && typeof window !== 'undefined') {
+      window.addEventListener('load', onLoad, { once: true });
+    }
+
     let raf = 0;
     let last = -1;
     const tick = (now) => {
@@ -1293,9 +1308,18 @@ function useEditorialLoader(rootRef, sceneRef, optsRef) {
       t += dt;
       const revealS = reduced ? 0.4 : sceneRef.current.revealS;
       if (revealAt < 0) {
-        const target = Math.min(curve(t), edRealLoad());
-        progress = target >= 1 ? 1 : Math.min(target, progress + dt * 1.5);
-        if (progress >= 1 && t >= loadS) revealAt = t;
+        // Hard safety timeout: loader must NEVER lock up the site on mobile/slow connections
+        const maxWait = reduced ? 0.8 : Math.max(2.4, loadS + 0.6);
+        const readyRatio = isWindowLoaded || (typeof document !== 'undefined' && document.readyState === 'complete') || t >= loadS ? 1 : edRealLoad();
+        const target = Math.min(1, Math.max(curve(t), (t / loadS) * readyRatio));
+
+        if (t >= maxWait) {
+          progress = 1;
+          revealAt = t;
+        } else {
+          progress = target >= 0.999 ? 1 : Math.min(target, progress + dt * 2.2);
+          if (progress >= 1 && t >= loadS) revealAt = t;
+        }
       }
 
       if (revealAt >= 0 && !revealTriggered) {
@@ -1321,6 +1345,9 @@ function useEditorialLoader(rootRef, sceneRef, optsRef) {
     raf = requestAnimationFrame(tick);
 
     return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('load', onLoad);
+      }
       cancelAnimationFrame(raf);
       ro.disconnect();
     };
@@ -1710,7 +1737,10 @@ export default function App() {
     {loaderMounted && (
       <CinematicLoader
         onRevealStart={() => setHeroReady(true)}
-        onComplete={() => setLoaderMounted(false)}
+        onComplete={() => {
+          setLoaderMounted(false);
+          ScrollTrigger.refresh();
+        }}
       />
     )}
     <Header /><main><Hero /><MenuSection /><StorySection /><LocationsSection /><ReviewsSection /></main><Footer />

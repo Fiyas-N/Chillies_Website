@@ -982,7 +982,7 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
   .menu-stage .menu-heading{display:block;}
   .menu-stage .menu-art{display:none;}
   .menu-stage .menu-carousel{width:calc(100% + 20px);margin:24px -10px 28px;overflow:visible;}
-  .menu-stage .food-grid{width:auto;max-width:none;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;transform:none!important;will-change:auto;padding-inline:10px;}
+  .menu-stage .food-grid{width:auto;max-width:none;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;transform:none!important;will-change:auto;padding-inline:10px;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior-x:contain;}
   .menu-stage .food-card{flex:0 0 min(78vw,320px);}
   .menu-stage .food-card>img{height:clamp(210px,62vw,250px);}
   .menu-stage .food-card[data-loop-copy="true"]{display:none;}
@@ -2092,4 +2092,39 @@ img[data-media-state="error"]{
 .hero-side-list li:hover .line-icon{
   transform:scale(1.2) rotate(8deg);
   color:var(--red);
+}
+
+/* 11. Cross-Device Touch & Viewport Stability */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-text-size-adjust: 100%;
+}
+.food-grid,
+.location-grid,
+.review-track {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+}
+.carousel-dots button {
+  position: relative;
+  touch-action: manipulation;
+}
+.carousel-dots button::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}
+.floating-back-to-top {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+@media(max-width: 480px) {
+  .floating-back-to-top {
+    bottom: 18px;
+    right: 18px;
+    width: 44px !important;
+    height: 44px !important;
+  }
 }
