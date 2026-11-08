@@ -131,20 +131,10 @@ function Header() {
   ];
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const sectionElements = links
-      .map(([, href]) => ({ id: href, el: document.querySelector(href) }))
-      .filter((s) => s.el);
-
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      
+      setScrolled(scrollY > 20);
+
       // Top of page
       if (scrollY < 120) {
         setActiveHref('#top');
@@ -158,12 +148,16 @@ function Header() {
       }
 
       // Find currently visible section
-      for (let i = sectionElements.length - 1; i >= 0; i--) {
-        const { id, el } = sectionElements[i];
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= 140) {
-          setActiveHref(id);
-          break;
+      for (let i = links.length - 1; i >= 0; i--) {
+        const [, href] = links[i];
+        if (href === '#top') continue;
+        const el = document.querySelector(href);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 160) {
+            setActiveHref(href);
+            break;
+          }
         }
       }
     };
