@@ -926,7 +926,14 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
   pointer-events:none;
   background:linear-gradient(to left, rgba(250,245,232,0.92) 0%, rgba(250,245,232,0) 100%);
 }
-.menu-stage .food-grid{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 4px 12px;scroll-behavior:smooth;}
+.menu-stage .food-grid{
+  display:flex;
+  width:max-content;
+  gap:16px;
+  overflow:visible;
+  padding:4px 4px 12px;
+  will-change:transform;
+}
 .menu-stage .food-grid::-webkit-scrollbar{display:none;}
 .menu-stage .food-card{flex:0 0 clamp(210px,17.5vw,270px);scroll-snap-align:start;}
 .menu-stage .food-card>img{height:clamp(192px,16vw,245px);}

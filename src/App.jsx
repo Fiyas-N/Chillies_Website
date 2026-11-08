@@ -226,17 +226,17 @@ function Hero() {
 
   const handleMouseMove = (e) => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (window.innerWidth <= 960) return;
+    if (window.matchMedia('(hover: none)').matches) return;
     const rect = heroRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    gsap.to('.hero-food', { x: x * 16, y: y * 12, rotate: x * 2, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-brush', { x: x * -14, y: y * -10, rotate: x * -2.5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-note-malay', { x: x * 20, y: y * 16, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-note-taste', { x: x * -18, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-stamp', { x: x * -14, y: y * -12, rotate: 9 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-botanical-branch', { x: x * -12, y: y * -10, rotate: -6 + x * 4, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-food', { x: x * 18, y: y * 14, rotate: x * 2.5, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-brush', { x: x * -16, y: y * -12, rotate: x * -3, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-note-malay', { x: x * 22, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-note-taste', { x: x * -20, y: y * 20, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-stamp', { x: x * -16, y: y * -14, rotate: 9 + x * 6, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-botanical-branch', { x: x * -14, y: y * -12, rotate: -6 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
   };
 
   const handleMouseLeave = () => {
@@ -301,12 +301,51 @@ function MenuSection() {
   const trackRef = useRef(null);
   const runwayRef = useRef(null);
   const [activeCard, setActiveCard] = useState(0);
+
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return undefined;
+    const runway = runwayRef.current;
+    if (!track || !runway) return undefined;
+    const desktop = window.matchMedia('(min-width: 761px)');
+    if (!desktop.matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
     gsap.registerPlugin(ScrollTrigger);
-    const observer = new ResizeObserver(() => ScrollTrigger.refresh());
+
+    const getCycleWidth = () => {
+      const cards = [...track.querySelectorAll('.food-card')];
+      return cards.length >= menuItems.length * 2
+        ? cards[menuItems.length].getBoundingClientRect().left - cards[0].getBoundingClientRect().left
+        : 0;
+    };
+
+    let ctx = null;
+    const updateScrub = () => {
+      const cycleW = getCycleWidth();
+      if (!cycleW) return;
+      ctx && ctx.revert();
+      ctx = gsap.context(() => {
+        gsap.fromTo(track, { x: 0 }, {
+          x: () => -cycleW,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: runway,
+            start: 'top 85%',
+            end: 'bottom 15%',
+            scrub: 0.85,
+            invalidateOnRefresh: true,
+          },
+        });
+      }, runway);
+    };
+
+    updateScrub();
+    const observer = new ResizeObserver(() => {
+      updateScrub();
+      ScrollTrigger.refresh();
+    });
     observer.observe(track);
+    observer.observe(runway);
+
     const refreshAfterImages = [...track.querySelectorAll('img')].map((image) => {
       if (image.complete) return Promise.resolve();
       return new Promise((resolve) => {
@@ -314,8 +353,13 @@ function MenuSection() {
         image.addEventListener('error', resolve, { once: true });
       });
     });
-    Promise.all(refreshAfterImages).then(() => ScrollTrigger.refresh());
+    Promise.all(refreshAfterImages).then(() => {
+      updateScrub();
+      ScrollTrigger.refresh();
+    });
+
     return () => {
+      ctx && ctx.revert();
       observer.disconnect();
     };
   }, []);
@@ -521,12 +565,14 @@ function useScrollMotion(heroReady = false) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Touch devices (phones, tablets) have native 120Hz momentum scrolling.
-    // Virtualizing touch scroll via Lenis disrupts native iOS/Android momentum and swipe gestures.
-    // We only bind Lenis smooth wheel scrolling on non-coarse pointer devices (mouse/trackpad).
-    const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    if (!prefersReducedMotion && !isTouch) {
-      lenis = new Lenis({ autoRaf: false, duration: 1.1, smoothWheel: true, wheelMultiplier: 0.82 });
+    if (!prefersReducedMotion) {
+      lenis = new Lenis({
+        autoRaf: false,
+        duration: 1.15,
+        smoothWheel: true,
+        wheelMultiplier: 0.85,
+        syncTouch: false,
+      });
       lenisRef.current = lenis;
       if (typeof window !== 'undefined') window.__lenis = lenis;
     }
@@ -658,7 +704,7 @@ function useScrollMotion(heroReady = false) {
           scrollTrigger: {
             trigger: heading,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none none reverse',
           },
           onComplete: () => {
             gsap.set(heading.querySelectorAll('.line-mask-wrap'), { overflow: 'visible' });
@@ -683,7 +729,7 @@ function useScrollMotion(heroReady = false) {
           scrollTrigger: {
             trigger: paragraph,
             start: 'top 91%',
-            once: true,
+            toggleActions: 'play none none reverse',
           },
           onComplete: () => {
             gsap.set(paragraph, { clearProps: 'filter' });
