@@ -242,7 +242,7 @@ function Hero() {
     gsap.to('.hero-note-malay', { x: x * 20, y: y * 16, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
     gsap.to('.hero-note-taste', { x: x * -18, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
     gsap.to('.hero-stamp', { x: x * -14, y: y * -12, rotate: 9 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-corner-art', { x: x * -12, y: y * -10, rotate: -5 + x * -2, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-botanical-branch', { x: x * -12, y: y * -10, rotate: -6 + x * 4, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
   };
 
   const handleMouseLeave = () => {
@@ -250,7 +250,7 @@ function Hero() {
       x: 0, y: 0, rotate: 0, duration: 1, ease: 'power3.out', overwrite: 'auto'
     });
     gsap.to('.hero-stamp', { x: 0, y: 0, rotate: 9, duration: 1, ease: 'power3.out', overwrite: 'auto' });
-    gsap.to('.hero-corner-art', { x: 0, y: 0, rotate: -5, duration: 1, ease: 'power3.out', overwrite: 'auto' });
+    gsap.to('.hero-botanical-branch', { x: 0, y: 0, rotate: -6, duration: 1, ease: 'power3.out', overwrite: 'auto' });
   };
 
   return (
@@ -262,14 +262,13 @@ function Hero() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="hero-corner-art" data-ornament aria-hidden="true">
-        <img className="hero-corner-sprig" src={generatedAsset('botanical-sprig.png')} alt="" />
-        <div className="hero-corner-note">
-          <span>Authentic</span>
-          <strong>Taste of Malabar</strong>
-          <svg viewBox="0 0 110 24" aria-hidden="true"><path d="M4 16c26-12 74-12 110-3" /></svg>
-        </div>
-      </div>
+      <img
+        className="hero-botanical-branch"
+        src={generatedAsset('botanical-branch.webp')}
+        alt=""
+        aria-hidden="true"
+        data-ornament
+      />
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
@@ -891,6 +890,7 @@ function useScrollMotion(heroReady = false) {
         .to('.hero-note-malay', { y: -38, x: 14, rotate: -4, ease: 'none' }, 0)
         .to('.hero-note-taste', { y: -48, x: -16, rotate: 4.5, ease: 'none' }, 0)
         .to('.hero-stamp', { rotate: 50, y: -28, ease: 'none' }, 0)
+        .to('.hero-botanical-branch', { y: -32, rotate: -18, ease: 'none' }, 0)
         .to('.hero-spice-doodle-wrap', { y: 32, ease: 'none' }, 0)
         .to('.hero-copy', { yPercent: -10, autoAlpha: 0.25, ease: 'none' }, 0);
 
