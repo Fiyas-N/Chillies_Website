@@ -242,6 +242,7 @@ function Hero() {
     gsap.to('.hero-note-malay', { x: x * 20, y: y * 16, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
     gsap.to('.hero-note-taste', { x: x * -18, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
     gsap.to('.hero-stamp', { x: x * -14, y: y * -12, rotate: 9 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-corner-art', { x: x * -12, y: y * -10, rotate: -5 + x * -2, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
   };
 
   const handleMouseLeave = () => {
@@ -249,6 +250,7 @@ function Hero() {
       x: 0, y: 0, rotate: 0, duration: 1, ease: 'power3.out', overwrite: 'auto'
     });
     gsap.to('.hero-stamp', { x: 0, y: 0, rotate: 9, duration: 1, ease: 'power3.out', overwrite: 'auto' });
+    gsap.to('.hero-corner-art', { x: 0, y: 0, rotate: -5, duration: 1, ease: 'power3.out', overwrite: 'auto' });
   };
 
   return (
@@ -260,6 +262,14 @@ function Hero() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      <div className="hero-corner-art" data-ornament aria-hidden="true">
+        <img className="hero-corner-sprig" src={generatedAsset('botanical-sprig.png')} alt="" />
+        <div className="hero-corner-note">
+          <span>Authentic</span>
+          <strong>Taste of Malabar</strong>
+          <svg viewBox="0 0 110 24" aria-hidden="true"><path d="M4 16c26-12 74-12 110-3" /></svg>
+        </div>
+      </div>
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
