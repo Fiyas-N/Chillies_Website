@@ -265,7 +265,12 @@ function Hero() {
       />
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
-        <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
+        <h1 id="hero-title">
+          <span className="hero-line"><span>Good</span></span>
+          <span className="hero-line"><span>Food <em>Brings</em></span></span>
+          <span className="hero-line"><span>People</span></span>
+          <span className="hero-line"><span>Together<span className="red-dot">.</span></span></span>
+        </h1>
         <p className="hero-description">Experience the authentic taste of Kerala with our fragrant Malabar Dum Biriyani, charcoal-grilled favourites and much more.</p>
         <div className="hero-actions"><Button href={orderUrl} target="_blank" rel="noreferrer"><WhatsAppIcon /> Order Now <Arrow /></Button><a className="text-link" href="#menu">Explore Menu <span className="link-arrow"><Arrow /></span></a></div>
       </div>
@@ -1005,7 +1010,7 @@ function useScrollMotion(heroReady = false) {
       tl.from(['.hero .eyebrow', '.hero-description', '.hero-actions'], {
         autoAlpha: 0, y: 34, duration: 1.15, stagger: 0.16,
       }, 0.05)
-        .fromTo('.hero-line > *', {
+        .fromTo('.hero-line > span', {
           yPercent: 120,
           autoAlpha: 0,
           filter: 'blur(16px)',
@@ -1016,6 +1021,9 @@ function useScrollMotion(heroReady = false) {
           duration: 1.15,
           stagger: 0.12,
           ease: 'power3.out',
+          onComplete: () => {
+            gsap.set('.hero-line', { overflow: 'visible' });
+          },
         }, 0.12)
         .from('.hero-food', {
           scale: 0.86, autoAlpha: 0, y: 38, duration: 1.25, ease: 'back.out(1.4)',
