@@ -1013,8 +1013,8 @@ footer{background:var(--paper)}.footer-cta{position:relative;display:flex;align-
 }
 
 /* Shorter story image keeps the intro and image visually aligned. */
-.story-photo-wrap{align-self:center;aspect-ratio:1.68;max-height:390px;}
-.story-photo-wrap>img{height:100%;}
+.story-photo-wrap{align-self:center;aspect-ratio:1.68;max-height:390px;overflow:hidden;border-radius:28px;box-shadow:0 14px 34px rgba(90,55,10,.14);}
+.story-photo-wrap>img{width:100%;height:100%;object-fit:cover;border-radius:inherit;}
 @media(max-width:1100px) and (min-width:761px){.story-photo-wrap{max-height:330px;}}
 
 /* Location actions share a baseline, stay inside their cards, and respond on hover. */
@@ -1632,6 +1632,32 @@ img[data-media-state="error"]{
   .signature-band>img{max-height:clamp(210px,64vw,290px);object-position:center 55%;margin:8px auto;}
   .signature-art-group .signature-art-image{max-width:clamp(140px,42vw,200px)!important;height:clamp(145px,42vw,200px);}
   .signature-art>span{font-size:clamp(20px,5.5vw,26px)!important;}
+}
+
+/* Give the story bottom dining photo matching rounded edges, warm shadow, and graceful hover response */
+.story-bottom-photo{
+  position:relative;
+  overflow:hidden;
+  border-radius:26px!important;
+  box-shadow:0 14px 34px rgba(90,55,10,.18);
+  align-self:center;
+}
+.story-bottom-photo img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:26px!important;
+  transition:transform 0.45s ease;
+}
+.story-bottom-photo:hover img{
+  transform:scale(1.03);
+}
+@media(max-width:760px){
+  .story-bottom-photo,
+  .story-bottom-photo img{
+    border-radius:20px!important;
+  }
 }
 
 /* Rich, balanced locations cluster bringing the copy and note closer together while filling the mid-top space. */
