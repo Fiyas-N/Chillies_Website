@@ -131,40 +131,55 @@ function Header() {
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
+    let rafId = null;
+    let lastScrolled = false;
+    let lastHref = '#top';
+
+    const updateNav = () => {
       const scrollY = window.scrollY;
-      setScrolled(scrollY > 20);
-
-      // Top of page
-      if (scrollY < 120) {
-        setActiveHref('#top');
-        return;
+      const isScrolled = scrollY > 20;
+      if (isScrolled !== lastScrolled) {
+        lastScrolled = isScrolled;
+        setScrolled(isScrolled);
       }
 
-      // Bottom of page near contact/footer
-      if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 80) {
-        setActiveHref('#contact');
-        return;
-      }
-
-      // Find currently visible section
-      for (let i = links.length - 1; i >= 0; i--) {
-        const [, href] = links[i];
-        if (href === '#top') continue;
-        const el = document.querySelector(href);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 160) {
-            setActiveHref(href);
-            break;
+      let newHref = '#top';
+      if (scrollY >= 120) {
+        if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 80) {
+          newHref = '#contact';
+        } else {
+          for (let i = links.length - 1; i >= 0; i--) {
+            const [, href] = links[i];
+            if (href === '#top') continue;
+            const el = document.querySelector(href);
+            if (el && el.getBoundingClientRect().top <= 160) {
+              newHref = href;
+              break;
+            }
           }
         }
       }
+
+      if (newHref !== lastHref) {
+        lastHref = newHref;
+        setActiveHref(newHref);
+      }
+    };
+
+    const handleScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        updateNav();
+        rafId = null;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    updateNav();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -223,28 +238,78 @@ function Header() {
 
 function Hero() {
   const heroRef = useRef(null);
+  const quickTos = useRef(null);
+  const rectRef = useRef(null);
 
-  const handleMouseMove = (e) => {
+  useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (window.matchMedia('(hover: none)').matches) return;
-    const rect = heroRef.current?.getBoundingClientRect();
-    if (!rect) return;
+
+    quickTos.current = {
+      foodX: gsap.quickTo('.hero-food', 'x', { duration: 0.6, ease: 'power2.out' }),
+      foodY: gsap.quickTo('.hero-food', 'y', { duration: 0.6, ease: 'power2.out' }),
+      foodR: gsap.quickTo('.hero-food', 'rotate', { duration: 0.6, ease: 'power2.out' }),
+      brushX: gsap.quickTo('.hero-brush', 'x', { duration: 0.8, ease: 'power2.out' }),
+      brushY: gsap.quickTo('.hero-brush', 'y', { duration: 0.8, ease: 'power2.out' }),
+      brushR: gsap.quickTo('.hero-brush', 'rotate', { duration: 0.8, ease: 'power2.out' }),
+      noteMalayX: gsap.quickTo('.hero-note-malay', 'x', { duration: 0.7, ease: 'power2.out' }),
+      noteMalayY: gsap.quickTo('.hero-note-malay', 'y', { duration: 0.7, ease: 'power2.out' }),
+      noteTasteX: gsap.quickTo('.hero-note-taste', 'x', { duration: 0.7, ease: 'power2.out' }),
+      noteTasteY: gsap.quickTo('.hero-note-taste', 'y', { duration: 0.7, ease: 'power2.out' }),
+      stampX: gsap.quickTo('.hero-stamp', 'x', { duration: 0.8, ease: 'power2.out' }),
+      stampY: gsap.quickTo('.hero-stamp', 'y', { duration: 0.8, ease: 'power2.out' }),
+      stampR: gsap.quickTo('.hero-stamp', 'rotate', { duration: 0.8, ease: 'power2.out' }),
+      branchX: gsap.quickTo('.hero-botanical-branch', 'x', { duration: 0.8, ease: 'power2.out' }),
+      branchY: gsap.quickTo('.hero-botanical-branch', 'y', { duration: 0.8, ease: 'power2.out' }),
+      branchR: gsap.quickTo('.hero-botanical-branch', 'rotate', { duration: 0.8, ease: 'power2.out' }),
+    };
+
+    const updateRect = () => {
+      if (heroRef.current) rectRef.current = heroRef.current.getBoundingClientRect();
+    };
+    updateRect();
+    window.addEventListener('resize', updateRect);
+    return () => window.removeEventListener('resize', updateRect);
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (heroRef.current) rectRef.current = heroRef.current.getBoundingClientRect();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!quickTos.current) return;
+    const rect = rectRef.current || heroRef.current?.getBoundingClientRect();
+    if (!rect || !rect.width || !rect.height) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    gsap.to('.hero-food', { x: x * 18, y: y * 14, rotate: x * 2.5, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-brush', { x: x * -16, y: y * -12, rotate: x * -3, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-note-malay', { x: x * 22, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-note-taste', { x: x * -20, y: y * 20, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-stamp', { x: x * -16, y: y * -14, rotate: 9 + x * 6, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-    gsap.to('.hero-botanical-branch', { x: x * -14, y: y * -12, rotate: -6 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    const q = quickTos.current;
+    q.foodX(x * 18);
+    q.foodY(y * 14);
+    q.foodR(x * 2.5);
+    q.brushX(x * -16);
+    q.brushY(y * -12);
+    q.brushR(x * -3);
+    q.noteMalayX(x * 22);
+    q.noteMalayY(y * 18);
+    q.noteTasteX(x * -20);
+    q.noteTasteY(y * 20);
+    q.stampX(x * -16);
+    q.stampY(y * -14);
+    q.stampR(9 + x * 6);
+    q.branchX(x * -14);
+    q.branchY(y * -12);
+    q.branchR(-6 + x * 5);
   };
 
   const handleMouseLeave = () => {
-    gsap.to(['.hero-food', '.hero-brush', '.hero-note-malay', '.hero-note-taste'], {
-      x: 0, y: 0, rotate: 0, duration: 1, ease: 'power3.out', overwrite: 'auto'
-    });
-    gsap.to('.hero-stamp', { x: 0, y: 0, rotate: 9, duration: 1, ease: 'power3.out', overwrite: 'auto' });
-    gsap.to('.hero-botanical-branch', { x: 0, y: 0, rotate: -6, duration: 1, ease: 'power3.out', overwrite: 'auto' });
+    if (!quickTos.current) return;
+    const q = quickTos.current;
+    q.foodX(0); q.foodY(0); q.foodR(0);
+    q.brushX(0); q.brushY(0); q.brushR(0);
+    q.noteMalayX(0); q.noteMalayY(0);
+    q.noteTasteX(0); q.noteTasteY(0);
+    q.stampX(0); q.stampY(0); q.stampR(9);
+    q.branchX(0); q.branchY(0); q.branchR(-6);
   };
 
   return (
@@ -253,6 +318,7 @@ function Hero() {
       id="top"
       aria-labelledby="hero-title"
       ref={heroRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -313,38 +379,26 @@ function MenuSection() {
 
     const getCycleWidth = () => {
       const cards = [...track.querySelectorAll('.food-card')];
-      return cards.length >= menuItems.length * 2
-        ? cards[menuItems.length].getBoundingClientRect().left - cards[0].getBoundingClientRect().left
-        : 0;
+      if (cards.length < menuItems.length * 2) return 0;
+      return Math.max(0, cards[menuItems.length].offsetLeft - cards[0].offsetLeft);
     };
 
-    let ctx = null;
-    const updateScrub = () => {
-      const cycleW = getCycleWidth();
-      if (!cycleW) return;
-      ctx && ctx.revert();
-      ctx = gsap.context(() => {
-        gsap.fromTo(track, { x: 0 }, {
-          x: () => -cycleW,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: runway,
-            start: 'top 85%',
-            end: 'bottom 15%',
-            scrub: 0.85,
-            invalidateOnRefresh: true,
-          },
-        });
-      }, runway);
-    };
+    const ctx = gsap.context(() => {
+      gsap.fromTo(track, { x: 0 }, {
+        x: () => -getCycleWidth(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: runway,
+          start: 'top 85%',
+          end: 'bottom 15%',
+          scrub: 0.85,
+          invalidateOnRefresh: true,
+        },
+      });
+    }, runway);
 
-    updateScrub();
-    const observer = new ResizeObserver(() => {
-      updateScrub();
-      ScrollTrigger.refresh();
-    });
-    observer.observe(track);
-    observer.observe(runway);
+    const onResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', onResize);
 
     const refreshAfterImages = [...track.querySelectorAll('img')].map((image) => {
       if (image.complete) return Promise.resolve();
@@ -354,15 +408,15 @@ function MenuSection() {
       });
     });
     Promise.all(refreshAfterImages).then(() => {
-      updateScrub();
       ScrollTrigger.refresh();
     });
 
     return () => {
-      ctx && ctx.revert();
-      observer.disconnect();
+      ctx.revert();
+      window.removeEventListener('resize', onResize);
     };
   }, []);
+
   const scrollToCard = (index) => {
     const track = trackRef.current;
     const card = track?.querySelectorAll('.food-card:not([data-loop-copy])')[index];
@@ -378,7 +432,7 @@ function MenuSection() {
     <section className="menu-section section-paper" id="menu">
       <div className="menu-pin-runway" ref={runwayRef}><div className="menu-stage">
         <div className="section-heading menu-heading"><div data-reveal><p className="eyebrow" data-typewriter><i /> Our Menu <i /></p><h2>Flavours<br />for Every Mood<span className="red-dot">.</span></h2><p>From charcoal-grilled classics to comforting rice dishes,<br className="desktop-only" /> explore a menu made for every appetite.</p><Button href={menuPdfUrl} target="_blank" rel="noopener noreferrer">View Full Menu <Arrow /></Button></div><div className="menu-art" data-reveal><div className="hand-note">Real ingredients<br /><strong>Real taste!</strong><svg viewBox="0 0 130 32" aria-hidden="true" data-draw><path d="M3 20c36-18 79-18 120-8m-8 0 10-1-4 10" /></svg></div><img className="menu-stamp" data-ornament src={referenceAsset('menu-food-stamp-transparent.png')} alt="Good food, good people" /></div></div>
-        <div className="menu-carousel menu-train"><button className="carousel-arrow carousel-prev" onClick={() => moveCards(-1)} aria-label="Previous menu categories"><Arrow direction="left" /></button><div className="food-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; const center = track.getBoundingClientRect().left + track.clientWidth / 2; const cards = [...track.querySelectorAll('.food-card')]; const nearest = cards.reduce((bestIndex, card, index) => Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - center) < Math.abs(cards[bestIndex].getBoundingClientRect().left + cards[bestIndex].getBoundingClientRect().width / 2 - center) ? index : bestIndex, 0); setActiveCard(nearest % menuItems.length); }}>
+        <div className="menu-carousel menu-train"><button className="carousel-arrow carousel-prev" onClick={() => moveCards(-1)} aria-label="Previous menu categories"><Arrow direction="left" /></button><div className="food-grid" ref={trackRef} onScroll={(event) => { const track = event.currentTarget; if (!track) return; const cardW = track.firstElementChild?.offsetWidth || 240; const index = Math.round(track.scrollLeft / (cardW + 12)); setActiveCard(Math.max(0, Math.min(menuItems.length - 1, index % menuItems.length))); }}>
           {[0, 1, 2, 3].flatMap((copy) => menuItems.map((item, i) => <a className="food-card" href={menuPdfUrl} target="_blank" rel="noopener noreferrer" key={`${copy}-${item.title}`} data-loop-copy={copy !== 1 ? 'true' : undefined} aria-hidden={copy !== 1} tabIndex={copy !== 1 ? -1 : 0} data-reveal={copy === 1 ? '' : undefined} style={{ '--reveal-order': i }} itemScope itemType="https://schema.org/MenuItem"><meta itemProp="menuAddOn" content={item.category} /><img src={item.source ? officialAsset(item.source) : referenceAsset(item.image)} alt={copy === 1 ? item.alt : ''} loading="lazy" decoding="async" itemProp="image" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = referenceAsset(item.image); }} /><div className="food-info"><h3 itemProp="name">{item.title}</h3><p itemProp="description">{item.description}</p><span className="round-arrow" aria-label={`View ${item.title} menu`}><Arrow /></span></div></a>))}
         </div><button className="carousel-arrow carousel-next" onClick={() => moveCards(1)} aria-label="Next menu categories"><Arrow /></button><div className="carousel-dots" aria-label="Menu category pages">{menuItems.map((item, i) => <button key={item.title} className={activeCard === i ? 'active' : ''} aria-label={`Show ${item.title}`} onClick={() => scrollToCard(i)} />)}</div></div>
       </div></div>
@@ -568,9 +622,9 @@ function useScrollMotion(heroReady = false) {
     if (!prefersReducedMotion) {
       lenis = new Lenis({
         autoRaf: false,
-        duration: 1.15,
+        duration: 0.95,
         smoothWheel: true,
-        wheelMultiplier: 0.85,
+        wheelMultiplier: 1.0,
         syncTouch: false,
       });
       lenisRef.current = lenis;
@@ -600,7 +654,7 @@ function useScrollMotion(heroReady = false) {
     if (lenis && tick) {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(500, 33);
     }
 
     // ScrollTrigger context runs on ALL devices, whether Lenis is active or native scroll is used!
@@ -692,13 +746,11 @@ function useScrollMotion(heroReady = false) {
         gsap.fromTo(words, {
           yPercent: 115,
           autoAlpha: 0,
-          filter: 'blur(16px)',
         }, {
           yPercent: 0,
           autoAlpha: 1,
-          filter: 'blur(0px)',
-          duration: 0.88,
-          stagger: 0.045,
+          duration: 0.85,
+          stagger: 0.04,
           ease: 'power3.out',
           immediateRender: false,
           scrollTrigger: {
@@ -708,7 +760,6 @@ function useScrollMotion(heroReady = false) {
           },
           onComplete: () => {
             gsap.set(heading.querySelectorAll('.line-mask-wrap'), { overflow: 'visible' });
-            gsap.set(words, { clearProps: 'filter' });
           },
         });
       });
@@ -716,13 +767,11 @@ function useScrollMotion(heroReady = false) {
       gsap.utils.toArray('.menu-heading > div:first-child > p:not(.eyebrow), .story-intro > p:not(.eyebrow), .story-bottom-copy > p:not(.eyebrow), .locations-heading > div:first-child > p:not(.eyebrow), .review-intro > p:not(.eyebrow), .instagram-section > div:first-child > p:not(.eyebrow)').forEach((paragraph, index) => {
         gsap.fromTo(paragraph, {
           autoAlpha: 0,
-          y: 24,
-          filter: 'blur(12px)',
+          y: 22,
         }, {
           autoAlpha: 1,
           y: 0,
-          filter: 'blur(0px)',
-          duration: 0.95,
+          duration: 0.85,
           delay: (index % 3) * 0.08,
           ease: 'power3.out',
           immediateRender: false,
@@ -730,9 +779,6 @@ function useScrollMotion(heroReady = false) {
             trigger: paragraph,
             start: 'top 91%',
             toggleActions: 'play none none reverse',
-          },
-          onComplete: () => {
-            gsap.set(paragraph, { clearProps: 'filter' });
           },
         });
       });
@@ -905,24 +951,28 @@ function useScrollMotion(heroReady = false) {
       });
 
       // 1. Global top scroll progress bar scrub
-      ScrollTrigger.create({
-        start: 'top top',
-        end: 'max',
-        onUpdate: (self) => {
-          const bar = document.querySelector('.scroll-progress-bar');
-          if (bar) bar.style.transform = `scaleX(${self.progress})`;
-        },
-      });
+      const progressBar = document.querySelector('.scroll-progress-bar');
+      if (progressBar) {
+        ScrollTrigger.create({
+          start: 'top top',
+          end: 'max',
+          onUpdate: (self) => {
+            progressBar.style.transform = `scaleX(${self.progress})`;
+          },
+        });
+      }
 
       // 2. Floating back-to-top button reveal on scroll
-      ScrollTrigger.create({
-        start: 400,
-        end: 'max',
-        onToggle: (self) => {
-          const pill = document.querySelector('.floating-back-to-top');
-          if (pill) pill.classList.toggle('is-visible', self.isActive);
-        },
-      });
+      const backToTopPill = document.querySelector('.floating-back-to-top');
+      if (backToTopPill) {
+        ScrollTrigger.create({
+          start: 400,
+          end: 'max',
+          onToggle: (self) => {
+            backToTopPill.classList.toggle('is-visible', self.isActive);
+          },
+        });
+      }
 
       // 3. Hero multi-layer depth scrub (biryani bucket, brush splash, floating notes, stamp)
       gsap.timeline({
