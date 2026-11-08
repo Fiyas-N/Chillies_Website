@@ -227,8 +227,38 @@ function Header() {
 }
 
 function Hero() {
+  const heroRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.innerWidth <= 960) return;
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    gsap.to('.hero-food', { x: x * 16, y: y * 12, rotate: x * 2, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-brush', { x: x * -14, y: y * -10, rotate: x * -2.5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-note-malay', { x: x * 20, y: y * 16, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-note-taste', { x: x * -18, y: y * 18, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to('.hero-stamp', { x: x * -14, y: y * -12, rotate: 9 + x * 5, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.to(['.hero-food', '.hero-brush', '.hero-note-malay', '.hero-note-taste'], {
+      x: 0, y: 0, rotate: 0, duration: 1, ease: 'power3.out', overwrite: 'auto'
+    });
+    gsap.to('.hero-stamp', { x: 0, y: 0, rotate: 9, duration: 1, ease: 'power3.out', overwrite: 'auto' });
+  };
+
   return (
-    <section className="hero section-paper" id="top" aria-labelledby="hero-title">
+    <section
+      className="hero section-paper"
+      id="top"
+      aria-labelledby="hero-title"
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="hero-copy">
         <p className="eyebrow" data-typewriter>Chillies Restaurant <i>·</i> Est. 2009</p>
         <h1 id="hero-title"><span className="hero-line"><span>Good</span></span><span className="hero-line">Food <em>Brings</em></span><span className="hero-line"><span>People</span></span><span className="hero-line"><span>Together<span className="red-dot">.</span></span></span></h1>
@@ -239,6 +269,11 @@ function Hero() {
         <svg className="hero-brush" viewBox="0 0 820 760" preserveAspectRatio="none" aria-hidden="true"><path d="M118 112 C209 42 337 54 431 46 C554 36 671 64 734 145 C791 219 784 336 774 436 C764 545 738 628 645 664 C556 699 440 685 338 690 C224 695 122 701 65 633 C12 580 23 443 31 339 C39 237 37 174 118 112 Z" fill="#FFC414" /></svg>
         <img className="hero-brush-rim" data-ornament src={generatedAsset('yellow-brush-ring.png')} alt="" aria-hidden="true" />
         <span className="hero-food-shadow" aria-hidden="true" />
+        <div className="hero-steam" aria-hidden="true">
+          <span className="steam-line steam-1" />
+          <span className="steam-line steam-2" />
+          <span className="steam-line steam-3" />
+        </div>
         <img className="hero-food" src={generatedAsset('hero-bucket-branded.png')} alt="Authentic Malabar Dum Biriyani and charcoal grilled chicken in Chillies takeaway bucket in Wandoor, Kerala" fetchPriority="high" />
         <div className="hero-note hero-note-malay" data-draw><span>Malabar</span><strong>Dum Biriyani</strong><svg viewBox="0 0 110 48" aria-hidden="true"><path d="M4 8c20 1 30 31 61 23 13-3 23-15 37-18m-3 0 13-3-6 12" /></svg></div>
         <div className="hero-note hero-note-taste" data-draw><span>Same Great Taste</span><strong>Always!</strong><svg viewBox="0 0 120 24" aria-hidden="true"><path d="M3 16c32-14 78-12 114-4" /></svg></div>
@@ -438,7 +473,35 @@ function ReviewsSection() {
     const card = track?.querySelector('.review-card');
     if (card) track.scrollBy({ left: card.getBoundingClientRect().width + 14, behavior: 'smooth' });
   };
-  return <section className={`reviews-section${hasOverflow ? ' has-review-overflow' : ''}`}><div className="review-intro" data-reveal><p className="eyebrow" data-typewriter>What our customers say</p><h2>Flavours That<br />Create <em>Memories.</em></h2><p>From first visits to lifelong favourites,<br /> our guests share what makes Chillies special.</p></div><div className="review-track" id="review-track" ref={trackRef}>{reviews.map(review => <article className="review-card" key={review.name} data-reveal><div className="stars">★★★★★ <span>”</span></div><p>{review.quote}</p><div className="reviewer"><img src={referenceAsset(review.image)} alt="" loading="lazy" decoding="async" /><b>{review.name}<small>{review.role}</small></b></div></article>)}</div>{hasOverflow && <button className="review-next" aria-label="Show next reviews" onClick={moveReviews}>→</button>}</section>;
+  return (
+    <section className={`reviews-section${hasOverflow ? ' has-review-overflow' : ''}`}>
+      <div className="review-intro" data-reveal>
+        <p className="eyebrow" data-typewriter>What our customers say</p>
+        <h2>Flavours That<br />Create <em>Memories.</em></h2>
+        <p>From first visits to lifelong favourites,<br /> our guests share what makes Chillies special.</p>
+      </div>
+      <div className="review-track" id="review-track" ref={trackRef}>
+        {reviews.map(review => (
+          <article className="review-card" key={review.name} data-reveal>
+            <div className="stars" aria-label="5 stars rating">
+              <span className="star-char">★</span>
+              <span className="star-char">★</span>
+              <span className="star-char">★</span>
+              <span className="star-char">★</span>
+              <span className="star-char">★</span>
+              <span className="quote-char">”</span>
+            </div>
+            <p>{review.quote}</p>
+            <div className="reviewer">
+              <img src={referenceAsset(review.image)} alt="" loading="lazy" decoding="async" />
+              <b>{review.name}<small>{review.role}</small></b>
+            </div>
+          </article>
+        ))}
+      </div>
+      {hasOverflow && <button className="review-next" aria-label="Show next reviews" onClick={moveReviews}>→</button>}
+    </section>
+  );
 }
 
 function Footer() {

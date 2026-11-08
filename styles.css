@@ -1748,3 +1748,294 @@ img[data-media-state="error"]{
 .hero-food, .hero-brush, .hero-brush-rim, .hero-stamp, .hero-spice-doodle{
   will-change:transform;
 }
+
+/* ==========================================================================
+   INTERACTIVE ANIMATIONS & MICRO-INTERACTIONS
+   ========================================================================== */
+
+/* 1. Biryani Steam Wisps */
+.hero-steam{
+  position:absolute;
+  z-index:2;
+  top:12%;
+  left:36%;
+  width:120px;
+  height:95px;
+  pointer-events:none;
+  opacity:.8;
+}
+.steam-line{
+  position:absolute;
+  bottom:0;
+  width:7px;
+  height:56px;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.55) 48%, rgba(255,255,255,0) 100%);
+  filter:blur(3.5px);
+  animation:steam-drift 4s ease-in-out infinite;
+}
+.steam-1{left:18px;animation-delay:0s;}
+.steam-2{left:54px;height:70px;animation-delay:1.3s;}
+.steam-3{left:90px;height:50px;animation-delay:2.4s;}
+
+@keyframes steam-drift{
+  0%{transform:translate3d(0,10px,0) scaleY(.5) scaleX(.8);opacity:0;}
+  35%{opacity:.75;}
+  75%{opacity:.3;transform:translate3d(14px,-48px,0) scaleY(1.3) scaleX(1.4);}
+  100%{opacity:0;transform:translate3d(22px,-70px,0) scaleY(1.6) scaleX(1.8);}
+}
+
+/* 2. Button Specular Light Sweep & Tactile Elevation */
+.button{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, background-color .25s ease;
+}
+.button:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:75%;
+  height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.34), transparent);
+  transform:skewX(-24deg);
+  transition:left .75s cubic-bezier(.2,.8,.2,1);
+  pointer-events:none;
+  z-index:1;
+}
+.button:hover:before{
+  left:140%;
+}
+.button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 22px rgba(139,7,25,.38), 0 4px 0 #8b0719;
+}
+.button:active{
+  transform:translateY(1px);
+  box-shadow:0 2px 0 #8b0719;
+}
+.button .arrow{
+  display:inline-block;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.button:hover .arrow{
+  transform:translateX(5px);
+}
+.text-link{
+  transition:color .25s ease, border-color .25s ease, transform .25s ease;
+}
+.text-link:hover{
+  transform:translateX(4px);
+  border-bottom-color:var(--red);
+}
+.text-link .link-arrow, .text-link span{
+  display:inline-block;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.text-link:hover .link-arrow, .text-link:hover span{
+  transform:translateX(5px);
+}
+
+/* 3. Food Card 3D Elevation, Zoom & Glowing Arrow */
+.food-card{
+  transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease, border-color .3s ease;
+  border:1px solid rgba(47,35,20,.05);
+  backface-visibility:hidden;
+}
+.food-card:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 24px 44px -10px rgba(109,82,34,.25), 0 8px 18px rgba(109,82,34,.1);
+  border-color:rgba(207,16,40,.22);
+}
+.food-card > img{
+  transition:transform .65s cubic-bezier(.16,1,.3,1), filter .4s ease;
+}
+.food-card:hover > img{
+  transform:scale(1.08);
+}
+.food-card .round-arrow{
+  transition:transform .38s cubic-bezier(.34,1.56,.64,1), background-color .25s ease, box-shadow .35s ease;
+}
+.food-card:hover .round-arrow{
+  transform:scale(1.18) rotate(-45deg);
+  background-color:#e0142c;
+  box-shadow:0 0 18px rgba(207,16,40,.65);
+}
+
+/* 4. Location Cards Elevation & Direction Links */
+.location-card{
+  transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+  border:1px solid rgba(47,35,20,.06);
+}
+.location-card:hover{
+  transform:translateY(-7px);
+  box-shadow:0 22px 40px -8px rgba(109,82,34,.22);
+}
+.location-card > img{
+  transition:transform .65s cubic-bezier(.16,1,.3,1);
+}
+.location-card:hover > img{
+  transform:scale(1.07);
+}
+.location-info h3{
+  transition:color .25s ease;
+}
+.location-card:hover .location-info h3{
+  color:var(--red);
+}
+.location-info > div a{
+  transition:color .2s ease, transform .2s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.location-info > div a:hover{
+  transform:translateX(3px);
+  color:#ad0b1f;
+}
+
+/* 5. Reviews Star Sparkle & Card Hover */
+.review-card{
+  transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+  border:1px solid rgba(47,35,20,.05);
+}
+.review-card:hover{
+  transform:translateY(-7px);
+  box-shadow:0 24px 44px -8px rgba(109,82,34,.22);
+}
+.stars{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  font-size:20px;
+  color:var(--red);
+}
+.stars .star-char{
+  display:inline-block;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), color .25s ease, text-shadow .25s ease;
+}
+.stars .quote-char{
+  margin-left:auto;
+  font:40px/0.7 var(--serif);
+  color:var(--ink);
+  transition:transform .3s ease;
+}
+.review-card:hover .stars .quote-char{
+  transform:scale(1.15) rotate(6deg);
+}
+.review-card:hover .stars .star-char{
+  color:#ffb700;
+  text-shadow:0 0 10px rgba(255,183,0,.8);
+}
+.review-card:hover .stars .star-char:nth-child(1){transform:scale(1.22);transition-delay:0s;}
+.review-card:hover .stars .star-char:nth-child(2){transform:scale(1.22);transition-delay:.05s;}
+.review-card:hover .stars .star-char:nth-child(3){transform:scale(1.22);transition-delay:.1s;}
+.review-card:hover .stars .star-char:nth-child(4){transform:scale(1.22);transition-delay:.15s;}
+.review-card:hover .stars .star-char:nth-child(5){transform:scale(1.22);transition-delay:.2s;}
+.review-card .reviewer img{
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+}
+.review-card:hover .reviewer img{
+  transform:scale(1.12);
+  box-shadow:0 6px 18px rgba(47,35,20,.22);
+}
+.review-next{
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), background-color .25s ease, box-shadow .3s ease;
+}
+.review-next:hover{
+  transform:scale(1.12) translateX(3px);
+  box-shadow:0 8px 24px rgba(207,16,40,.45);
+}
+
+/* 6. Continuous Organic Botanical & Spice Floating Animations */
+@keyframes botanical-drift-1{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg);}
+  50%{transform:translate3d(0,-11px,0) rotate(4deg);}
+}
+@keyframes botanical-drift-2{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg);}
+  50%{transform:translate3d(0,10px,0) rotate(-4deg);}
+}
+@keyframes botanical-drift-3{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg);}
+  50%{transform:translate3d(6px,-8px,0) rotate(3deg);}
+}
+.locations-sprig{animation:botanical-drift-1 6.5s ease-in-out infinite;}
+.locations-leaf{animation:botanical-drift-2 7.2s ease-in-out -1.5s infinite;}
+.locations-chilli{animation:botanical-drift-3 8s ease-in-out -3s infinite;}
+.signature-art-image.botanical-art{animation:botanical-drift-1 6s ease-in-out infinite;}
+.signature-art-image.leaf-art{animation:botanical-drift-2 7.5s ease-in-out -2s infinite;}
+.signature-art > span{animation:botanical-drift-3 8.5s ease-in-out -1s infinite;}
+.menu-art .hand-note{animation:botanical-drift-1 7s ease-in-out infinite;}
+.menu-art .menu-stamp{animation:botanical-drift-2 8s ease-in-out -2.5s infinite;}
+
+/* 7. Timeline Milestone Beacon Glow */
+.timeline p{
+  transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s ease;
+}
+.timeline p:hover{
+  transform:translateX(8px);
+}
+.timeline p:before{
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, background-color .35s ease;
+}
+.timeline p:hover:before{
+  transform:scale(1.6);
+  background-color:var(--red);
+  box-shadow:0 0 0 6px rgba(207,16,40,.25), 0 0 16px rgba(207,16,40,.6);
+}
+
+/* 8. Values Badges Micro-Interactions */
+.values span{
+  transition:transform .3s cubic-bezier(.16,1,.3,1), color .25s ease;
+}
+.values span:hover{
+  transform:translateY(-3px);
+  color:var(--red);
+}
+.values span .line-icon{
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), color .25s ease;
+}
+.values span:hover .line-icon{
+  transform:scale(1.22) rotate(-10deg);
+  color:var(--red);
+}
+
+/* 9. Carousel Controls Elastic Feedback */
+.carousel-arrow{
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, background-color .2s ease;
+}
+.carousel-prev:hover{
+  transform:scale(1.15) translateX(-3px);
+  box-shadow:0 8px 22px rgba(207,16,40,.45);
+}
+.carousel-next:hover{
+  transform:scale(1.15) translateX(3px);
+  box-shadow:0 8px 22px rgba(207,16,40,.45);
+}
+.carousel-dots button{
+  transition:width .3s cubic-bezier(.34,1.56,.64,1), background .25s ease, transform .25s ease;
+}
+.carousel-dots button:hover{
+  transform:scale(1.3);
+  background:var(--red);
+}
+
+/* 10. Hero Side List Interactive Hover */
+.hero-side-list li{
+  transition:transform .3s cubic-bezier(.16,1,.3,1), color .25s ease;
+  cursor:default;
+}
+.hero-side-list li:hover{
+  transform:translateX(5px);
+  color:var(--red);
+}
+.hero-side-list li .line-icon{
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), color .25s ease;
+}
+.hero-side-list li:hover .line-icon{
+  transform:scale(1.2) rotate(8deg);
+  color:var(--red);
+}
