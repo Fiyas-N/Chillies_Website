@@ -546,6 +546,7 @@ function useScrollMotion(heroReady = false) {
     if (!prefersReducedMotion && !isTouch) {
       lenis = new Lenis({ autoRaf: false, duration: 1.1, smoothWheel: true, wheelMultiplier: 0.82 });
       lenisRef.current = lenis;
+      if (typeof window !== 'undefined') window.__lenis = lenis;
     }
 
     const onSectionLink = (event) => {
@@ -588,10 +589,11 @@ function useScrollMotion(heroReady = false) {
       });
 
       gsap.utils.toArray('[data-reveal]').forEach((item) => {
+        const triggerEl = item.closest('.story-bottom, .signature-band, .locations-ribbon') || item;
         gsap.fromTo(item, { autoAlpha: 0, y: 44 }, {
           autoAlpha: 1, y: 0, duration: 1.05, delay: Number(item.style.getPropertyValue('--reveal-order') || 0) * 0.1,
           ease: 'power3.out',
-          scrollTrigger: { trigger: item, start: 'top 91%', once: true, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: triggerEl, start: 'top 88%', once: true, invalidateOnRefresh: true },
         });
       });
 
@@ -670,7 +672,11 @@ function useScrollMotion(heroReady = false) {
           scrollTrigger: {
             trigger: heading,
             start: 'top 88%',
-            toggleActions: 'play none none reverse',
+            once: true,
+          },
+          onComplete: () => {
+            gsap.set(heading.querySelectorAll('.line-mask-wrap'), { overflow: 'visible' });
+            gsap.set(words, { clearProps: 'filter' });
           },
         });
       });
@@ -691,7 +697,10 @@ function useScrollMotion(heroReady = false) {
           scrollTrigger: {
             trigger: paragraph,
             start: 'top 91%',
-            toggleActions: 'play none none reverse',
+            once: true,
+          },
+          onComplete: () => {
+            gsap.set(paragraph, { clearProps: 'filter' });
           },
         });
       });
@@ -859,7 +868,7 @@ function useScrollMotion(heroReady = false) {
           duration: 0.65,
           delay: index * 0.08,
           ease: 'power3.out',
-          scrollTrigger: { trigger: item, start: 'top 94%', once: true },
+          scrollTrigger: { trigger: '.locations-ribbon', start: 'top 90%', once: true },
         });
       });
 
@@ -997,6 +1006,7 @@ function useScrollMotion(heroReady = false) {
       if (tick) gsap.ticker.remove(tick);
       lenis?.destroy();
       lenisRef.current = null;
+      if (typeof window !== 'undefined') window.__lenis = null;
     };
   }, []);
 
